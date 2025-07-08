@@ -1,16 +1,16 @@
 "use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import axios from 'axios';
-import { motion, useMotionValue, useSpring } from 'framer-motion';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
+import { motion } from "framer-motion";
 // import { useAuth } from '@/components/AuthContext'; // Uncomment if you have AuthContext
 
 export default function LoginPage() {
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const router = useRouter();
@@ -39,28 +39,28 @@ export default function LoginPage() {
 
   const formik = useFormik({
     initialValues: {
-      username: '',
-      password: '',
+      username: "",
+      password: "",
     },
     validationSchema: Yup.object({
-      username: Yup.string().email('Invalid email address').required('Email is required'),
-      password: Yup.string().required('Password is required'),
+      username: Yup.string().email("Invalid email address").required("Email is required"),
+      password: Yup.string().required("Password is required"),
     }),
     onSubmit: async (values, { setSubmitting }) => {
-      setError('');
+      setError("");
       setIsLoading(true);
       try {
-        const response = await axios.post('http://localhost:5000/user/login', {
+        const response = await axios.post("http://localhost:5000/login", {
           email: values.username,
           password: values.password,
         });
         setIsLoading(false);
         // login(response.data.token); // Uncomment if you have AuthContext
-        router.push('/');
+        router.push("/");
       } catch (err) {
         setIsLoading(false);
         setError(
-          err.response?.data?.message || 'Login failed. Please check your credentials.'
+          err.response?.data?.message || "Login failed. Please check your credentials."
         );
       }
     },
@@ -89,7 +89,7 @@ export default function LoginPage() {
         <div
           className="absolute left-0 top-1/4 w-[60vw] h-[40vw] max-w-2xl max-h-[30vh] rounded-full bg-fuchsia-700 opacity-30 blur-3xl rotate-[-25deg]"
           style={{
-            animation: 'flow-diagonal 6s ease-in-out infinite',
+            animation: "flow-diagonal 6s ease-in-out infinite",
           }}
         ></div>
       </div>
@@ -101,9 +101,9 @@ export default function LoginPage() {
           rotateY: cardPos.y,
           scale: isHovered ? 1.04 : 1,
           boxShadow: isHovered
-            ? '0 0 40px 8px rgba(234, 0, 255, 0.25), 0 2px 32px 0 rgba(138, 79, 255, 0.25)'
-            : '0 2px 32px 0 rgba(138, 79, 255, 0.10)',
-          transition: 'box-shadow 0.3s, scale 0.3s',
+            ? "0 0 40px 8px rgba(234, 0, 255, 0.25), 0 2px 32px 0 rgba(138, 79, 255, 0.25)"
+            : "0 2px 32px 0 rgba(138, 79, 255, 0.10)",
+          transition: "box-shadow 0.3s, scale 0.3s",
         }}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -136,9 +136,10 @@ export default function LoginPage() {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200 ${
-                formik.touched.username && formik.errors.username ? 'border-red-500' : 'border-gray-600'
+                formik.touched.username && formik.errors.username ? "border-red-500" : "border-gray-600"
               }`}
               placeholder="Enter your email"
+              autoComplete="username"
             />
             {formik.touched.username && formik.errors.username && (
               <div className="text-xs text-red-400 mt-1">{formik.errors.username}</div>
@@ -154,9 +155,10 @@ export default function LoginPage() {
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200 ${
-                formik.touched.password && formik.errors.password ? 'border-red-500' : 'border-gray-600'
+                formik.touched.password && formik.errors.password ? "border-red-500" : "border-gray-600"
               }`}
               placeholder="Enter your password"
+              autoComplete="current-password"
             />
             {formik.touched.password && formik.errors.password && (
               <div className="text-xs text-red-400 mt-1">{formik.errors.password}</div>
@@ -178,21 +180,25 @@ export default function LoginPage() {
             disabled={isLoading}
             className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white py-3 rounded-lg font-semibold transition-all duration-200"
           >
-            {isLoading ? 'Signing in...' : 'Sign in'}
+            {isLoading ? "Signing in..." : "Sign in"}
           </button>
 
           <button
             type="button"
             className="w-full border border-gray-600 py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-white/10 transition"
           >
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg" alt="Google" className="h-5 w-5 text-white
-            " />
+            <img
+              src="https://www.svgrepo.com/show/475656/google-color.svg"
+              alt="Google"
+              className="h-5 w-5 text-white"
+              onError={(e) => { e.target.style.display = 'none'; }}
+            />
             Sign in with Google
           </button>
         </form>
 
         <p className="mt-6 text-xs text-center text-gray-400">
-          Don't have an account?{' '}
+          {`Don't have an account? `}
           <Link href="/Sign-up" className="text-purple-400 hover:underline font-medium">
             Sign up
           </Link>
