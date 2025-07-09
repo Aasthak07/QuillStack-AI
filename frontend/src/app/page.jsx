@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Navbar from "./Components/Navbar";
+import Navbar from "../Components/Navbar";
+import Footer from "../Components/Footer";
 import { FaCheckCircle, FaCode, FaSyncAlt, FaUsers, FaCloudUploadAlt, FaMagic, FaEdit, FaShareAlt, FaGithub, FaDiscord, FaLinkedin, FaUserTie, FaUserCog, FaUserEdit, FaUserShield } from "react-icons/fa";
 
 const features = [
@@ -295,16 +296,10 @@ export default function LandingPage() {
             ))}
           </div>
         </section>
+        
 
         {/* Footer */}
-        <footer className="max-w-6xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-3 border-t border-[#181C2A] text-xs text-gray-400">
-          <span>© 2024 QuillStackAI</span>
-          <div className="flex gap-3">
-            <a href="https://github.com/" target="_blank" rel="noopener noreferrer" className="hover:text-[#8A4FFF] transition"><FaGithub size={18} /></a>
-            <a href="https://discord.com/" target="_blank" rel="noopener noreferrer" className="hover:text-[#8A4FFF] transition"><FaDiscord size={18} /></a>
-            <a href="https://linkedin.com/" target="_blank" rel="noopener noreferrer" className="hover:text-[#8A4FFF] transition"><FaLinkedin size={18} /></a>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </div>
   );
