@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import axios from "axios";
 
 const passwordRules = [
   { label: "Minimum 8 characters", test: (v) => v.length >= 8 },
@@ -12,16 +15,23 @@ const passwordRules = [
   { label: "One special character", test: (v) => /[@!#%&*^$]/.test(v) },
 ];
 
+const SignUpSchema = Yup.object().shape({
+  firstName: Yup.string().required("First name is required"),
+  lastName: Yup.string().required("Last name is required"),
+  email: Yup.string().email("Invalid email address").required("Email is required"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(8, "Minimum 8 characters")
+    .matches(/[A-Z]/, "One uppercase letter")
+    .matches(/[a-z]/, "One lowercase letter")
+    .matches(/[0-9]/, "One number")
+    .matches(/[@!#%&*^$]/, "One special character"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Please confirm your password'),
+});
+
 export default function SignUpPage() {
-  const [form, setForm] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
-  const [touched, setTouched] = useState({});
-  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
   const [shake, setShake] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -46,54 +56,20 @@ export default function SignUpPage() {
     setIsHovered(true);
   };
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleBlur = (e) => {
-    setTouched({ ...touched, [e.target.name]: true });
-  };
-
-  const validateEmail = (email) =>
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-
-  const passwordChecks = passwordRules.map((rule) => rule.test(form.password));
-  const allPasswordValid = passwordChecks.every(Boolean);
-  const confirmPasswordValid =
-    form.confirmPassword && form.password === form.confirmPassword;
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setError("");
-    setSuccess(false);
-    if (
-      !form.firstName.trim() ||
-      !form.lastName.trim() ||
-      !validateEmail(form.email) ||
-      !allPasswordValid ||
-      !confirmPasswordValid
-    ) {
-      setShake(true);
-      setError("Please fix the errors above.");
-      setTimeout(() => setShake(false), 600);
-      return;
-    }
-    setSuccess(true);
-    setForm({
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-    });
-    setTouched({});
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#0B0F1C]">
       <motion.div
         initial={{ opacity: 0, y: 40 }}
-        animate={shake ? { x: [0, -16, 16, -12, 12, -6, 6, 0], opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
+        animate={
+          shake
+            ? { x: [0, -16, 16, -12, 12, -6, 6, 0], opacity: 1, y: 0 }
+            : { opacity: 1, y: 0 }
+        }
+        transition={
+          shake
+            ? { x: { type: "tween", duration: 0.6 }, opacity: { duration: 0.3 }, y: { duration: 0.3 } }
+            : { type: "spring", stiffness: 400, damping: 20 }
+        }
         className="relative w-full max-w-xl bg-gradient-to-br from-[#181C2A] to-[#1B113A] rounded-2xl px-8 py-8 shadow-2xl border border-white/10"
         style={{
           boxShadow: isHovered
@@ -107,137 +83,133 @@ export default function SignUpPage() {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         onMouseEnter={handleMouseEnter}
-        transition={{ type: "spring", stiffness: 400, damping: 20 }}
       >
         <h1 className="text-2xl font-bold text-[#EAEAEA] mb-2 text-center">Sign Up</h1>
         <p className="text-xs text-gray-400 mb-6 text-center">
           Create your account to get started
         </p>
-        <AnimatePresence>
-          {success && (
-            <motion.div
-              initial={{ y: -30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -30, opacity: 0 }}
-              className="mb-4 px-4 py-2 bg-[#00FFB2]/10 border border-[#00FFB2]/20 text-[#00FFB2] rounded-md text-xs text-center font-semibold shadow"
-            >
-              Signed up successfully!
-            </motion.div>
-          )}
-        </AnimatePresence>
-        {error && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="mb-4 px-4 py-2 bg-[#FF5F5F]/10 border border-[#FF5F5F]/20 text-[#FF5F5F] rounded-md text-xs text-center"
-          >
-            {error}
-          </motion.div>
-        )}
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="flex gap-3">
-            <div className="w-1/2">
-              <label className="block text-xs font-medium text-gray-300 mb-1">First Name</label>
-              <input
-                type="text"
-                name="firstName"
-                value={form.firstName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 border-gray-600"
-                placeholder="First Name"
-              />
-            </div>
-            <div className="w-1/2">
-              <label className="block text-xs font-medium text-gray-300 mb-1">Last Name</label>
-              <input
-                type="text"
-                name="lastName"
-                value={form.lastName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                className="w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 border-gray-600"
-                placeholder="Last Name"
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Email</label>
-            <input
-              type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${
-                touched.email && !validateEmail(form.email)
-                  ? "border-[#FF5F5F]"
-                  : "border-gray-600"
-              }`}
-              placeholder="Enter your email"
-            />
-            {touched.email && !validateEmail(form.email) && (
-              <div className="text-xs text-[#FF5F5F] mt-1 animate-pulse">
-                Please enter a valid email address.
-              </div>
-            )}
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={form.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${
-                touched.password && !allPasswordValid
-                  ? "border-[#FF5F5F]"
-                  : "border-gray-600"
-              }`}
-              placeholder="Create a password"
-            />
-            {/* Password rules UI removed, logic retained */}
-          </div>
-          <div>
-            <label className="block text-xs font-medium text-gray-300 mb-1">Confirm Password</label>
-            <input
-              type="password"
-              name="confirmPassword"
-              value={form.confirmPassword}
-              onChange={handleChange}
-              onBlur={handleBlur}
-              className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${
-                touched.confirmPassword && !confirmPasswordValid
-                  ? "border-[#FF5F5F]"
-                  : "border-gray-600"
-              }`}
-              placeholder="Re-enter your password"
-            />
-            <AnimatePresence>
-              {touched.confirmPassword && !confirmPasswordValid && (
-                <motion.div
-                  initial={{ opacity: 0, y: -8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -8 }}
-                  className="text-xs text-[#FF5F5F] mt-1 bg-[#2a0e1c] px-3 py-2 rounded shadow-lg border border-[#FF5F5F]/40"
-                  role="alert"
+        <Formik
+          initialValues={{
+            firstName: "",
+            lastName: "",
+            email: "",
+            password: "",
+            confirmPassword: "",
+          }}
+          validationSchema={SignUpSchema}
+          onSubmit={async (values, { resetForm, setSubmitting, setErrors }) => {
+            setSuccess(false);
+            setShake(false);
+            try {
+              await axios.post("http://localhost:5000/user/signup", {
+                name: `${values.firstName} ${values.lastName}`,
+                email: values.email,
+                password: values.password,
+              });
+              setSuccess(true);
+              resetForm();
+            } catch (error) {
+              setShake(true);
+              setSuccess(false);
+              console.error("Signup error:", error.response?.data || error.message);
+              if (error.response && error.response.data && error.response.data.message) {
+                setErrors({ email: error.response.data.message });
+              }
+              setTimeout(() => setShake(false), 600);
+            } finally {
+              setSubmitting(false);
+            }
+          }}
+        >
+          {({ errors, touched, isSubmitting, values }) => {
+            const passwordChecks = passwordRules.map((rule) => rule.test(values.password));
+            return (
+              <Form className="space-y-5">
+                <div className="flex gap-3">
+                  <div className="w-1/2">
+                    <label className="block text-xs font-medium text-gray-300 mb-1">First Name</label>
+                    <Field
+                      type="text"
+                      name="firstName"
+                      className="w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 border-gray-600"
+                      placeholder="First Name"
+                    />
+                    <ErrorMessage name="firstName" component="div" className="text-xs text-[#FF5F5F] mt-1" />
+                  </div>
+                  <div className="w-1/2">
+                    <label className="block text-xs font-medium text-gray-300 mb-1">Last Name</label>
+                    <Field
+                      type="text"
+                      name="lastName"
+                      className="w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 border-gray-600"
+                      placeholder="Last Name"
+                    />
+                    <ErrorMessage name="lastName" component="div" className="text-xs text-[#FF5F5F] mt-1" />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-300 mb-1">Email</label>
+                  <Field
+                    type="email"
+                    name="email"
+                    className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${touched.email && errors.email ? "border-[#FF5F5F]" : "border-gray-600"}`}
+                    placeholder="Enter your email"
+                  />
+                  <ErrorMessage name="email" component="div" className="text-xs text-[#FF5F5F] mt-1 animate-pulse" />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-300 mb-1">Password</label>
+                  <Field
+                    type="password"
+                    name="password"
+                    className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${touched.password && errors.password ? "border-[#FF5F5F]" : "border-gray-600"}`}
+                    placeholder="Create a password"
+                  />
+                  <ErrorMessage name="password" component="div" className="text-xs text-[#FF5F5F] mt-1" />
+                  <div className="mt-2 space-y-1">
+                    {passwordRules.map((rule, idx) => (
+                      <div key={rule.label} className={`text-xs flex items-center gap-2 ${values.password ? (passwordChecks[idx] ? "text-[#00FFB2]" : "text-[#FF5F5F]") : "text-gray-400"}`}>
+                        <span className="inline-block w-2 h-2 rounded-full" style={{ background: values.password ? (passwordChecks[idx] ? "#00FFB2" : "#FF5F5F") : "#888" }}></span>
+                        {rule.label}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-300 mb-1">Confirm Password</label>
+                  <Field
+                    type="password"
+                    name="confirmPassword"
+                    className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${touched.confirmPassword && errors.confirmPassword ? "border-[#FF5F5F]" : "border-gray-600"}`}
+                    placeholder="Re-enter your password"
+                  />
+                  <ErrorMessage name="confirmPassword" component="div" className="text-xs text-[#FF5F5F] mt-1 bg-[#2a0e1c] px-3 py-2 rounded shadow-lg border border-[#FF5F5F]/40" />
+                </div>
+                <motion.button
+                  whileHover={{ scale: 1.04, boxShadow: "0 0 16px #A259FF" }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-[#8A4FFF] to-[#A259FF] hover:from-[#A259FF] hover:to-[#8A4FFF] text-white py-3 rounded-lg font-semibold transition-all duration-200 mt-2 shadow-lg"
+                  disabled={isSubmitting}
                 >
-                  <span className="font-semibold">Alert:</span> Passwords do not match.
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-          <motion.button
-            whileHover={{ scale: 1.04, boxShadow: "0 0 16px #A259FF" }}
-            whileTap={{ scale: 0.98 }}
-            type="submit"
-            className="w-full bg-gradient-to-r from-[#8A4FFF] to-[#A259FF] hover:from-[#A259FF] hover:to-[#8A4FFF] text-white py-3 rounded-lg font-semibold transition-all duration-200 mt-2 shadow-lg"
-          >
-            Sign Up
-          </motion.button>
-        </form>
+                  Sign Up
+                </motion.button>
+                <AnimatePresence>
+                  {success && (
+                    <motion.div
+                      initial={{ y: -30, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: -30, opacity: 0 }}
+                      className="mb-4 px-4 py-2 bg-[#00FFB2]/10 border border-[#00FFB2]/20 text-[#00FFB2] rounded-md text-xs text-center font-semibold shadow"
+                    >
+                      Signed up successfully!
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </Form>
+            );
+          }}
+        </Formik>
         <p className="mt-6 text-xs text-center text-gray-400">
           Already have an account?{' '}
           <Link href="/login" className="text-purple-400 hover:underline font-medium">
