@@ -14,7 +14,12 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 // ========== ROUTES ==========
 
 // Auth routes (Signup & Login) mounted at /user
-app.use('/user', require('./routes/authRoutes'));
+app.use('/user', require('./routers/userRouter'));
+
+// Admin routes mounted at /admin
+app.use('/admin', require('./routers/adminRouter'));
+
+app.use('/api/docs', require('./routers/docRouter')); 
 
 // Test route (optional)
 app.get('/', (req, res) => {

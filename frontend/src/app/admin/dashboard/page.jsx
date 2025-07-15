@@ -1,9 +1,10 @@
 "use client";
-import { useState } from "react";
-import AdminSidebar from "../../../Components/AdminSidebar";
-import AdminNavbar from "../../../Components/AdminNavbar";
+import { useState, useEffect } from "react";
+import AdminSidebar from "../../../components/AdminSidebar";
+import AdminNavbar from "../../../components/AdminNavbar";
 import { motion } from "framer-motion";
 import { FaUsers, FaFileAlt, FaCogs, FaHourglassHalf } from "react-icons/fa";
+import axios from "axios";
 
 function DashboardCard({ label, value, icon, color, delay = 0 }) {
   return (
@@ -22,30 +23,68 @@ function DashboardCard({ label, value, icon, color, delay = 0 }) {
   );
 }
 
-export default function AdminDashboardPage(props) {
+export default function AdminDashboardPage() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    newUsers: 0,
+    adminUsers: 0,
+    activeSessions: 0,
+    docsGenerated: 0,
+    pendingApprovals: 0
+  });
+  const [loading, setLoading] = useState(true);
+  
   const sidebarWidth = 240;
   const navbarHeight = 64; // px, adjust if your AdminNavbar height changes
+
+  useEffect(() => {
+    fetchDashboardStats();
+  }, []);
+
+  const fetchDashboardStats = async () => {
+    try {
+      const token = localStorage.getItem('adminToken');
+      const response = await axios.get('http://localhost:5000/admin/dashboard/stats', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      if (response.data.success) {
+        setStats(response.data.stats);
+      }
+    } catch (error) {
+      console.error('Error fetching dashboard stats:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const metrics = [
     {
       label: "Total Users",
-      value: props.totalUsers ?? "1,245",
-      icon: <FaUsers className="text-3xl text-[#3B82F6]" />, color: "from-[#3B82F6]/80 to-[#6366F1]/80",
+      value: stats.totalUsers.toLocaleString(),
+      icon: <FaUsers className="text-3xl text-[#3B82F6]" />, 
+      color: "from-[#3B82F6]/80 to-[#6366F1]/80",
     },
     {
-      label: "Docs Generated",
-      value: props.docsGenerated ?? "3,875",
-      icon: <FaFileAlt className="text-3xl text-[#6366F1]" />, color: "from-[#6366F1]/80 to-[#3B82F6]/80",
+      label: "New Users (30d)",
+      value: stats.newUsers.toLocaleString(),
+      icon: <FaFileAlt className="text-3xl text-[#6366F1]" />, 
+      color: "from-[#6366F1]/80 to-[#3B82F6]/80",
     },
     {
       label: "Active Sessions",
-      value: props.activeSessions ?? "89",
-      icon: <FaCogs className="text-3xl text-[#3B82F6]" />, color: "from-[#3B82F6]/80 to-[#6366F1]/80",
+      value: stats.activeSessions.toLocaleString(),
+      icon: <FaCogs className="text-3xl text-[#3B82F6]" />, 
+      color: "from-[#3B82F6]/80 to-[#6366F1]/80",
     },
     {
-      label: "Pending Approvals",
-      value: props.pendingApprovals ?? "12",
-      icon: <FaHourglassHalf className="text-3xl text-[#6366F1]" />, color: "from-[#6366F1]/80 to-[#3B82F6]/80",
+      label: "Admin Users",
+      value: stats.adminUsers.toLocaleString(),
+      icon: <FaHourglassHalf className="text-3xl text-[#6366F1]" />, 
+      color: "from-[#6366F1]/80 to-[#3B82F6]/80",
     },
   ];
   return (
@@ -65,8 +104,21 @@ export default function AdminDashboardPage(props) {
           >
             Admin Dashboard
           </motion.h1>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {metrics.map((metric, idx) => (
+          {loading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[1, 2, 3, 4].map((idx) => (
+                <div key={idx} className="rounded-2xl bg-gradient-to-br from-[#232946]/80 to-[#181C2A]/80 border border-white/10 shadow-xl p-7 flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gray-600 rounded-lg animate-pulse"></div>
+                  <div className="flex-1">
+                    <div className="h-4 bg-gray-600 rounded animate-pulse mb-2"></div>
+                    <div className="h-8 bg-gray-600 rounded animate-pulse"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {metrics.map((metric, idx) => (
               <motion.div
                 key={metric.label}
                 whileHover={{ scale: 1.045 }}
@@ -80,7 +132,8 @@ export default function AdminDashboardPage(props) {
                 </div>
               </motion.div>
             ))}
-          </div>
+            </div>
+          )}
         </main>
       </div>
     </div>

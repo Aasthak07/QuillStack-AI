@@ -101,7 +101,7 @@ export default function SignUpPage() {
             setSuccess(false);
             setShake(false);
             try {
-              await axios.post("http://localhost:5000/user/signup", {
+              await axios.post("http://localhost:5000/user/add", {
                 name: `${values.firstName} ${values.lastName}`,
                 email: values.email,
                 password: values.password,
@@ -111,10 +111,21 @@ export default function SignUpPage() {
             } catch (error) {
               setShake(true);
               setSuccess(false);
-              console.error("Signup error:", error.response?.data || error.message);
-              if (error.response && error.response.data && error.response.data.message) {
-                setErrors({ email: error.response.data.message });
+              console.error("Signup error:", error);
+              
+              // Handle different types of errors
+              if (error.response) {
+                // Server responded with error status
+                const errorMessage = error.response.data?.message || 'Signup failed. Please try again.';
+                setErrors({ email: errorMessage });
+              } else if (error.request) {
+                // Network error - no response received
+                setErrors({ email: 'Network error. Please check your connection and try again.' });
+              } else {
+                // Other error
+                setErrors({ email: 'An unexpected error occurred. Please try again.' });
               }
+              
               setTimeout(() => setShake(false), 600);
             } finally {
               setSubmitting(false);

@@ -7,8 +7,8 @@ import Link from "next/link";
 
 const navLinks = [
   { name: "Home", href: "/" },
-  { name: "Generate Docs", href: "/generate" },
-  { name: "My Projects", href: "/projects" },
+  { name: "Generate Docs", href: "/generate-docs" },
+  { name: "My Docs", href: "/my-docs" },
   { name: "About Us", href: "/about" },
   { name: "Contact", href: "/contact" },
   // Optional extras:
@@ -98,7 +98,7 @@ export default function Navbar({ user, onLogout }) {
                 Login
               </Link>
               <Link
-                href="/Sign-up"
+                href="/sign-up"
                 className="ml-2 px-4 py-2 rounded border border-[#8A4FFF] text-[#8A4FFF] font-semibold hover:bg-[#8A4FFF] hover:text-white transition"
               >
                 Signup
@@ -192,7 +192,7 @@ export default function Navbar({ user, onLogout }) {
                       Login
                     </Link>
                     <Link
-                      href="/Sign-up"
+                      href="/sign-up"
                       className="w-full px-4 py-2 rounded border border-[#8A4FFF] text-[#8A4FFF] font-semibold hover:bg-[#8A4FFF] hover:text-white transition text-center"
                       onClick={() => setMobileOpen(false)}
                     >

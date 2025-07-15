@@ -16,7 +16,7 @@ export default function LoginPage() {
   const router = useRouter();
   // const { login } = useAuth(); // Uncomment if you have AuthContext
 
-  // 3D tilt logic
+  // // 3D tilt logic
   const [cardPos, setCardPos] = useState({ x: 0, y: 0 });
   const handleMouseMove = (e) => {
     const card = e.currentTarget;
@@ -50,11 +50,13 @@ export default function LoginPage() {
       setError("");
       setIsLoading(true);
       try {
-        const response = await axios.post("http://localhost:5000/login", {
+        const response = await axios.post("http://localhost:5000/user/authenticate", {
           email: values.username,
           password: values.password,
         });
         setIsLoading(false);
+        localStorage.setItem('userToken', response.data.token);
+        // localStorage.setItem('userData', JSON.stringify(response.data.user));
         // login(response.data.token); // Uncomment if you have AuthContext
         router.push("/");
       } catch (err) {
@@ -135,9 +137,8 @@ export default function LoginPage() {
               value={formik.values.username}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200 ${
-                formik.touched.username && formik.errors.username ? "border-red-500" : "border-gray-600"
-              }`}
+              className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200 ${formik.touched.username && formik.errors.username ? "border-red-500" : "border-gray-600"
+                }`}
               placeholder="Enter your email"
               autoComplete="username"
             />
@@ -154,9 +155,8 @@ export default function LoginPage() {
               value={formik.values.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200 ${
-                formik.touched.password && formik.errors.password ? "border-red-500" : "border-gray-600"
-              }`}
+              className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200 ${formik.touched.password && formik.errors.password ? "border-red-500" : "border-gray-600"
+                }`}
               placeholder="Enter your password"
               autoComplete="current-password"
             />
@@ -199,7 +199,7 @@ export default function LoginPage() {
 
         <p className="mt-6 text-xs text-center text-gray-400">
           {`Don't have an account? `}
-          <Link href="/Sign-up" className="text-purple-400 hover:underline font-medium">
+          <Link href="/sign-up" className="text-purple-400 hover:underline font-medium">
             Sign up
           </Link>
         </p>
