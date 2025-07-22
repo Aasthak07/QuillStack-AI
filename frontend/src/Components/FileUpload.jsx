@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaCheckCircle, FaTimesCircle, FaUpload, FaFileAlt, FaTimes } from "react-icons/fa";
 import toast, { Toaster } from "react-hot-toast";
 
-// Allowed file types
 const ALLOWED_TYPES = [
   "js", "jsx", "ts", "tsx", "py", "java", "html", "css"
 ];
@@ -21,7 +20,6 @@ export default function FileUpload({ onUploadSuccess }) {
   const [error, setError] = useState("");
   const inputRef = useRef();
 
-  // File validation
   const validateFile = (file) => {
     if (!file) return false;
     const ext = getFileExt(file.name).trim();
@@ -38,7 +36,6 @@ export default function FileUpload({ onUploadSuccess }) {
     return true;
   };
 
-  // Handle file selection
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (validateFile(file)) {
@@ -48,7 +45,6 @@ export default function FileUpload({ onUploadSuccess }) {
     }
   };
 
-  // Handle drag events
   const handleDragOver = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -71,13 +67,11 @@ export default function FileUpload({ onUploadSuccess }) {
     }
   };
 
-  // Remove selected file
   const handleRemoveFile = () => {
     setSelectedFile(null);
     setError("");
   };
 
-  // Upload logic
   const handleUpload = async () => {
     if (!selectedFile) return;
     setIsUploading(true);
@@ -91,8 +85,7 @@ export default function FileUpload({ onUploadSuccess }) {
       });
       const data = await res.json();
       if (data.success && data.data) {
-        toast.success(`✅ Docs generated successfully using ${data.modelUsed}`);
-        console.log("📄 Generated Docs:", data.data);
+        toast.success("✅ Docs Generated Successfully!");
         if (onUploadSuccess) {
           onUploadSuccess(data.data);
         }
@@ -108,13 +101,12 @@ export default function FileUpload({ onUploadSuccess }) {
     }
   };
 
-  // File preview (name & size)
   const filePreview = selectedFile && (
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 10 }}
-      className="flex items-center gap-3 bg-[#181C2A] border border-[#6366F1]/30 rounded-lg px-4 py-2 mt-3 shadow"
+      className="flex items-center gap-3 bg-[#181C2A] text-amber-200 border border-[#6366F1]/30 rounded-lg px-4 py-2 mt-3 shadow"
     >
       <FaFileAlt className="text-[#8A4FFF] text-lg" />
       <span className="text-sm text-white truncate max-w-[120px]">{selectedFile.name}</span>
@@ -132,7 +124,6 @@ export default function FileUpload({ onUploadSuccess }) {
 
   return (
     <div className="w-full max-w-md mx-auto">
-      {/* Toast container (place once in your app, e.g. _app.js or layout.jsx) */}
       <Toaster position="top-right" toastOptions={{
         style: {
           background: "#181C2A",
@@ -143,8 +134,6 @@ export default function FileUpload({ onUploadSuccess }) {
         success: { style: { background: "#232946", color: "#A259FF" } },
         error: { style: { background: "#232946", color: "#FF6B6B" } },
       }} />
-
-      {/* Dropzone */}
       <motion.div
         className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl px-6 py-10 bg-gradient-to-br from-[#181C2A] to-[#232946] shadow-xl transition-all duration-300 cursor-pointer select-none relative ${
           isDragActive ? "border-[#A259FF] bg-[#232946] scale-105 shadow-2xl" : "border-[#6366F1]/40"
@@ -181,8 +170,6 @@ export default function FileUpload({ onUploadSuccess }) {
           </motion.span>
         )}
       </motion.div>
-
-      {/* Error message (animated) */}
       <AnimatePresence>
         {error && (
           <motion.div
@@ -195,8 +182,6 @@ export default function FileUpload({ onUploadSuccess }) {
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Upload button */}
       <motion.button
         className={`w-full mt-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-[#8A4FFF] to-[#6366F1] shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#A259FF]/40`}
         onClick={handleUpload}
@@ -215,7 +200,7 @@ export default function FileUpload({ onUploadSuccess }) {
           </>
         ) : (
           <>
-            <FaUpload /> Generate Docs
+            <FaUpload /> Upload & Generate Docs
           </>
         )}
       </motion.button>

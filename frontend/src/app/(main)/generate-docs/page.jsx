@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import FileUpload from "@/components/FileUpload";
+import ReactMarkdown from "react-markdown";
 
 export default function GenerateDocsPage() {
-  const [generatedDocs, setGeneratedDocs] = useState("");
+  const [docs, setDocs] = useState("");
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#0B0F1C] relative overflow-hidden">
@@ -26,7 +27,7 @@ export default function GenerateDocsPage() {
         ></div>
       </div>
       <motion.div
-        className="relative z-10 w-full max-w-xl bg-white/5 backdrop-blur-md rounded-2xl px-8 py-8 shadow-2xl border border-fuchsia-700/20"
+        className="relative z-10 w-full max-w-3xl bg-white/5 backdrop-blur-md rounded-2xl px-8 py-8 shadow-2xl border border-fuchsia-700/20"
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7 }}
@@ -47,19 +48,17 @@ export default function GenerateDocsPage() {
         >
           Upload your code file to let <span className="text-fuchsia-400 font-semibold">QuillStackAI</span> generate documentation automatically
         </motion.p>
-        <FileUpload onUploadSuccess={setGeneratedDocs} />
-
-        {/* Generated Docs Display */}
+        <FileUpload onUploadSuccess={setDocs} />
         <AnimatePresence>
-          {generatedDocs && (
+          {docs && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.5 }}
-              className="mt-8 bg-[#181C2A] border border-[#6366F1]/30 rounded-xl p-6 shadow max-h-96 overflow-y-auto relative"
+              className="mt-8 text-white bg-[#181C2A] border border-[#6366F1]/30 rounded-xl p-6 shadow max-h-96 overflow-y-auto relative prose prose-invert prose-fuchsia dark:prose-invert dark:prose-fuchsia"
             >
-              <pre className="whitespace-pre-wrap text-white text-sm font-mono">{generatedDocs}</pre>
+              <ReactMarkdown>{docs}</ReactMarkdown>
             </motion.div>
           )}
         </AnimatePresence>
