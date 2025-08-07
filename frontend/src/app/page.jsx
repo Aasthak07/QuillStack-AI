@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { FaCheckCircle, FaCode, FaSyncAlt, FaUsers, FaCloudUploadAlt, FaMagic, FaEdit, FaShareAlt, FaGithub, FaDiscord, FaLinkedin, FaUserTie, FaUserCog, FaUserEdit, FaUserShield } from "react-icons/fa";
 
@@ -40,8 +39,7 @@ export default function LandingPage() {
 
   return (
     <div className="bg-[#0B0F1C] min-h-screen text-[#EAEAEA] font-sans">
-      <Navbar user={null} />
-      <div className="mt-20">
+      <div className="mt-0">
         {/* Hero Section */}
         <section className="max-w-6xl mx-auto px-4 pt-12 pb-20 flex flex-col md:flex-row items-center gap-10 md:gap-16">
           <motion.div
@@ -50,6 +48,8 @@ export default function LandingPage() {
             transition={{ duration: 0.7 }}
             className="flex-1"
           >
+
+            
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-5 leading-tight">
               The Smarter Way to <span className="text-[#8A4FFF]">Generate Documentation</span>
             </h1>
@@ -298,7 +298,6 @@ export default function LandingPage() {
         </section>
         
 
-        {/* Footer */}
         <Footer />
       </div>
     </div>
