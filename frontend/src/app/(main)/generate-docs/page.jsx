@@ -11,11 +11,16 @@ export default function GenerateDocsPage() {
   const [error, setError] = useState("");
 
   const token = localStorage.getItem("token");
-  if (!token) return <div>Unauthorized</div>;
 
   const handleUpload = async (e) => {
     e.preventDefault();
     setError("");
+    
+    if (!token) {
+      setError("Please login first to generate documentation");
+      return;
+    }
+    
     const formData = new FormData();
     formData.append("file", file);
 
@@ -56,6 +61,8 @@ export default function GenerateDocsPage() {
           }}
         ></div>
       </div>
+
+
       <motion.div
         className="relative z-10 w-full max-w-3xl bg-white/5 backdrop-blur-md rounded-2xl px-8 py-8 shadow-2xl border border-fuchsia-700/20"
         initial={{ opacity: 0, y: 40 }}
@@ -78,20 +85,7 @@ export default function GenerateDocsPage() {
         >
           Upload your code file to let <span className="text-fuchsia-400 font-semibold">QuillStackAI</span> generate documentation automatically
         </motion.p>
-        <form onSubmit={handleUpload} className="flex flex-col gap-4">
-          <input
-            type="file"
-            onChange={e => setFile(e.target.files[0])}
-            required
-            className="px-4 py-2 rounded-lg border border-fuchsia-700 bg-[#181C2A] text-white placeholder:text-fuchsia-400 focus:ring-2 focus:ring-fuchsia-700 focus:outline-none"
-          />
-          <button
-            type="submit"
-            className="px-4 py-2 bg-fuchsia-700 hover:bg-fuchsia-800 text-white rounded-lg font-semibold shadow transition"
-          >
-            Upload & Generate
-          </button>
-        </form>
+        <FileUpload onUploadSuccess={setDoc} />
         {error && <div className="mt-4 text-red-400 text-center">{error}</div>}
         <AnimatePresence>
           {doc && (

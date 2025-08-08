@@ -74,6 +74,14 @@ export default function FileUpload({ onUploadSuccess }) {
 
   const handleUpload = async () => {
     if (!selectedFile) return;
+    
+    const token = localStorage.getItem("token") || localStorage.getItem("userToken");
+    if (!token) {
+      setError("Please login first to generate documentation");
+      toast.error("Please login first to generate documentation");
+      return;
+    }
+    
     setIsUploading(true);
     setError("");
     const formData = new FormData();
@@ -81,6 +89,7 @@ export default function FileUpload({ onUploadSuccess }) {
     try {
       const res = await fetch("http://localhost:5000/api/docs/upload", {
         method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
       const data = await res.json();
