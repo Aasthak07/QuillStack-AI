@@ -3,6 +3,7 @@ const multer = require("multer");
 const fs = require("fs");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const docsControllers = require('../controllers/docsControllers');
+const { authMiddleware } = require('../middleware/authMiddleware');
 
 const router = express.Router();
 
@@ -14,7 +15,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const PRIMARY_MODEL = "gemini-2.5-pro";
 const FALLBACK_MODEL = "gemini-2.0-flash";
 
-router.post("/upload", upload.single("file"), async (req, res) => {
+router.post("/upload", authMiddleware, upload.single("file"), async (req, res) => {
   if (!req.file) {
     return res.status(400).json({ success: false, message: "No file uploaded" });
   }

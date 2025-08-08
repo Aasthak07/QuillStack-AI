@@ -8,7 +8,7 @@ import Link from "next/link";
 const navLinks = [
   { name: "Home", href: "/" },
   { name: "Generate Docs", href: "/generate-docs" },
-  { name: "My Docs", href: "/my-docs" },
+  { name: "My Docs", href: "/mydocs" },
   { name: "About Us", href: "/about" },
   { name: "Contact", href: "/contact" },
   // Optional extras:
@@ -83,12 +83,20 @@ export default function Navbar({ user, onLogout }) {
           ))}
           {/* Auth Buttons */}
           {user ? (
-            <button
-              onClick={onLogout}
-              className="ml-4 px-4 py-2 rounded bg-[#8A4FFF] text-white font-semibold hover:bg-[#A259FF] transition"
-            >
-              Logout
-            </button>
+            <div className="ml-4 flex items-center gap-3">
+              <div className="flex items-center gap-2 text-white">
+                <div className="w-8 h-8 bg-[#8A4FFF] rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                  {user.initials}
+                </div>
+                <span className="text-sm font-medium">{user.name}</span>
+              </div>
+              <button
+                onClick={onLogout}
+                className="px-3 py-1 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition text-sm"
+              >
+                Logout
+              </button>
+            </div>
           ) : (
             <>
               <Link

@@ -18,6 +18,7 @@ export default function FileUpload({ onUploadSuccess }) {
   const [isDragActive, setIsDragActive] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState("");
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const inputRef = useRef();
 
   const validateFile = (file) => {
@@ -39,6 +40,13 @@ export default function FileUpload({ onUploadSuccess }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (validateFile(file)) {
+      // Check authentication when file is selected
+      const token = localStorage.getItem("token") || localStorage.getItem("userToken");
+      if (!token) {
+        setShowLoginModal(true);
+        setSelectedFile(null);
+        return;
+      }
       setSelectedFile(file);
     } else {
       setSelectedFile(null);
@@ -61,6 +69,13 @@ export default function FileUpload({ onUploadSuccess }) {
     setIsDragActive(false);
     const file = e.dataTransfer.files[0];
     if (validateFile(file)) {
+      // Check authentication when file is dropped
+      const token = localStorage.getItem("token") || localStorage.getItem("userToken");
+      if (!token) {
+        setShowLoginModal(true);
+        setSelectedFile(null);
+        return;
+      }
       setSelectedFile(file);
     } else {
       setSelectedFile(null);
@@ -77,8 +92,7 @@ export default function FileUpload({ onUploadSuccess }) {
     
     const token = localStorage.getItem("token") || localStorage.getItem("userToken");
     if (!token) {
-      setError("Please login first to generate documentation");
-      toast.error("Please login first to generate documentation");
+      setShowLoginModal(true);
       return;
     }
     
@@ -92,6 +106,13 @@ export default function FileUpload({ onUploadSuccess }) {
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
       });
+      
+      // Check for 401 Unauthorized
+      if (res.status === 401) {
+        setShowLoginModal(true);
+        return;
+      }
+      
       const data = await res.json();
       if (data.success && data.data) {
         toast.success("✅ Docs Generated Successfully!");
@@ -103,8 +124,11 @@ export default function FileUpload({ onUploadSuccess }) {
         throw new Error(data.message || "No docs generated");
       }
     } catch (error) {
-      setError(error.message || "Upload failed: Network Error");
-      toast.error("Upload failed: " + (error.message || "Network Error"));
+      // Don't show error if we're showing login modal
+      if (!showLoginModal) {
+        setError(error.message || "Upload failed: Network Error");
+        toast.error("Upload failed: " + (error.message || "Network Error"));
+      }
     } finally {
       setIsUploading(false);
     }
@@ -143,6 +167,71 @@ export default function FileUpload({ onUploadSuccess }) {
         success: { style: { background: "#232946", color: "#A259FF" } },
         error: { style: { background: "#232946", color: "#FF6B6B" } },
       }} />
+
+      {/* Login Required Modal */}
+      <AnimatePresence>
+        {showLoginModal && (
+          <motion.div
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowLoginModal(false)}
+          >
+            <motion.div
+              className="bg-white/10 backdrop-blur-md rounded-2xl px-8 py-6 shadow-2xl border border-fuchsia-700/20 max-w-md mx-4"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ duration: 0.3 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="text-center">
+                <div className="w-12 h-12 bg-fuchsia-700/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg
+                    className="w-6 h-6 text-fuchsia-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                    />
+                  </svg>
+                </div>
+                <h3 className="text-xl font-bold text-white mb-2">Login Required</h3>
+                <p className="text-fuchsia-200 mb-6">
+                  Please login first to generate documentation with{" "}
+                  <span className="text-fuchsia-400 font-semibold">QuillStackAI</span>
+                </p>
+                <div className="space-y-3">
+                  <button
+                    onClick={() => window.location.href = '/login'}
+                    className="w-full px-4 py-2 bg-fuchsia-700 hover:bg-fuchsia-800 text-white rounded-lg font-semibold transition-all duration-200"
+                  >
+                    Go to Login
+                  </button>
+                  <button
+                    onClick={() => window.location.href = '/sign-up'}
+                    className="w-full px-4 py-2 bg-transparent border border-fuchsia-700 hover:bg-fuchsia-700/10 text-fuchsia-300 rounded-lg font-semibold transition-all duration-200"
+                  >
+                    Create Account
+                  </button>
+                  <button
+                    onClick={() => setShowLoginModal(false)}
+                    className="w-full px-4 py-2 bg-transparent text-gray-400 hover:text-white rounded-lg font-semibold transition-all duration-200"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
       <motion.div
         className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl px-6 py-10 bg-gradient-to-br from-[#181C2A] to-[#232946] shadow-xl transition-all duration-300 cursor-pointer select-none relative ${
           isDragActive ? "border-[#A259FF] bg-[#232946] scale-105 shadow-2xl" : "border-[#6366F1]/40"

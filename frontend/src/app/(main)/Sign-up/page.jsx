@@ -102,7 +102,6 @@ export default function SignUpPage() {
             setShake(false);
             try {
               await axios.post("http://localhost:5000/user/add", {
-                name: `${values.firstName} ${values.lastName}`,
                 email: values.email,
                 password: values.password,
               });
