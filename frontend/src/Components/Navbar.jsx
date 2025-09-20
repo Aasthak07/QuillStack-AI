@@ -4,6 +4,7 @@ import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { useAuth } from "@/context/AuthContext";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -19,7 +20,8 @@ const navLinks = [
   // { name: "Try Demo", href: "/demo" },
 ];
 
-export default function Navbar({ user, onLogout }) {
+export default function Navbar() {
+  const { user, logout, isAuthenticated } = useAuth();
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -82,16 +84,16 @@ export default function Navbar({ user, onLogout }) {
             </motion.div>
           ))}
           {/* Auth Buttons */}
-          {user ? (
+          {isAuthenticated() ? (
             <div className="ml-4 flex items-center gap-3">
               <div className="flex items-center gap-2 text-white">
                 <div className="w-8 h-8 bg-[#8A4FFF] rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                  {user.initials}
+                  {user?.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
                 </div>
-                <span className="text-sm font-medium">{user.name}</span>
+                <span className="text-sm font-medium">{user?.name || user?.email || 'User'}</span>
               </div>
               <button
-                onClick={onLogout}
+                onClick={logout}
                 className="px-3 py-1 rounded bg-red-600 text-white font-semibold hover:bg-red-700 transition text-sm"
               >
                 Logout
@@ -180,11 +182,11 @@ export default function Navbar({ user, onLogout }) {
                 ))}
               </div>
               <div className="mt-8 flex flex-col gap-3">
-                {user ? (
+                {isAuthenticated() ? (
                   <button
                     onClick={() => {
                       setMobileOpen(false);
-                      onLogout && onLogout();
+                      logout();
                     }}
                     className="w-full px-4 py-2 rounded bg-[#8A4FFF] text-white font-semibold hover:bg-[#A259FF] transition"
                   >

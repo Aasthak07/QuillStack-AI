@@ -1,11 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
-import axios from "axios";
+import { useAuth } from "@/context/AuthContext";
+import { useAuthForm } from "@/hooks/useAuthForm";
+import { getSignupErrors } from "@/utils/validators";
 
 const passwordRules = [
   { label: "Minimum 8 characters", test: (v) => v.length >= 8 },
@@ -15,27 +16,26 @@ const passwordRules = [
   { label: "One special character", test: (v) => /[@!#%&*^$]/.test(v) },
 ];
 
-const SignUpSchema = Yup.object().shape({
-  firstName: Yup.string().required("First name is required"),
-  lastName: Yup.string().required("Last name is required"),
-  email: Yup.string().email("Invalid email address").required("Email is required"),
-  password: Yup.string()
-    .required("Password is required")
-    .min(8, "Minimum 8 characters")
-    .matches(/[A-Z]/, "One uppercase letter")
-    .matches(/[a-z]/, "One lowercase letter")
-    .matches(/[0-9]/, "One number")
-    .matches(/[@!#%&*^$]/, "One special character"),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password'), null], 'Passwords must match')
-    .required('Please confirm your password'),
-});
 
 export default function SignUpPage() {
   const [success, setSuccess] = useState(false);
   const [shake, setShake] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [cardPos, setCardPos] = useState({ x: 0, y: 0 });
+  const router = useRouter();
+  const { signup } = useAuth();
+  
+  const { values, errors, isSubmitting, handleChange, handleSubmit, setErrors } = useAuthForm(
+    {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    getSignupErrors
+  );
+  
+  const passwordChecks = passwordRules.map((rule) => rule.test(values.password || ""));
 
   const handleMouseMove = (e) => {
     const card = e.currentTarget;
@@ -47,6 +47,59 @@ export default function SignUpPage() {
     const rotateX = ((y - centerY) / centerY) * 10;
     const rotateY = ((x - centerX) / centerX) * -10;
     setCardPos({ x: rotateX, y: rotateY });
+  };
+  
+  const onSubmit = async (formData) => {
+    setSuccess(false);
+    setShake(false);
+    
+    try {
+      const result = await signup({
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      });
+      
+      if (result.success) {
+        setSuccess(true);
+        // Redirect to login page after 2 seconds
+        setTimeout(() => {
+          router.push('/login');
+        }, 2000);
+      } else {
+        setShake(true);
+        setErrors({ form: result.error || 'Signup failed. Please try again.' });
+        setTimeout(() => setShake(false), 600);
+      }
+    } catch (error) {
+      setShake(true);
+      setErrors({ form: 'An unexpected error occurred. Please try again.' });
+      console.error('Signup error:', error);
+      setTimeout(() => setShake(false), 600);
+    }
+  };
+  
+  // Wrap handleSubmit to work with our form
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    const formData = {
+      name: values.name,
+      email: values.email,
+      password: values.password,
+      confirmPassword: values.confirmPassword
+    };
+    
+    // Manually validate the form
+    const formErrors = getSignupErrors(formData);
+    if (Object.keys(formErrors).length > 0) {
+      setErrors(formErrors);
+      setShake(true);
+      setTimeout(() => setShake(false), 600);
+      return;
+    }
+    
+    // If no errors, proceed with submission
+    onSubmit(formData);
   };
   const handleMouseLeave = () => {
     setCardPos({ x: 0, y: 0 });
@@ -88,94 +141,48 @@ export default function SignUpPage() {
         <p className="text-xs text-gray-400 mb-6 text-center">
           Create your account to get started
         </p>
-        <Formik
-          initialValues={{
-            firstName: "",
-            lastName: "",
-            email: "",
-            password: "",
-            confirmPassword: "",
-          }}
-          validationSchema={SignUpSchema}
-          onSubmit={async (values, { resetForm, setSubmitting, setErrors }) => {
-            setSuccess(false);
-            setShake(false);
-            try {
-              await axios.post("http://localhost:5000/user/add", {
-                email: values.email,
-                password: values.password,
-              });
-              setSuccess(true);
-              resetForm();
-            } catch (error) {
-              setShake(true);
-              setSuccess(false);
-              console.error("Signup error:", error);
-              
-              // Handle different types of errors
-              if (error.response) {
-                // Server responded with error status
-                const errorMessage = error.response.data?.message || 'Signup failed. Please try again.';
-                setErrors({ email: errorMessage });
-              } else if (error.request) {
-                // Network error - no response received
-                setErrors({ email: 'Network error. Please check your connection and try again.' });
-              } else {
-                // Other error
-                setErrors({ email: 'An unexpected error occurred. Please try again.' });
-              }
-              
-              setTimeout(() => setShake(false), 600);
-            } finally {
-              setSubmitting(false);
-            }
-          }}
-        >
-          {({ errors, touched, isSubmitting, values }) => {
-            const passwordChecks = passwordRules.map((rule) => rule.test(values.password));
-            return (
-              <Form className="space-y-5">
-                <div className="flex gap-3">
-                  <div className="w-1/2">
-                    <label className="block text-xs font-medium text-gray-300 mb-1">First Name</label>
-                    <Field
-                      type="text"
-                      name="firstName"
-                      className="w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 border-gray-600"
-                      placeholder="First Name"
-                    />
-                    <ErrorMessage name="firstName" component="div" className="text-xs text-[#FF5F5F] mt-1" />
-                  </div>
-                  <div className="w-1/2">
-                    <label className="block text-xs font-medium text-gray-300 mb-1">Last Name</label>
-                    <Field
-                      type="text"
-                      name="lastName"
-                      className="w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 border-gray-600"
-                      placeholder="Last Name"
-                    />
-                    <ErrorMessage name="lastName" component="div" className="text-xs text-[#FF5F5F] mt-1" />
-                  </div>
-                </div>
+        <form onSubmit={handleFormSubmit} className="space-y-5">
+          <div>
+            <label className="block text-xs font-medium text-gray-300 mb-1">Full Name</label>
+            <input
+              type="text"
+              name="name"
+              value={values.name}
+              onChange={handleChange}
+              className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${
+                errors.name ? "border-[#FF5F5F]" : "border-gray-600"
+              }`}
+              placeholder="Enter your full name"
+            />
+            {errors.name && <div className="text-xs text-[#FF5F5F] mt-1">{errors.name}</div>}
+          </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-300 mb-1">Email</label>
-                  <Field
+                  <input
                     type="email"
                     name="email"
-                    className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${touched.email && errors.email ? "border-[#FF5F5F]" : "border-gray-600"}`}
+                    value={values.email}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${
+                      errors.email ? "border-[#FF5F5F]" : "border-gray-600"
+                    }`}
                     placeholder="Enter your email"
                   />
-                  <ErrorMessage name="email" component="div" className="text-xs text-[#FF5F5F] mt-1 animate-pulse" />
+                  {errors.email && <div className="text-xs text-[#FF5F5F] mt-1 animate-pulse">{errors.email}</div>}
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-300 mb-1">Password</label>
-                  <Field
+                  <input
                     type="password"
                     name="password"
-                    className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${touched.password && errors.password ? "border-[#FF5F5F]" : "border-gray-600"}`}
+                    value={values.password}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${
+                      errors.password ? "border-[#FF5F5F]" : "border-gray-600"
+                    }`}
                     placeholder="Create a password"
                   />
-                  <ErrorMessage name="password" component="div" className="text-xs text-[#FF5F5F] mt-1" />
+                  {errors.password && <div className="text-xs text-[#FF5F5F] mt-1">{errors.password}</div>}
                   <div className="mt-2 space-y-1">
                     {passwordRules.map((rule, idx) => (
                       <div key={rule.label} className={`text-xs flex items-center gap-2 ${values.password ? (passwordChecks[idx] ? "text-[#00FFB2]" : "text-[#FF5F5F]") : "text-gray-400"}`}>
@@ -187,22 +194,35 @@ export default function SignUpPage() {
                 </div>
                 <div>
                   <label className="block text-xs font-medium text-gray-300 mb-1">Confirm Password</label>
-                  <Field
+                  <input
                     type="password"
                     name="confirmPassword"
-                    className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${touched.confirmPassword && errors.confirmPassword ? "border-[#FF5F5F]" : "border-gray-600"}`}
+                    value={values.confirmPassword}
+                    onChange={handleChange}
+                    className={`w-full px-4 py-3 bg-white/5 border rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-[#A259FF] focus:ring-2 focus:ring-[#A259FF]/30 transition-all duration-200 ${
+                      errors.confirmPassword ? "border-[#FF5F5F]" : "border-gray-600"
+                    }`}
                     placeholder="Re-enter your password"
                   />
-                  <ErrorMessage name="confirmPassword" component="div" className="text-xs text-[#FF5F5F] mt-1 bg-[#2a0e1c] px-3 py-2 rounded shadow-lg border border-[#FF5F5F]/40" />
+                  {errors.confirmPassword && (
+                    <div className="text-xs text-[#FF5F5F] mt-1 bg-[#2a0e1c] px-3 py-2 rounded shadow-lg border border-[#FF5F5F]/40">
+                      {errors.confirmPassword}
+                    </div>
+                  )}
                 </div>
+                {errors.form && (
+                  <div className="text-xs text-[#FF5F5F] bg-[#2a0e1c] px-3 py-2 rounded shadow-lg border border-[#FF5F5F]/40">
+                    {errors.form}
+                  </div>
+                )}
                 <motion.button
                   whileHover={{ scale: 1.04, boxShadow: "0 0 16px #A259FF" }}
                   whileTap={{ scale: 0.98 }}
                   type="submit"
-                  className="w-full bg-gradient-to-r from-[#8A4FFF] to-[#A259FF] hover:from-[#A259FF] hover:to-[#8A4FFF] text-white py-3 rounded-lg font-semibold transition-all duration-200 mt-2 shadow-lg"
+                  className="w-full bg-gradient-to-r from-[#8A4FFF] to-[#A259FF] hover:from-[#A259FF] hover:to-[#8A4FFF] text-white py-3 rounded-lg font-semibold transition-all duration-200 mt-2 shadow-lg disabled:opacity-70 disabled:cursor-not-allowed"
                   disabled={isSubmitting}
                 >
-                  Sign Up
+                  {isSubmitting ? 'Signing up...' : 'Sign Up'}
                 </motion.button>
                 <AnimatePresence>
                   {success && (
@@ -212,14 +232,11 @@ export default function SignUpPage() {
                       exit={{ y: -30, opacity: 0 }}
                       className="mb-4 px-4 py-2 bg-[#00FFB2]/10 border border-[#00FFB2]/20 text-[#00FFB2] rounded-md text-xs text-center font-semibold shadow"
                     >
-                      Signed up successfully!
+                      Signed up successfully! Redirecting to login...
                     </motion.div>
                   )}
                 </AnimatePresence>
-              </Form>
-            );
-          }}
-        </Formik>
+              </form>
         <p className="mt-6 text-xs text-center text-gray-400">
           Already have an account?{' '}
           <Link href="/login" className="text-purple-400 hover:underline font-medium">

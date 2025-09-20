@@ -21,19 +21,6 @@ app.use('/admin', require('./routers/adminRouter'));
 
 app.use('/api/docs', require('./routers/docRouter')); 
 
-// Test route (optional)
-app.get('/', (req, res) => {
-  res.send('🚀 QuillStack AI Backend is Live');
-});
-
-app.get('/add', (req, res) => {
-  res.send('Response From Add All Route');
-});
-
-app.get('/getall', (req, res) => {
-  res.send('Response From Get All Route');
-});
-
 // ========== ERROR HANDLING ==========
 
 // 404 Route Handler
