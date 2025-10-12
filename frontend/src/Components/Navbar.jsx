@@ -102,7 +102,7 @@ export default function Navbar() {
           ) : (
             <>
               <Link
-                href="/login"
+                href="/Login"
                 className="ml-4 px-4 py-2 rounded bg-[#8A4FFF] text-white font-semibold hover:bg-[#A259FF] transition"
               >
                 Login
@@ -195,7 +195,7 @@ export default function Navbar() {
                 ) : (
                   <>
                     <Link
-                      href="/login"
+                      href="/Login"
                       className="w-full px-4 py-2 rounded bg-[#8A4FFF] text-white font-semibold hover:bg-[#A259FF] transition text-center"
                       onClick={() => setMobileOpen(false)}
                     >
