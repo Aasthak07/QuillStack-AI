@@ -67,7 +67,7 @@ export default function AdminLoginPage() {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.6 }}
-        className="absolute top-6 left-6 z-10"
+        className="absolute top-6 left-6 z-30"
       >
         <Link
           href="/login"
