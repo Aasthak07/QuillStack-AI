@@ -6,10 +6,10 @@ import { usePathname } from "next/navigation";
 
 const navLinks = [
   { name: "Dashboard", href: "/admin/dashboard", icon: <FaHome /> },
-  { name: "Manage Users", href: "/admin/users", icon: <FaUsers /> },
+  { name: "Manage Users", href: "/admin/manage-users", icon: <FaUsers /> },
   { name: "Docs", href: "/admin/docs", icon: <FaFileAlt /> },
-  { name: "Logs", href: "/admin/logs", icon: <FaScroll /> },
-  { name: "Settings", href: "/admin/settings", icon: <FaCogs /> },
+  // { name: "Logs", href: "/admin/logs", icon: <FaScroll /> },
+  // { name: "Settings", href: "/admin/settings", icon: <FaCogs /> },
   { name: "Logout", href: "/admin/logout", icon: <FaSignOutAlt />, isLogout: true },
 ];
 

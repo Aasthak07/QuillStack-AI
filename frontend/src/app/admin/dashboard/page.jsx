@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import AdminSidebar from "../../../components/AdminSidebar";
 import AdminNavbar from "../../../components/AdminNavbar";
+import AdminProtectedRoute from "../../../components/AdminProtectedRoute";
 import { motion } from "framer-motion";
 import { FaUsers, FaFileAlt, FaCogs, FaHourglassHalf } from "react-icons/fa";
 import axios from "axios";
@@ -88,54 +89,56 @@ export default function AdminDashboardPage() {
     },
   ];
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#181C2A] via-[#232946] to-[#0B0F1C]">
-      <AdminNavbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-      <div className="flex flex-1 relative">
-        <AdminSidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} style={{ top: navbarHeight, height: `calc(100vh - ${navbarHeight}px)` }} />
-        <main
-          className="flex-1 transition-all duration-300 px-6 pt-20"
-          style={{ marginLeft: isSidebarOpen ? sidebarWidth : 0 }}
-        >
-          <motion.h1
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-xl md:text-2xl lg:text-3xl font-bold md:font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] via-[#6366F1] to-[#A259FF] mb-8 drop-shadow-md tracking-tight font-sans"
+    <AdminProtectedRoute>
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#181C2A] via-[#232946] to-[#0B0F1C]">
+        <AdminNavbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+        <div className="flex flex-1 relative">
+          <AdminSidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} style={{ top: navbarHeight, height: `calc(100vh - ${navbarHeight}px)` }} />
+          <main
+            className="flex-1 transition-all duration-300 px-6 pt-20"
+            style={{ marginLeft: isSidebarOpen ? sidebarWidth : 0 }}
           >
-            Admin Dashboard
-          </motion.h1>
-          {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {[1, 2, 3, 4].map((idx) => (
-                <div key={idx} className="rounded-2xl bg-gradient-to-br from-[#232946]/80 to-[#181C2A]/80 border border-white/10 shadow-xl p-7 flex items-center gap-4">
-                  <div className="w-12 h-12 bg-gray-600 rounded-lg animate-pulse"></div>
-                  <div className="flex-1">
-                    <div className="h-4 bg-gray-600 rounded animate-pulse mb-2"></div>
-                    <div className="h-8 bg-gray-600 rounded animate-pulse"></div>
+            <motion.h1
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              className="text-xl md:text-2xl lg:text-3xl font-bold md:font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-[#3B82F6] via-[#6366F1] to-[#A259FF] mb-8 drop-shadow-md tracking-tight font-sans"
+            >
+              Admin Dashboard
+            </motion.h1>
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {[1, 2, 3, 4].map((idx) => (
+                  <div key={idx} className="rounded-2xl bg-gradient-to-br from-[#232946]/80 to-[#181C2A]/80 border border-white/10 shadow-xl p-7 flex items-center gap-4">
+                    <div className="w-12 h-12 bg-gray-600 rounded-lg animate-pulse"></div>
+                    <div className="flex-1">
+                      <div className="h-4 bg-gray-600 rounded animate-pulse mb-2"></div>
+                      <div className="h-8 bg-gray-600 rounded animate-pulse"></div>
+                    </div>
                   </div>
-                </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                {metrics.map((metric, idx) => (
+                <motion.div
+                  key={metric.label}
+                  whileHover={{ scale: 1.045 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                  className="rounded-2xl bg-gradient-to-br from-[#232946]/80 to-[#181C2A]/80 border border-white/10 shadow-xl hover:shadow-2xl p-7 flex items-center gap-4 cursor-pointer group transition-all duration-300"
+                >
+                  <div className={`text-4xl ${metric.icon.props.className} group-hover:scale-110 transition-transform duration-300`}>{metric.icon}</div>
+                  <div>
+                    <div className="text-lg font-semibold text-white/80 mb-1 tracking-wide group-hover:text-white transition-colors duration-300">{metric.label}</div>
+                    <div className="text-3xl font-extrabold tracking-tight text-white drop-shadow group-hover:text-[#6366F1] transition-colors duration-300">{metric.value}</div>
+                  </div>
+                </motion.div>
               ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-              {metrics.map((metric, idx) => (
-              <motion.div
-                key={metric.label}
-                whileHover={{ scale: 1.045 }}
-                transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                className="rounded-2xl bg-gradient-to-br from-[#232946]/80 to-[#181C2A]/80 border border-white/10 shadow-xl hover:shadow-2xl p-7 flex items-center gap-4 cursor-pointer group transition-all duration-300"
-              >
-                <div className={`text-4xl ${metric.icon.props.className} group-hover:scale-110 transition-transform duration-300`}>{metric.icon}</div>
-                <div>
-                  <div className="text-lg font-semibold text-white/80 mb-1 tracking-wide group-hover:text-white transition-colors duration-300">{metric.label}</div>
-                  <div className="text-3xl font-extrabold tracking-tight text-white drop-shadow group-hover:text-[#6366F1] transition-colors duration-300">{metric.value}</div>
-                </div>
-              </motion.div>
-            ))}
-            </div>
-          )}
-        </main>
+              </div>
+            )}
+          </main>
+        </div>
       </div>
-    </div>
+    </AdminProtectedRoute>
   );
 }

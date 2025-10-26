@@ -44,6 +44,7 @@ export default function AdminLoginPage() {
         router.push('/admin/dashboard')
       }
     } catch (err) {
+      console.error('Login error:', err.response?.data || err.message)
       setError(err.response?.data?.message || 'Login failed. Please try again.')
     } finally {
       setIsLoading(false)

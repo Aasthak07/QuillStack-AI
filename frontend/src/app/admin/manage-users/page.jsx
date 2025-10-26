@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import AdminSidebar from "../../../components/AdminSidebar";
 import AdminNavbar from "../../../components/AdminNavbar";
+import AdminProtectedRoute from "../../../components/AdminProtectedRoute";
 import { motion } from "framer-motion";
 import { FaUsers, FaSearch, FaEdit, FaTrash, FaUserShield, FaUser } from "react-icons/fa";
 import axios from "axios";
@@ -87,14 +88,15 @@ export default function AdminUsersPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#181C2A] via-[#232946] to-[#0B0F1C]">
-      <AdminNavbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
-      <div className="flex flex-1 relative">
-        <AdminSidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} style={{ top: navbarHeight, height: `calc(100vh - ${navbarHeight}px)` }} />
-        <main
-          className="flex-1 transition-all duration-300 px-6 pt-20"
-          style={{ marginLeft: isSidebarOpen ? sidebarWidth : 0 }}
-        >
+    <AdminProtectedRoute>
+      <div className="min-h-screen flex flex-col bg-gradient-to-br from-[#181C2A] via-[#232946] to-[#0B0F1C]">
+        <AdminNavbar isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+        <div className="flex flex-1 relative">
+          <AdminSidebar isOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} style={{ top: navbarHeight, height: `calc(100vh - ${navbarHeight}px)` }} />
+          <main
+            className="flex-1 transition-all duration-300 px-6 pt-20"
+            style={{ marginLeft: isSidebarOpen ? sidebarWidth : 0 }}
+          >
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -324,6 +326,7 @@ export default function AdminUsersPage() {
           </motion.div>
         </div>
       )}
-    </div>
+      </div>
+    </AdminProtectedRoute>
   );
 } 

@@ -1,8 +1,19 @@
 "use client";
-import { FaBars, FaUserCircle } from "react-icons/fa";
+import { FaBars, FaUserCircle, FaSignOutAlt } from "react-icons/fa";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function AdminNavbar({ isSidebarOpen, setIsSidebarOpen }) {
+  const router = useRouter();
+
+  const handleLogout = () => {
+    // Clear admin token and user data
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('adminUser');
+    // Redirect to admin login
+    router.push('/admin-login');
+  };
+
   return (
     <motion.header
       initial={{ y: -40, opacity: 0 }}
@@ -33,6 +44,14 @@ export default function AdminNavbar({ isSidebarOpen, setIsSidebarOpen }) {
         >
           <FaUserCircle className="text-2xl md:text-3xl text-[#6366F1]" />
           <span className="hidden md:inline text-base font-medium">Admin</span>
+        </button>
+        <button
+          onClick={handleLogout}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 border border-red-500/30 text-red-400 hover:text-red-300 transition"
+          aria-label="Logout"
+        >
+          <FaSignOutAlt className="text-lg" />
+          <span className="hidden md:inline text-sm font-medium">Logout</span>
         </button>
       </div>
     </motion.header>
