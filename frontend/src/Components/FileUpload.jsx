@@ -215,7 +215,7 @@ export default function FileUpload({ onUploadSuccess }) {
                     Go to Login
                   </button>
                   <button
-                    onClick={() => window.location.href = '/sign-up'}
+                    onClick={() => window.location.href = '/signup'}
                     className="w-full px-4 py-2 bg-transparent border border-fuchsia-700 hover:bg-fuchsia-700/10 text-fuchsia-300 rounded-lg font-semibold transition-all duration-200"
                   >
                     Create Account

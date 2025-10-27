@@ -35,7 +35,7 @@ export default function Navbar() {
         background:
           "linear-gradient(90deg, #8A4FFF 0%, #EA00FF 50%, #0B0F1C 100%)",
         backgroundSize: "200% 200%",
-        animation: "navbar-gradient-flow 8s ease-in-out infinite"
+        animation: "navbar-gradient-flow 8s ease-in-out infinite",
       }}
     >
       <style jsx>{`
@@ -54,7 +54,10 @@ export default function Navbar() {
       <div className="absolute inset-0 bg-[#0B0F1C]/80 z-0 pointer-events-none" />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between h-16 z-10">
         {/* Logo */}
-        <Link href="/" className="text-2xl font-bold tracking-tight text-white select-none">
+        <Link
+          href="/"
+          className="text-2xl font-bold tracking-tight text-white select-none"
+        >
           QuillStack <span className="text-[#8A4FFF]">AI</span>
         </Link>
         {/* Desktop Nav */}
@@ -88,9 +91,15 @@ export default function Navbar() {
             <div className="ml-4 flex items-center gap-3">
               <div className="flex items-center gap-2 text-white">
                 <div className="w-8 h-8 bg-[#8A4FFF] rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                  {user?.name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
+                  {user?.name
+                    ?.split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase() || "U"}
                 </div>
-                <span className="text-sm font-medium">{user?.name || user?.email || 'User'}</span>
+                <span className="text-sm font-medium">
+                  {user?.name || user?.email || "User"}
+                </span>
               </div>
               <button
                 onClick={logout}
@@ -108,7 +117,7 @@ export default function Navbar() {
                 Login
               </Link>
               <Link
-                href="/sign-up"
+                href="/signup"
                 className="ml-2 px-4 py-2 rounded border border-[#8A4FFF] text-[#8A4FFF] font-semibold hover:bg-[#8A4FFF] hover:text-white transition"
               >
                 Signup
@@ -122,8 +131,19 @@ export default function Navbar() {
           onClick={() => setMobileOpen(true)}
           aria-label="Open menu"
         >
-          <svg width="28" height="28" fill="none" stroke="#EAEAEA" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+          <svg
+            width="28"
+            height="28"
+            fill="none"
+            stroke="#EAEAEA"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
           </svg>
         </button>
       </div>
@@ -143,10 +163,10 @@ export default function Navbar() {
             {/* Sidebar */}
             <motion.div
               key="sidebar"
-              initial={{ x: '100%' }}
+              initial={{ x: "100%" }}
               animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', stiffness: 400, damping: 40 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", stiffness: 400, damping: 40 }}
               className="fixed top-0 right-0 w-4/5 max-w-xs h-full bg-[#181C2A] shadow-2xl z-50 flex flex-col p-6"
             >
               <div className="flex items-center justify-between mb-8">
@@ -156,17 +176,25 @@ export default function Navbar() {
                   className="p-2 rounded hover:bg-[#222] focus:outline-none"
                   aria-label="Close menu"
                 >
-                  <svg width="24" height="24" fill="none" stroke="#EAEAEA" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  <svg
+                    width="24"
+                    height="24"
+                    fill="none"
+                    stroke="#EAEAEA"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 18L18 6M6 6l12 12"
+                    />
                   </svg>
                 </button>
               </div>
               <div className="flex flex-col gap-4">
                 {navLinks.map((link) => (
-                  <motion.div
-                    key={link.name}
-                    whileTap={{ scale: 0.97 }}
-                  >
+                  <motion.div key={link.name} whileTap={{ scale: 0.97 }}>
                     <Link
                       href={link.href}
                       className={`block px-2 py-2 rounded text-lg font-medium transition-colors duration-150 ${
@@ -202,7 +230,7 @@ export default function Navbar() {
                       Login
                     </Link>
                     <Link
-                      href="/sign-up"
+                      href="/signup"
                       className="w-full px-4 py-2 rounded border border-[#8A4FFF] text-[#8A4FFF] font-semibold hover:bg-[#8A4FFF] hover:text-white transition text-center"
                       onClick={() => setMobileOpen(false)}
                     >
@@ -217,4 +245,4 @@ export default function Navbar() {
       </AnimatePresence>
     </nav>
   );
-} 
+}
