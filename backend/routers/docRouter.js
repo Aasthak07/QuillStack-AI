@@ -10,10 +10,10 @@ const router = express.Router();
 // Multer setup for file uploads (keep as-is)
 const upload = multer({ dest: "uploads/" });
 
-// Gemini setup
+// Gemini setup - Using confirmed available models
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const PRIMARY_MODEL = "gemini-2.5-pro";
-const FALLBACK_MODEL = "gemini-2.0-flash";
+const PRIMARY_MODEL = "gemini-2.0-flash";
+const FALLBACK_MODEL = "gemini-2.5-flash";
 
 router.post("/upload", authMiddleware, upload.single("file"), async (req, res) => {
   if (!req.file) {

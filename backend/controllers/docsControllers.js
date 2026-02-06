@@ -21,9 +21,9 @@
 
 //     try {
 //       const prompt = `Generate comprehensive technical documentation for this code:
-      
+
 //       ${fileContent}
-      
+
 //      # Code Analysis Template
 
 // ## Code Overview
@@ -305,7 +305,7 @@
 //   // Convert markdown to DOCX using a library like mammoth or docx
 //   const docx = require('docx');
 //   const { Document, Paragraph, TextRun } = docx;
-  
+
 //   const doc = new Document({
 //     sections: [{
 //       properties: {},
@@ -340,14 +340,14 @@ const uploadFile = async (req, res) => {
 
     const fileContent = fs.readFileSync(req.file.path, "utf-8");
     const filename = req.file.originalname;
-    
+
     // Validate file content
     if (!fileContent.trim()) {
       return res.status(400).json({ error: "File appears to be empty" });
     }
 
     // AI Model with enhanced configuration
-    const model = genAI.getGenerativeModel({ 
+    const model = genAI.getGenerativeModel({
       model: "gemini-2.0-flash",
       generationConfig: {
         temperature: 0.3, // Lower temperature for more consistent, technical output
@@ -360,14 +360,14 @@ const uploadFile = async (req, res) => {
     try {
       // Get optimized prompt based on code type
       const prompt = getOptimalPrompt(fileContent, filename);
-      
+
       console.log(`Generating documentation for ${filename} using optimized prompt...`);
-      
+
       // Generate documentation with retry logic
       let result;
       let attempts = 0;
       const maxAttempts = 3;
-      
+
       while (attempts < maxAttempts) {
         try {
           result = await model.generateContent(prompt);
@@ -375,14 +375,14 @@ const uploadFile = async (req, res) => {
         } catch (aiError) {
           attempts++;
           if (attempts === maxAttempts) throw aiError;
-          
+
           console.log(`Attempt ${attempts} failed, retrying...`);
           await new Promise(resolve => setTimeout(resolve, 1000 * attempts)); // Exponential backoff
         }
       }
 
       const aiGeneratedDoc = result.response.text();
-      
+
       // Validate AI response
       if (!aiGeneratedDoc || aiGeneratedDoc.trim().length < 100) {
         throw new Error("AI generated documentation is too short or empty");
@@ -402,7 +402,7 @@ const uploadFile = async (req, res) => {
         wordCount: processedDoc.split(' ').length,
         codeLines: fileContent.split('\n').length
       });
-      
+
       await doc.save();
 
       // Clean up the temporary file
@@ -411,8 +411,8 @@ const uploadFile = async (req, res) => {
       }
 
       // Return enhanced response with quality metrics
-      res.json({ 
-        message: "Documentation created successfully!", 
+      res.json({
+        message: "Documentation created successfully!",
         data: doc,
         metrics: {
           wordCount: doc.wordCount,
@@ -424,7 +424,7 @@ const uploadFile = async (req, res) => {
 
     } catch (aiError) {
       console.error("AI processing error:", aiError);
-      
+
       // More specific error handling
       let errorMessage = "Failed to generate documentation";
       if (aiError.message.includes('quota')) {
@@ -434,7 +434,7 @@ const uploadFile = async (req, res) => {
       } else if (aiError.message.includes('too short')) {
         errorMessage = "Generated documentation was insufficient. Please try with a different file.";
       }
-      
+
       res.status(500).json({
         error: errorMessage,
         details: process.env.NODE_ENV === 'development' ? aiError.message : undefined
@@ -442,8 +442,8 @@ const uploadFile = async (req, res) => {
     }
   } catch (error) {
     console.error("Upload error:", error);
-    res.status(500).json({ 
-      error: "File processing failed: " + error.message 
+    res.status(500).json({
+      error: "File processing failed: " + error.message
     });
 
     // Clean up the temporary file if it exists
@@ -462,7 +462,7 @@ const regenerateDoc = async (req, res) => {
   try {
     const { id } = req.params;
     const { useAlternativePrompt } = req.body;
-    
+
     const doc = await Documentation.findById(id);
     if (!doc) {
       return res.status(404).json({ error: "Document not found" });
@@ -472,7 +472,7 @@ const regenerateDoc = async (req, res) => {
       return res.status(400).json({ error: "Original code not available for regeneration" });
     }
 
-    const model = genAI.getGenerativeModel({ 
+    const model = genAI.getGenerativeModel({
       model: "gemini-2.0-flash",
       generationConfig: {
         temperature: useAlternativePrompt ? 0.5 : 0.3, // Slightly higher temp for variation
@@ -496,12 +496,12 @@ const regenerateDoc = async (req, res) => {
     doc.version = incrementVersion(doc.version);
     doc.generatedAt = new Date();
     doc.wordCount = newContent.split(' ').length;
-    
+
     await doc.save();
 
-    res.json({ 
-      message: "Documentation regenerated successfully!", 
-      data: doc 
+    res.json({
+      message: "Documentation regenerated successfully!",
+      data: doc
     });
 
   } catch (error) {
@@ -516,7 +516,7 @@ function detectLanguage(filename) {
   const languageMap = {
     'js': 'JavaScript',
     'jsx': 'JavaScript (React)',
-    'ts': 'TypeScript', 
+    'ts': 'TypeScript',
     'tsx': 'TypeScript (React)',
     'py': 'Python',
     'java': 'Java',
@@ -530,22 +530,22 @@ function detectLanguage(filename) {
     'vue': 'Vue.js',
     'svelte': 'Svelte'
   };
-  
+
   return languageMap[extension] || 'Unknown';
 }
 
 function postProcessDocumentation(content, filename) {
   // Remove excessive whitespace
   let processed = content.replace(/\n{3,}/g, '\n\n');
-  
+
   // Ensure proper heading hierarchy
   processed = processed.replace(/^#{4,}/gm, '###');
-  
+
   // Add filename to title if not present
   if (!processed.includes(filename)) {
     processed = `# ${filename} Documentation\n\n${processed}`;
   }
-  
+
   // Fix common formatting issues
   processed = processed
     .replace(/\*\*\s+/g, '**') // Fix bold formatting
@@ -554,7 +554,7 @@ function postProcessDocumentation(content, filename) {
     .replace(/\s+`/g, '`')
     .replace(/\[Placeholder\]/gi, '[Details from code analysis]') // Replace common AI placeholders
     .replace(/\[TODO\]/gi, '[Implementation specific]');
-  
+
   return processed;
 }
 
@@ -633,7 +633,7 @@ const updateDoc = async (req, res) => {
 
     const updatedDoc = await Documentation.findByIdAndUpdate(
       id,
-      { 
+      {
         content,
         version: incrementVersion((await Documentation.findById(id)).version || '1.0'),
         lastModified: new Date()
@@ -755,13 +755,13 @@ const markdownToHtml = (markdown) => {
     </head>
     <body>
       ${markdown
-        .replace(/^### (.+$)/gm, '<h3>$1</h3>')
-        .replace(/^## (.+$)/gm, '<h2>$1</h2>')
-        .replace(/^# (.+$)/gm, '<h1>$1</h1>')
-        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\*(.+?)\*/g, '<em>$1</em>')
-        .replace(/```([^`]+)```/g, '<pre><code>$1</code></pre>')
-        .replace(/\n/g, '<br>')}
+      .replace(/^### (.+$)/gm, '<h3>$1</h3>')
+      .replace(/^## (.+$)/gm, '<h2>$1</h2>')
+      .replace(/^# (.+$)/gm, '<h1>$1</h1>')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/```([^`]+)```/g, '<pre><code>$1</code></pre>')
+      .replace(/\n/g, '<br>')}
     </body>
     </html>
   `;
@@ -800,12 +800,12 @@ async function convertToPdf(markdown) {
   return pdf;
 }
 
-module.exports = { 
-  uploadFile, 
-  getAllDocs, 
-  updateDoc, 
-  getDocById, 
-  exportDoc, 
+module.exports = {
+  uploadFile,
+  getAllDocs,
+  updateDoc,
+  getDocById,
+  exportDoc,
   regenerateDoc,
   uploadAndGenerateDoc: uploadFile, // Alias for compatibility
   getMyDocs: getAllDocs // Alias for compatibility
