@@ -23,7 +23,7 @@ router.post('/add', (req, res) => {
         }).catch((err) => {
             console.log(err);
             if (err.code === 11000) {
-                res.status(400).json({ message: 'contact email already exists' });
+                res.status(400).json({ message: 'Email already exists' });
             }
             else {
                 res.status(500).json({ message: 'Internal server error' });
@@ -53,11 +53,14 @@ router.post('/authenticate', (req, res) => {
                 jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' }, (err, token) => {
                     if (err) {
                         console.log(err);
-                        res.status(500).json({ message: 'invalid credentials' });
+                        res.status(500).json({ message: 'Error generating token' });
                     } else {
                         res.status(200).json({ token });
                     }
-                })
+                });
+            } else {
+                // User not found - invalid credentials
+                res.status(401).json({ message: 'Invalid credentials' });
             }
         }).catch((err) => {
             res.status(500).json({ message: 'Internal Server Error' });

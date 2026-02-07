@@ -1,13 +1,10 @@
-const {Schema, model} = require('../connection');
+const mongoose = require('mongoose');
 
-const contactSchema = new Schema({
+const contactSchema = new mongoose.Schema({
     name: String,
-    email: {type:String, required:true,unique:true},
-    message:{type:String,required:true},
-    createdAt:{type:Date,default:Date.now},
+    email: { type: String, required: true, unique: true },
+    message: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now },
 });
 
-
-
-
-module.exports = model('contact',contactSchema);
+module.exports = mongoose.model('contact', contactSchema);

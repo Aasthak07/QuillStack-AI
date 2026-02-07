@@ -1,10 +1,9 @@
-const {Schema, model} = require('../connection');
+const mongoose = require('mongoose');
 
-const uploadcodeSchema = new Schema({
-    filename: {type:String, required:true,unique:true},
-    content:{type:String,required:true},
-    createdAt:{type:Date,default:Date.now},
+const uploadcodeSchema = new mongoose.Schema({
+    filename: { type: String, required: true, unique: true },
+    content: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now },
 });
 
-
-module.exports = model('contact',uploadcodeSchema);
+module.exports = mongoose.model('upload', uploadcodeSchema);
