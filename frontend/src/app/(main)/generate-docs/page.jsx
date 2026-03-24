@@ -4,14 +4,73 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import FileUpload from "@/components/FileUpload";
 import ReactMarkdown from "react-markdown";
+import { FaFilePdf, FaCopy, FaShareAlt, FaMarkdown } from "react-icons/fa";
+import toast from "react-hot-toast";
 
 export default function GenerateDocsPage() {
   const [doc, setDoc] = useState(null);
   const [error, setError] = useState("");
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
 
   const handleExportMarkdown = () => {
     if (!doc?._id) return;
     window.open(`http://localhost:5000/api/docs/export/${doc._id}/markdown`, '_blank');
+  };
+
+  const handleDownloadPdf = async () => {
+    if (!doc) return;
+    setIsGeneratingPdf(true);
+    try {
+      const html2pdf = (await import('html2pdf.js')).default;
+      const element = document.querySelector('.markdown-content');
+      
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: 'QuillStack_Documentation.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      await html2pdf().set(opt).from(element).save();
+      toast.success("PDF Downloaded Successfully");
+    } catch (err) {
+      console.error("PDF generation error:", err);
+      toast.error("Failed to generate PDF");
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  };
+
+  const handleCopy = () => {
+    if (!doc) return;
+    const textToCopy = doc.content || doc;
+    navigator.clipboard.writeText(textToCopy)
+      .then(() => toast.success("Copied to clipboard!"))
+      .catch(() => toast.error("Failed to copy"));
+  };
+
+  const handleShare = async () => {
+    if (!doc?._id) return;
+    const shareUrl = `${window.location.origin}/doc/${doc._id}`;
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: 'QuillStack AI Documentation',
+          text: `Check out the documentation for ${doc.filename || 'this file'}`,
+          url: shareUrl,
+        });
+        return;
+      } catch (err) {
+        if (err.name === "AbortError") return;
+        console.error("Share failed", err);
+      }
+    }
+    
+    navigator.clipboard.writeText(shareUrl)
+      .then(() => toast.success("Share link copied to clipboard!"))
+      .catch(() => toast.error("Failed to copy link"));
   };
 
   return (
@@ -207,12 +266,31 @@ export default function GenerateDocsPage() {
                     </div>
                   </div>
                   {doc._id && (
-                    <div className="mt-6 pt-4 border-t border-fuchsia-700/20">
+                    <div className="mt-6 pt-4 border-t border-fuchsia-700/20 grid grid-cols-2 lg:grid-cols-4 gap-3">
                       <button
-                        className="w-full px-4 py-2 bg-fuchsia-700 hover:bg-fuchsia-800 text-white rounded-lg font-semibold shadow transition"
+                        className="w-full px-4 py-2 bg-fuchsia-700 hover:bg-fuchsia-800 text-white rounded-lg font-semibold shadow transition text-sm flex items-center justify-center gap-2"
                         onClick={handleExportMarkdown}
                       >
-                        Export as Markdown
+                        <FaMarkdown /> Markdown
+                      </button>
+                      <button
+                        className="w-full px-4 py-2 bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-600 hover:to-rose-700 text-white rounded-lg font-semibold shadow transition text-sm flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                        onClick={handleDownloadPdf}
+                        disabled={isGeneratingPdf}
+                      >
+                        <FaFilePdf /> {isGeneratingPdf ? "Generating..." : "PDF"}
+                      </button>
+                      <button
+                        className="w-full px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-semibold shadow transition text-sm flex items-center justify-center gap-2"
+                        onClick={handleCopy}
+                      >
+                        <FaCopy /> Copy
+                      </button>
+                      <button
+                        className="w-full px-4 py-2 bg-[#6366F1] hover:bg-[#4f46e5] text-white rounded-lg font-semibold shadow transition text-sm flex items-center justify-center gap-2"
+                        onClick={handleShare}
+                      >
+                        <FaShareAlt /> Share
                       </button>
                     </div>
                   )}

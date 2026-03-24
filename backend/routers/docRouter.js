@@ -4,6 +4,7 @@ const fs = require("fs");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const docsControllers = require('../controllers/docsControllers');
 const { authMiddleware } = require('../middleware/authMiddleware');
+const Documentation = require('../models/docsModel');
 
 const router = express.Router();
 
@@ -38,12 +39,23 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
       const response = await result.response;
       const docText = response.text();
       console.log(`✅ [${fileName}] Documentation generated with PRIMARY model: ${PRIMARY_MODEL}`);
+      
+      // Save to database
+      const doc = new Documentation({
+        filename: fileName,
+        content: docText,
+        originalContent: fileContent,
+        wordCount: docText.split(/\s+/).length,
+        codeLines: fileContent.split('\n').length
+      });
+      await doc.save();
+
       // Always cleanup
       fs.unlinkSync(filePath);
       return res.json({
         success: true,
         modelUsed: PRIMARY_MODEL,
-        data: docText,
+        data: doc,
       });
     } catch (primaryErr) {
       console.error(`❌ [${fileName}] Primary model (${PRIMARY_MODEL}) failed:`, primaryErr?.message || primaryErr);
@@ -54,12 +66,23 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
         const response = await result.response;
         const docText = response.text();
         console.log(`✅ [${fileName}] Documentation generated with FALLBACK model: ${FALLBACK_MODEL}`);
+        
+        // Save to database
+        const doc = new Documentation({
+          filename: fileName,
+          content: docText,
+          originalContent: fileContent,
+          wordCount: docText.split(/\s+/).length,
+          codeLines: fileContent.split('\n').length
+        });
+        await doc.save();
+
         // Always cleanup
         fs.unlinkSync(filePath);
         return res.json({
           success: true,
           modelUsed: FALLBACK_MODEL,
-          data: docText,
+          data: doc,
         });
       } catch (fallbackErr) {
         console.error(`❌ [${fileName}] Fallback model (${FALLBACK_MODEL}) also failed:`, fallbackErr?.message || fallbackErr);
@@ -84,5 +107,8 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
 
 // Add export endpoint for markdown
 router.get('/export/:id/markdown', docsControllers.exportDoc);
+
+// Public route to get documentation by ID
+router.get('/:id', docsControllers.getDocById);
 
 module.exports = router;
