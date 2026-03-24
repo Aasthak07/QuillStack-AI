@@ -114,8 +114,8 @@ flowchart LR
     A["Standard User"] --> U1("Register & Login")
     A --> U2("Upload Source Code")
     A --> U3("Generate AI Analytics")
-    A --> U4("Export File (PDF/Word)")
-    A --> U5("View Generation History")
+    A --> U4("Export, Copy, & Share Document")
+    A --> U5("Manage & Delete Generation History")
     
     B["System Admin"] --> U1
     B --> U5
@@ -186,9 +186,9 @@ classDiagram
 Our goal for the UI was to keep the design incredibly straightforward so the user isn't overwhelmed by the powerful AI running behind the scenes.
 
 1.  **Authentication Gates:** Strict, minimal login forms that immediately tell you if you typed a password wrong before even bothering the server.
-2.  **Dashboard Modules:** A clean table layout tracking a user's chronological history. Users can easily sort, filter, and retrieve past API generations in seconds.
+2.  **Dashboard Modules:** A beautifully crafted, horizontal list-layout dashboard tracking a user's chronological generation history. Users can interact with any row to instantly View, download as PDF, Copy, Share, or securely Delete past documentation through seamless client-side interactions.
 3.  **The Generation Workspace:** The heart of the app. Users drop their source code into the left pane, hit generate, and watch a loading indicator lock the screen until a beautifully formatted MarkDown document magically populates the right pane.
-4.  **Exporting Mechanisms:** Simple trigger buttons that instantly compile the generated web text into completely clean, downloadable PDF or Word documents.
+4.  **Exporting Mechanisms:** Simple trigger buttons that leverage advanced client-side scripts (like `html2pdf.js`) to instantly compile the generated web text into completely clean, perfectly styled downloadable PDF documents without heavily loading the backend server.
 
 ---
 

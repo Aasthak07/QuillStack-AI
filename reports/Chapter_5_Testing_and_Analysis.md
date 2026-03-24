@@ -49,6 +49,7 @@ We kept a strict log of our tests. The table below highlights some of the most c
 | **TC-004** | **API Flow** | Uploaded a 50-line JavaScript file and told the AI: "Explain this." | The system reads the code, queries Gemini, and paints clean Markdown on the screen. | Text successfully returned from Google and cleanly formatted in the React window. | **PASS** |
 | **TC-005** | **Database** | Generated a document, completely closed the browser, and logged back in. | The database remembers the document and lists it properly in the History dashboard. | Previous data successfully loaded from MongoDB automatically. | **PASS** |
 | **TC-006** | **Exporting** | Clicked the `Export as PDF` button under a finished document. | The app instantly converts the web text into a cleanly styled, downloadable PDF file. | PDF downloaded instantly, retaining all bold text and bullet points. | **PASS** |
+| **TC-007** | **Actions** | Clicked the Delete button on the Dashboard and confirmed the prompt. | The UI instantly removes the document row and permanently deletes the record from MongoDB. | Document successfully cascade-deleted and removed from the active view. | **PASS** |
 
 ---
 

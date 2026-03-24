@@ -17,7 +17,7 @@ Building this platform wasn't just about plugging into an API; it was about buil
 1.  **Taming the AI:** We successfully integrated the Google Gemini API as a completely stateless microservice. Our Express backend securely holds the private API keys, packages user code over HTTPS, and forces the AI to return beautifully formatted Markdown every single time.
 2.  **A Decoupled MERN Architecture:** We kept the React frontend incredibly fast and visually clean, offloading all the heavy API throttling, data parsing, and user authentication to the Node.js backend.
 3.  **Ironclad Security:** We didn't cut corners on user data. We successfully implemented `bcrypt` to scramble passwords into unreadable hashes and utilized JSON Web Tokens (JWT) to ensure users can only ever access their own generated documents inside the MongoDB cluster.
-4.  **A Developer-Friendly UI:** We successfully eliminated user friction. The interface is intuitive, the loading states protect the backend from spam-clicks, and the final results can be exported to a PDF in a single click.
+4.  **A Developer-Friendly UI:** We successfully eliminated user friction. Expanding beyond the generation workspace, we built a comprehensive "My Documents" list-styled dashboard. The interface is completely intuitive, allowing users to effortlessly view past history, securely delete unwanted records from MongoDB, and seamlessly export, copy, or distribute their Markdown files in a single click.
 
 ---
 

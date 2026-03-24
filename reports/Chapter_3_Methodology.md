@@ -78,7 +78,7 @@ To truly understand how QuillStack AI operates, it helps to walk through the exa
 3.  **The API Request:** The frontend packages the file and the user's JWT Token, sending it behind the scenes to the backend server.
 4.  **Verification & Processing:** The backend catches the request, checks the token to ensure the user isn't an intruder, reads the uploaded file, and silently fires off a request to the Google Gemini API. 
 5.  **Database Storage:** A few seconds later, Gemini replies with the completed documentation. The backend intercepts this reply and safely stores a copy of it in the user's specific MongoDB database record.
-6.  **Displaying the Result:** The backend finally sends the finished text back to the browser. The frontend UI stops spinning a "loading" wheel, immediately renders the Markdown text onto the screen, and unlocks the buttons allowing the user to export their new document as a PDF or Word file.
+6.  **Displaying the Result:** The backend finally sends the finished text back to the browser. The frontend UI stops spinning a "loading" wheel, immediately renders the Markdown text onto the screen, and unlocks the action tray allowing the user to seamlessly export their new document as a perfectly styled PDF, copy it, or instantly share it.
 
 ---
 

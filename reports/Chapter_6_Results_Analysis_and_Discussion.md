@@ -15,7 +15,7 @@ The final version of QuillStack AI successfully bridged the gap between a standa
 1.  **Authentication:** A fully operational login system that securely hashes passwords using `bcrypt` and locks the app down using JSON Web Tokens (JWT).
 2.  **AI Generation:** An Express.js backend that securely packages user files, fires them over to Google Gemini, and pulls back clean technical explanations.
 3.  **Document Management:** A MongoDB database that automatically saves and organizes every single document a user generates so they never lose their history.
-4.  **Exporting:** A React frontend button that instantly packages the final web text into downloadable PDF or Word files.
+4.  **Interactive Document Actions:** A comprehensive suite of frontend buttons allowing users to seamlessly view, securely delete, selectively copy, natively share, and instantly package their generated text into downloadable, styled PDFs using client-side rendering.
 
 ---
 
