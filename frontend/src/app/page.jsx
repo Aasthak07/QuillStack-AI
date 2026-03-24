@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 import { FaCheckCircle, FaCode, FaSyncAlt, FaUsers, FaCloudUploadAlt, FaMagic, FaEdit, FaShareAlt, FaGithub, FaDiscord, FaLinkedin, FaUserTie, FaUserCog, FaUserEdit, FaUserShield } from "react-icons/fa";
 
 const features = [
@@ -41,7 +39,6 @@ export default function LandingPage() {
 
   return (
     <div className="bg-[#0B0F1C] min-h-screen text-[#EAEAEA] font-sans">
-      <Navbar />
       <div className="mt-0">
         {/* Hero Section */}
         <section className="max-w-6xl mx-auto px-4 pt-12 pb-20 flex flex-col md:flex-row items-center gap-10 md:gap-16">
@@ -299,9 +296,6 @@ export default function LandingPage() {
             ))}
           </div>
         </section>
-        
-
-        <Footer />
       </div>
     </div>
   );
