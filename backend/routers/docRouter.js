@@ -105,6 +105,12 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
   }
 });
 
+// Add endpoint to fetch all docs
+router.get('/my-docs', authMiddleware, docsControllers.getAllDocs);
+
+// Add endpoint to delete a doc securely
+router.delete('/:id', authMiddleware, docsControllers.deleteDoc);
+
 // Add export endpoint for markdown
 router.get('/export/:id/markdown', docsControllers.exportDoc);
 

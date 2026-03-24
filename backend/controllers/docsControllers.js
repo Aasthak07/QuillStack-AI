@@ -800,6 +800,22 @@ async function convertToPdf(markdown) {
   return pdf;
 }
 
+const deleteDoc = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const deletedDoc = await Documentation.findByIdAndDelete(id);
+    
+    if (!deletedDoc) {
+      return res.status(404).json({ error: "Document not found" });
+    }
+    
+    res.status(200).json({ success: true, message: "Document deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting document:", error);
+    res.status(500).json({ error: "Failed to delete document" });
+  }
+};
+
 module.exports = {
   uploadFile,
   getAllDocs,
@@ -808,5 +824,6 @@ module.exports = {
   exportDoc,
   regenerateDoc,
   uploadAndGenerateDoc: uploadFile, // Alias for compatibility
-  getMyDocs: getAllDocs // Alias for compatibility
+  getMyDocs: getAllDocs, // Alias for compatibility
+  deleteDoc
 };
