@@ -86,18 +86,33 @@ router.post('/login', async (req, res) => {
     }
 });
 
+const Documentation = require('../models/docsModel');
+
 // Get admin dashboard stats
-router.get('/stats', verifyToken, verifyAdmin, async (req, res) => {
+router.get('/dashboard/stats', verifyToken, verifyAdmin, async (req, res) => {
     try {
-        const totalUsers = await Model.countDocuments();
-        const adminUsers = await Model.countDocuments({ isAdmin: true });
-        const regularUsers = totalUsers - adminUsers;
+        const [totalUsers, adminUsers, docsGenerated] = await Promise.all([
+            Model.countDocuments(),
+            Model.countDocuments({ isAdmin: true }),
+            Documentation.countDocuments()
+        ]);
         
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+        
+        const newUsers = await Model.countDocuments({ createdAt: { $gte: thirtyDaysAgo } });
+
         res.status(200).json({
-            totalUsers,
-            adminUsers,
-            regularUsers,
-            statsDate: new Date()
+            success: true,
+            stats: {
+                totalUsers,
+                adminUsers,
+                newUsers,
+                docsGenerated,
+                activeSessions: Math.floor(Math.random() * 50), // Mock active sessions
+                pendingApprovals: 0, // Mock pending approvals
+                statsDate: new Date()
+            }
         });
     } catch (err) {
         console.log(err);
