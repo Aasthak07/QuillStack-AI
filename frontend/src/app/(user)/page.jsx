@@ -2,301 +2,219 @@
 
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { FaCheckCircle, FaCode, FaSyncAlt, FaUsers, FaCloudUploadAlt, FaMagic, FaEdit, FaShareAlt, FaGithub, FaDiscord, FaLinkedin, FaUserTie, FaUserCog, FaUserEdit, FaUserShield } from "react-icons/fa";
+import { HiOutlineSparkles, HiOutlineCube, HiOutlineShieldCheck, HiOutlineArrowRight, HiOutlineCommandLine, HiOutlineCloudArrowUp, HiOutlineUserGroup, HiOutlineShare } from "react-icons/hi2";
+import Link from "next/link";
 
 const features = [
-  { icon: <FaCheckCircle className="text-[#8A4FFF] text-2xl" />, label: "Zero Manual Work" },
-  { icon: <FaMagic className="text-[#8A4FFF] text-2xl" />, label: "Smart & Adaptive" },
-  { icon: <FaSyncAlt className="text-[#8A4FFF] text-2xl" />, label: "Real-Time Sync" },
-  { icon: <FaCloudUploadAlt className="text-[#8A4FFF] text-2xl" />, label: "Export Anywhere" },
-  { icon: <FaUsers className="text-[#8A4FFF] text-2xl" />, label: "Built for Teams" },
+  { 
+    icon: <HiOutlineSparkles className="text-accent-primary text-2xl" />, 
+    title: "AI-Driven Precision",
+    desc: "Our models don't just read code; they understand context, intent, and architecture." 
+  },
+  { 
+    icon: <HiOutlineCube className="text-accent-primary text-2xl" />, 
+    title: "Modular Structure",
+    desc: "Automatically organizes docs into logical modules, classes, and functions." 
+  },
+  { 
+    icon: <HiOutlineCommandLine className="text-accent-primary text-2xl" />, 
+    title: "CLI Integration",
+    desc: "Sync your documentation directly from your development environment." 
+  },
+  { 
+    icon: <HiOutlineCloudArrowUp className="text-accent-primary text-2xl" />, 
+    title: "Live Deployment",
+    desc: "Deploy your docs to a hosted URL with a single command or commit." 
+  },
+  { 
+    icon: <HiOutlineUserGroup className="text-accent-primary text-2xl" />, 
+    title: "Team Sync",
+    desc: "Collaborative editing and version control built especially for developers." 
+  },
+  { 
+    icon: <HiOutlineShieldCheck className="text-accent-primary text-2xl" />, 
+    title: "Enterprise Security",
+    desc: "Your code never leaves your secure environment. Local-first analysis options." 
+  },
 ];
 
 const howItWorks = [
-  { icon: <FaCode className="text-[#8A4FFF] text-2xl" />, title: "Connect Your Code" },
-  { icon: <FaMagic className="text-[#8A4FFF] text-2xl" />, title: "AI Works Its Magic" },
-  { icon: <FaEdit className="text-[#8A4FFF] text-2xl" />, title: "Refine with Ease" },
-  { icon: <FaShareAlt className="text-[#8A4FFF] text-2xl" />, title: "Publish & Share" },
-];
-
-const featureTable = [
-  ["Code-aware docs", "Role-based access", "Custom templates"],
-  ["Multi-language", "Comments/annotations", "Version history"],
-  ["CI/CD integration", "Dashboards", "Automation API"],
-];
-
-const audience = [
-  { icon: <FaUserCog className="text-[#8A4FFF] text-2xl" />, label: "Developers", desc: "Instant, accurate docs for every commit." },
-  { icon: <FaUserTie className="text-[#8A4FFF] text-2xl" />, label: "PMs", desc: "Project docs always up to date." },
-  { icon: <FaUserShield className="text-[#8A4FFF] text-2xl" />, label: "DevOps", desc: "Docs that sync with your pipelines." },
-  { icon: <FaUserEdit className="text-[#8A4FFF] text-2xl" />, label: "Technical Writers", desc: "Focus on clarity, not copy-paste." },
+  { icon: <HiOutlineCommandLine />, title: "Connect Repo", desc: "Link your GitHub or local directory." },
+  { icon: <HiOutlineSparkles />, title: "AI Analysis", desc: "Gemini AI parses your code structure." },
+  { icon: <HiOutlineShare />, title: "Export & Sync", desc: "Generate Markdown, PDF, or HTML docs." },
 ];
 
 export default function LandingPage() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <div className="bg-[#0B0F1C] min-h-screen text-[#EAEAEA] font-sans">
-      <div className="mt-0">
-        {/* Hero Section */}
-        <section className="max-w-6xl mx-auto px-4 pt-12 pb-20 flex flex-col md:flex-row items-center gap-10 md:gap-16">
+    <div className="bg-[#060910] min-h-screen text-gray-200 selection:bg-accent-primary/20 bg-mesh pb-20">
+      
+      {/* Hero Section */}
+      <section className="relative pt-32 pb-20 px-4 overflow-hidden">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[500px] bg-accent-primary/5 blur-[120px] -z-10 rounded-full" />
+        
+        <div className="max-w-6xl mx-auto text-center space-y-8">
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="flex-1"
-          >
-
-            
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold mb-5 leading-tight">
-              The Smarter Way to <span className="text-[#8A4FFF]">Generate Documentation</span>
-            </h1>
-            <p className="text-base md:text-lg text-gray-300 mb-6 max-w-xl">
-              Let AI analyze your code and auto-generate flawless docs—so you can focus on building.
-            </p>
-            <div className="flex gap-3 flex-wrap">
-              <button className="bg-[#8A4FFF] hover:bg-[#A259FF] text-white font-semibold px-5 py-2.5 rounded-lg shadow transition text-sm">
-                Try QuillStackAI Free
-              </button>
-              <button className="bg-white/10 border border-[#8A4FFF] text-[#8A4FFF] hover:bg-[#8A4FFF] hover:text-white font-semibold px-5 py-2.5 rounded-lg transition text-sm">
-                Watch Demo
-              </button>
-            </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9 }}
-            className="flex-1 flex justify-center items-center"
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border-white/10 text-sm font-medium text-accent-primary"
           >
-            {/* Placeholder for AI/code illustration */}
-            <div className="w-[260px] h-[160px] sm:w-[320px] sm:h-[200px] bg-gradient-to-br from-[#8A4FFF]/40 to-[#EA00FF]/20 rounded-3xl flex items-center justify-center shadow-2xl border border-[#8A4FFF]/20">
-              <span className="text-3xl text-[#8A4FFF] font-black opacity-60">[AI Illustration]</span>
-            </div>
+            <HiOutlineSparkles className="animate-pulse" />
+            <span>Introducing QuillStack v2.0</span>
           </motion.div>
-        </section>
+          
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="text-5xl md:text-7xl font-extrabold tracking-tight"
+          >
+            Your Code, <span className="text-gradient">Documented</span> <br />
+            by Intelligence.
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="max-w-2xl mx-auto text-lg md:text-xl text-gray-400 leading-relaxed"
+          >
+            Stop wasting hours on manual documentation. Let QuillStack AI analyze your codebase and generate professional, synchronized docs in seconds.
+          </motion.p>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+          >
+            <Link href="/signup" className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-accent-primary text-white font-bold shadow-2xl shadow-accent-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+              Start Building Free <HiOutlineArrowRight />
+            </Link>
+            <button className="w-full sm:w-auto px-8 py-4 rounded-2xl glass border-white/10 font-bold hover:bg-white/5 transition-all">
+              Watch Product Tour
+            </button>
+          </motion.div>
+        </div>
+      </section>
 
-        {/* Why QuillStackAI */}
-        <section className="max-w-5xl mx-auto px-4 py-10">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-2xl font-bold mb-6 text-center"
-          >
-            Why QuillStackAI?
-          </motion.h2>
-          <motion.div
-            className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={{ visible: { transition: { staggerChildren: 0.1 } } }}
-          >
-            {features.map((f, i) => (
-              <motion.div
-                key={f.label}
-                className="flex items-center gap-3 bg-[#181C2A] rounded-xl p-4 shadow hover:shadow-lg transition"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-              >
+      {/* Features Grid */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <div className="text-center mb-16 space-y-4">
+          <h2 className="text-3xl md:text-4xl font-bold">Built for Modern Developers</h2>
+          <p className="text-gray-400 max-w-xl mx-auto">Everything you need to maintain high-quality documentation without the overhead.</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {features.map((f, i) => (
+            <motion.div 
+              key={f.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.1 }}
+              className="p-8 rounded-3xl glass border-white/5 hover:border-accent-primary/20 hover:bg-accent-primary/5 transition-all group"
+            >
+              <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:bg-accent-primary/10 transition-all">
                 {f.icon}
-                <span className="text-base font-semibold">{f.label}</span>
-              </motion.div>
-            ))}
-          </motion.div>
-        </section>
+              </div>
+              <h3 className="text-xl font-bold mb-3">{f.title}</h3>
+              <p className="text-gray-400 text-sm leading-relaxed">{f.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </section>
 
-        {/* How It Works */}
-        <section className="max-w-6xl mx-auto px-4 py-12">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-2xl font-bold mb-8 text-center"
-          >
-            How It Works
-          </motion.h2>
-          <div className="flex flex-col md:flex-row gap-6 md:gap-10 justify-center items-center">
-            {howItWorks.map((step, i) => (
-              <motion.div
-                key={step.title}
-                className="flex flex-col items-center text-center bg-[#181C2A] rounded-xl p-5 w-full md:w-48 shadow"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
+      {/* Proof/Illustration Section */}
+      <section className="max-w-7xl mx-auto px-6 py-24">
+        <div className="glass rounded-[40px] p-8 md:p-16 border-white/5 relative overflow-hidden flex flex-col lg:flex-row items-center gap-16">
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-accent-primary/10 blur-[100px] pointer-events-none" />
+          
+          <div className="flex-1 space-y-8">
+            <h2 className="text-3xl md:text-5xl font-bold leading-tight">Docs that stay in sync with every commit.</h2>
+            <div className="space-y-6">
+              {[
+                "Automatic type detection & mapping",
+                "Project-wide architectual summaries",
+                "Internal cross-referencing",
+                "Export as Markdown, PDF, or interactive Web"
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <HiOutlineShieldCheck className="text-accent-primary text-xl" />
+                  <span className="text-gray-300 font-medium">{item}</span>
+                </div>
+              ))}
+            </div>
+            <button className="px-8 py-3 rounded-xl bg-white text-black font-bold hover:bg-gray-200 transition-all">
+              Try Interactive Demo
+            </button>
+          </div>
+          
+          <div className="flex-1 w-full max-w-md lg:max-w-none">
+            <div className="glass-dark rounded-2xl p-4 border-white/10 shadow-2xl relative">
+              <div className="flex gap-2 mb-4">
+                <div className="w-3 h-3 rounded-full bg-red-500/50" />
+                <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
+                <div className="w-3 h-3 rounded-full bg-green-500/50" />
+              </div>
+              <code className="text-xs md:text-sm text-accent-primary block space-y-1">
+                <p className="opacity-50">// QuillStack AI - AutoDoc</p>
+                <p className="text-white">analyze_project(<span className="text-accent-secondary">"./src"</span>) {'{'}</p>
+                <p className="ml-4">context = parse_AST();</p>
+                <p className="ml-4 text-accent-secondary">generate_markdown(context);</p>
+                <p className="ml-4 text-green-400">deploy_to_hosted_url();</p>
+                <p>{'}'}</p>
+              </code>
+              <motion.div 
+                initial={{ x: -20, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                className="absolute -bottom-6 -right-6 p-4 glass rounded-2xl border-accent-primary/30 shadow-2xl"
               >
-                {step.icon}
-                <span className="mt-3 text-base font-semibold">{step.title}</span>
-                <span className="mt-1 text-gray-400 text-xs">Step {i + 1}</span>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
+                    <HiOutlineSparkles className="text-green-500" />
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-white">Documentation Ready</p>
+                    <p className="text-[10px] text-gray-400">142 files analyzed</p>
+                  </div>
+                </div>
               </motion.div>
-            ))}
+            </div>
           </div>
-        </section>
+        </div>
+      </section>
 
-        {/* Testimonials */}
-        <section className="max-w-4xl mx-auto px-4 py-12">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-2xl font-bold mb-8 text-center"
+      {/* CTA Section */}
+      <section className="max-w-4xl mx-auto px-6 py-24 text-center space-y-8">
+        <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight">Ready to reclaim <span className="text-gradient">your time?</span></h2>
+        <p className="text-gray-400 text-lg">Join 2,000+ developers documenting the future with QuillStack AI.</p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link href="/signup" className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-accent-primary text-white font-bold shadow-2xl shadow-accent-primary/20 hover:scale-105 active:scale-95 transition-all">
+            Get Started For Free
+          </Link>
+          <form 
+            onSubmit={e => { e.preventDefault(); setSubscribed(true); }}
+            className="w-full sm:w-auto flex items-center gap-2 p-1 glass rounded-2xl border-white/5"
           >
-            What Our Users Say
-          </motion.h2>
-          <div className="flex flex-col md:flex-row gap-6">
-            <motion.div
-              className="flex-1 bg-[#181C2A] rounded-xl p-5 shadow"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-            >
-              <p className="text-base mb-3">“QuillStackAI reduced our doc overhead by 90%...”</p>
-              <span className="text-xs text-gray-400">— Priya R., CTO</span>
-            </motion.div>
-            <motion.div
-              className="flex-1 bg-[#181C2A] rounded-xl p-5 shadow"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-            >
-              <p className="text-base mb-3">“Docs that stay in sync with our sprint cycles...”</p>
-              <span className="text-xs text-gray-400">— Diego M., Lead Dev</span>
-            </motion.div>
-          </div>
-        </section>
-
-        {/* Feature Table */}
-        <section className="max-w-5xl mx-auto px-4 py-12">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-2xl font-bold mb-8 text-center"
-          >
-            Feature Comparison
-          </motion.h2>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-[#181C2A] rounded-xl overflow-hidden shadow text-left text-sm">
-              <thead>
-                <tr>
-                  <th className="px-4 py-3 text-base text-[#8A4FFF]">AI Core</th>
-                  <th className="px-4 py-3 text-base text-[#8A4FFF]">Collaboration</th>
-                  <th className="px-4 py-3 text-base text-[#8A4FFF]">Flexibility</th>
-                </tr>
-              </thead>
-              <tbody>
-                {featureTable.map((row, i) => (
-                  <tr key={i} className="border-t border-[#222]">
-                    {row.map((cell, j) => (
-                      <td key={j} className="px-4 py-3 text-gray-200">{cell}</td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        {/* Call to Action */}
-        <section className="max-w-3xl mx-auto px-4 py-12 text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-xl font-bold mb-4"
-          >
-            Start Writing Better Docs Today
-          </motion.h2>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button className="bg-[#8A4FFF] hover:bg-[#A259FF] text-white font-semibold px-6 py-3 rounded-lg shadow transition text-base">
-              Get Started — Free Forever
-            </button>
-            <button className="bg-white/10 border border-[#8A4FFF] text-[#8A4FFF] hover:bg-[#8A4FFF] hover:text-white font-semibold px-6 py-3 rounded-lg transition text-base">
-              Talk to Sales
-            </button>
-          </div>
-        </section>
-
-        {/* Email Newsletter */}
-        <section className="max-w-2xl mx-auto px-4 py-12 text-center">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-lg font-bold mb-2"
-          >
-            Stay in the Loop
-          </motion.h2>
-          <form
-            className="flex flex-col sm:flex-row gap-3 justify-center items-center"
-            onSubmit={e => {
-              e.preventDefault();
-              setSubscribed(true);
-            }}
-          >
-            <input
-              type="email"
+            <input 
+              type="email" 
+              placeholder="Stay updated" 
+              className="bg-transparent px-4 py-2 text-sm outline-none w-full sm:w-48"
               required
-              placeholder="Your email address"
-              className="px-3 py-2 rounded-lg bg-[#181C2A] border border-[#8A4FFF] text-white focus:outline-none focus:ring-2 focus:ring-[#8A4FFF] w-full sm:w-auto text-sm"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              disabled={subscribed}
             />
-            <button
-              type="submit"
-              className="bg-[#8A4FFF] hover:bg-[#A259FF] text-white font-semibold px-5 py-2.5 rounded-lg transition text-sm"
-              disabled={subscribed}
-            >
-              {subscribed ? "Subscribed!" : "Subscribe"}
+            <button className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-sm font-bold transition-all">
+              {subscribed ? "Done!" : "Subscribe"}
             </button>
           </form>
-          <p className="text-xs text-gray-400 mt-1">Get AI documentation tips, updates, and case studies.</p>
-        </section>
-
-        {/* Audience Section */}
-        <section className="max-w-5xl mx-auto px-4 py-12">
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="text-2xl font-bold mb-8 text-center"
-          >
-            Who Is QuillStackAI For?
-          </motion.h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {audience.map((a, i) => (
-              <motion.div
-                key={a.label}
-                className="flex flex-col items-center bg-[#181C2A] rounded-xl p-5 shadow"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: i * 0.08 }}
-              >
-                {a.icon}
-                <span className="mt-3 text-base font-semibold">{a.label}</span>
-                <span className="mt-1 text-gray-400 text-xs text-center">{a.desc}</span>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </div>
   );
 }
+

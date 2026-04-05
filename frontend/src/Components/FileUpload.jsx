@@ -2,12 +2,10 @@
 
 import React, { useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaCheckCircle, FaTimesCircle, FaUpload, FaFileAlt, FaTimes } from "react-icons/fa";
+import { HiOutlineCloudArrowUp, HiOutlineDocumentText, HiOutlineXMark, HiOutlineCheckCircle, HiOutlineExclamationCircle, HiOutlineLockClosed, HiOutlineRocketLaunch } from "react-icons/hi2";
 import toast, { Toaster } from "react-hot-toast";
 
-const ALLOWED_TYPES = [
-  "js", "jsx", "ts", "tsx", "py", "java", "html", "css"
-];
+const ALLOWED_TYPES = ["js", "jsx", "ts", "tsx", "py", "java", "html", "css"];
 
 function getFileExt(filename) {
   return filename.split('.').pop().toLowerCase();
@@ -25,12 +23,7 @@ export default function FileUpload({ onUploadSuccess }) {
     if (!file) return false;
     const ext = getFileExt(file.name).trim();
     if (!ALLOWED_TYPES.includes(ext)) {
-      setError(
-        `Unsupported file type. Allowed: ${ALLOWED_TYPES.map(e => '.' + e).join(", ")}`
-      );
-      toast.error(
-        `Unsupported file type. Allowed: ${ALLOWED_TYPES.map(e => '.' + e).join(", ")}`
-      );
+      setError(`Unsupported file type. Allowed: ${ALLOWED_TYPES.map(e => '.' + e).join(", ")}`);
       return false;
     }
     setError("");
@@ -40,7 +33,6 @@ export default function FileUpload({ onUploadSuccess }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (validateFile(file)) {
-      // Check authentication when file is selected
       const token = localStorage.getItem("token") || localStorage.getItem("userToken");
       if (!token) {
         setShowLoginModal(true);
@@ -51,45 +43,10 @@ export default function FileUpload({ onUploadSuccess }) {
     } else {
       setSelectedFile(null);
     }
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragActive(true);
-  };
-  const handleDragLeave = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragActive(false);
-  };
-  const handleDrop = (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setIsDragActive(false);
-    const file = e.dataTransfer.files[0];
-    if (validateFile(file)) {
-      // Check authentication when file is dropped
-      const token = localStorage.getItem("token") || localStorage.getItem("userToken");
-      if (!token) {
-        setShowLoginModal(true);
-        setSelectedFile(null);
-        return;
-      }
-      setSelectedFile(file);
-    } else {
-      setSelectedFile(null);
-    }
-  };
-
-  const handleRemoveFile = () => {
-    setSelectedFile(null);
-    setError("");
   };
 
   const handleUpload = async () => {
     if (!selectedFile) return;
-    
     const token = localStorage.getItem("token") || localStorage.getItem("userToken");
     if (!token) {
       setShowLoginModal(true);
@@ -107,7 +64,6 @@ export default function FileUpload({ onUploadSuccess }) {
         body: formData,
       });
       
-      // Check for 401 Unauthorized
       if (res.status === 401) {
         setShowLoginModal(true);
         return;
@@ -115,135 +71,80 @@ export default function FileUpload({ onUploadSuccess }) {
       
       const data = await res.json();
       if (data.success && data.data) {
-        toast.success("✅ Docs Generated Successfully!");
-        if (onUploadSuccess) {
-          onUploadSuccess(data.data);
-        }
+        toast.success("Documentation generated!");
+        if (onUploadSuccess) onUploadSuccess(data.data);
         setSelectedFile(null);
       } else {
         throw new Error(data.message || "No docs generated");
       }
     } catch (error) {
-      // Don't show error if we're showing login modal
       if (!showLoginModal) {
-        setError(error.message || "Upload failed: Network Error");
-        toast.error("Upload failed: " + (error.message || "Network Error"));
+        setError(error.message || "Network Error");
+        toast.error("Upload failed");
       }
     } finally {
       setIsUploading(false);
     }
   };
 
-  const filePreview = selectedFile && (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 10 }}
-      className="flex items-center gap-3 bg-[#181C2A] text-amber-200 border border-[#6366F1]/30 rounded-lg px-4 py-2 mt-3 shadow"
-    >
-      <FaFileAlt className="text-[#8A4FFF] text-lg" />
-      <span className="text-sm text-white truncate max-w-[120px]">{selectedFile.name}</span>
-      <span className="text-xs text-gray-400">({(selectedFile.size / 1024).toFixed(1)} KB)</span>
-      <FaCheckCircle className="text-green-400 ml-2" />
-      <button
-        onClick={handleRemoveFile}
-        className="ml-2 text-gray-400 hover:text-red-400 transition"
-        aria-label="Remove file"
-      >
-        <FaTimes />
-      </button>
-    </motion.div>
-  );
-
   return (
-    <div className="w-full max-w-md mx-auto">
-      <Toaster position="top-right" toastOptions={{
-        style: {
-          background: "#181C2A",
-          color: "#EAEAEA",
-          borderRadius: "0.75rem",
-          boxShadow: "0 2px 16px 0 #8A4FFF33",
-        },
-        success: { style: { background: "#232946", color: "#A259FF" } },
-        error: { style: { background: "#232946", color: "#FF6B6B" } },
+    <div className="w-full space-y-4">
+      <Toaster position="bottom-right" toastOptions={{
+        className: 'glass-dark border border-white/5 text-white rounded-2xl',
+        style: { background: 'rgba(11, 15, 28, 0.8)', backdropFilter: 'blur(12px)' }
       }} />
 
       {/* Login Required Modal */}
       <AnimatePresence>
         {showLoginModal && (
-          <motion.div
-            className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setShowLoginModal(false)}
-          >
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
             <motion.div
-              className="bg-white/10 backdrop-blur-md rounded-2xl px-8 py-6 shadow-2xl border border-fuchsia-700/20 max-w-md mx-4"
-              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              onClick={() => setShowLoginModal(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: 20 }}
-              transition={{ duration: 0.3 }}
-              onClick={(e) => e.stopPropagation()}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-sm glass-dark p-8 rounded-3xl border border-white/10 shadow-2xl text-center space-y-6"
             >
-              <div className="text-center">
-                <div className="w-12 h-12 bg-fuchsia-700/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg
-                    className="w-6 h-6 text-fuchsia-400"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                    />
-                  </svg>
-                </div>
-                <h3 className="text-xl font-bold text-white mb-2">Login Required</h3>
-                <p className="text-fuchsia-200 mb-6">
-                  Please login first to generate documentation with{" "}
-                  <span className="text-fuchsia-400 font-semibold">QuillStackAI</span>
-                </p>
-                <div className="space-y-3">
-                  <button
-                    onClick={() => window.location.href = '/login'}
-                    className="w-full px-4 py-2 bg-fuchsia-700 hover:bg-fuchsia-800 text-white rounded-lg font-semibold transition-all duration-200"
-                  >
-                    Go to Login
-                  </button>
-                  <button
-                    onClick={() => window.location.href = '/sign-up'}
-                    className="w-full px-4 py-2 bg-transparent border border-fuchsia-700 hover:bg-fuchsia-700/10 text-fuchsia-300 rounded-lg font-semibold transition-all duration-200"
-                  >
-                    Create Account
-                  </button>
-                  <button
-                    onClick={() => setShowLoginModal(false)}
-                    className="w-full px-4 py-2 bg-transparent text-gray-400 hover:text-white rounded-lg font-semibold transition-all duration-200"
-                  >
-                    Cancel
-                  </button>
-                </div>
+              <div className="w-16 h-16 bg-accent-primary/10 rounded-2xl flex items-center justify-center mx-auto text-accent-primary">
+                <HiOutlineLockClosed className="text-3xl" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-white">Authentication Required</h3>
+                <p className="text-sm text-gray-400">Please sign in to your account to continue generating documentation.</p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <button
+                  onClick={() => window.location.href = '/login'}
+                  className="w-full py-3 bg-accent-primary text-white rounded-xl font-bold hover:scale-[1.02] transition-all"
+                >
+                  Sign In
+                </button>
+                <button
+                  onClick={() => setShowLoginModal(false)}
+                  className="w-full py-3 bg-white/5 text-gray-300 rounded-xl font-bold hover:bg-white/10 transition-all"
+                >
+                  Maybe Later
+                </button>
               </div>
             </motion.div>
-          </motion.div>
+          </div>
         )}
       </AnimatePresence>
+
       <motion.div
-        className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl px-6 py-10 bg-gradient-to-br from-[#181C2A] to-[#232946] shadow-xl transition-all duration-300 cursor-pointer select-none relative ${
-          isDragActive ? "border-[#A259FF] bg-[#232946] scale-105 shadow-2xl" : "border-[#6366F1]/40"
+        className={`relative group cursor-pointer rounded-3xl border-2 border-dashed transition-all p-10 text-center ${
+          isDragActive ? "border-accent-primary bg-accent-primary/5 scale-[1.02]" : "border-white/10 hover:border-white/20 hover:bg-white/5"
         }`}
-        tabIndex={0}
         onClick={() => inputRef.current.click()}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-        whileHover={{ scale: 1.03, boxShadow: "0 0 32px 0 #8A4FFF55" }}
-        whileTap={{ scale: 0.98 }}
-        animate={isDragActive ? { scale: 1.04, boxShadow: "0 0 40px 8px #A259FF55" } : {}}
+        onDragOver={(e) => { e.preventDefault(); setIsDragActive(true); }}
+        onDragLeave={() => setIsDragActive(false)}
+        onDrop={(e) => { e.preventDefault(); setIsDragActive(false); const file = e.dataTransfer.files[0]; if (validateFile(file)) setSelectedFile(file); }}
       >
         <input
           ref={inputRef}
@@ -253,55 +154,60 @@ export default function FileUpload({ onUploadSuccess }) {
           onChange={handleFileChange}
           disabled={isUploading}
         />
-        <FaUpload className="text-4xl text-[#8A4FFF] mb-2" />
-        <p className="text-white text-base font-semibold mb-1">Drag & drop your code file here</p>
-        <p className="text-xs text-gray-400 mb-2">or click to select (.js, .jsx, .ts, .tsx, .py, .java, .html, .css)</p>
-        <AnimatePresence>{filePreview}</AnimatePresence>
-        {!selectedFile && (
-          <motion.span
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="mt-3 text-xs text-gray-500"
-          >
-            Max file size: 5MB
-          </motion.span>
-        )}
-      </motion.div>
-      <AnimatePresence>
-        {error && (
+        
+        <div className="space-y-4">
+          <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center mx-auto group-hover:scale-110 transition-transform">
+            <HiOutlineCloudArrowUp className="text-3xl text-accent-primary" />
+          </div>
+          <div className="space-y-1">
+            <p className="text-base font-bold text-white">Select Code File</p>
+            <p className="text-xs text-gray-500">Drag & drop or browse from computer</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-2 opacity-50">
+            {ALLOWED_TYPES.slice(0, 4).map(t => <span key={t} className="px-2 py-0.5 bg-white/5 rounded text-[10px] uppercase font-bold">{t}</span>)}
+            <span className="text-[10px] font-bold">...</span>
+          </div>
+        </div>
+
+        {selectedFile && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="mt-4 px-4 py-2 bg-red-500/10 border border-red-500/20 text-red-400 rounded-md text-xs text-center"
+            className="mt-6 p-4 glass rounded-2xl border-accent-primary/20 flex items-center gap-3 text-left"
+            onClick={(e) => e.stopPropagation()}
           >
-            <FaTimesCircle className="inline mr-1" /> {error}
+            <div className="w-10 h-10 rounded-xl bg-accent-primary/10 flex items-center justify-center text-accent-primary">
+              <HiOutlineDocumentText className="text-xl" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-white truncate">{selectedFile.name}</p>
+              <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">{(selectedFile.size / 1024).toFixed(1)} KB</p>
+            </div>
+            <button
+              onClick={() => setSelectedFile(null)}
+              className="p-2 hover:bg-white/5 rounded-lg text-gray-500 hover:text-white transition-colors"
+            >
+              <HiOutlineXMark className="text-xl" />
+            </button>
           </motion.div>
         )}
-      </AnimatePresence>
-      <motion.button
-        className={`w-full mt-6 py-3 rounded-xl font-semibold text-white bg-gradient-to-r from-[#8A4FFF] to-[#6366F1] shadow-lg transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#A259FF]/40`}
+      </motion.div>
+
+      <button
         onClick={handleUpload}
         disabled={!selectedFile || isUploading}
-        whileHover={!isUploading ? { scale: 1.04 } : {}}
-        whileTap={!isUploading ? { scale: 0.98 } : {}}
-        type="button"
+        className="w-full py-4 rounded-2xl bg-accent-primary text-white font-bold shadow-2xl shadow-accent-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2"
       >
         {isUploading ? (
-          <>
-            <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-              <path className="opacity-75" fill="#A259FF" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-            </svg>
-            <span>Processing…</span>
-          </>
+          <div className="flex items-center gap-2">
+            <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin" />
+            <span>Architecting Docs...</span>
+          </div>
         ) : (
-          <>
-            <FaUpload /> Upload & Generate Docs
-          </>
+          <>Generate Documentation <HiOutlineRocketLaunch className="text-xl" /></>
         )}
-      </motion.button>
+      </button>
     </div>
   );
 }
+

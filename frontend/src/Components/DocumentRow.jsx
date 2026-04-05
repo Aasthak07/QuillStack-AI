@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { FaFilePdf, FaCopy, FaShareAlt, FaEye, FaTrash } from "react-icons/fa";
+import { HiOutlineEye, HiOutlineDocumentArrowDown, HiOutlineClipboardDocumentList, HiOutlineShare, HiOutlineTrash, HiOutlineCalendar, HiOutlineDocumentText } from "react-icons/hi2";
 import toast from "react-hot-toast";
 
 export default function DocumentRow({ doc, onDelete }) {
@@ -11,7 +11,7 @@ export default function DocumentRow({ doc, onDelete }) {
 
   const handleDelete = async (e) => {
     e.stopPropagation();
-    if (!window.confirm("Are you sure you want to delete this document?")) return;
+    if (!window.confirm("Delete this document forever?")) return;
     
     setIsDeleting(true);
     try {
@@ -20,153 +20,115 @@ export default function DocumentRow({ doc, onDelete }) {
         headers: token ? { Authorization: `Bearer ${token}` } : {},
       });
       
-      if (!response.ok) throw new Error("Failed to delete document");
-      
-      toast.success("Document deleted permanently");
+      if (!response.ok) throw new Error("Delete failed");
+      toast.success("Archived document removed");
       if (onDelete) onDelete(doc._id);
     } catch (err) {
-      toast.error("Failed to delete document");
-      setIsDeleting(false); // Only reset if failed. If success, component unmounts instantly.
+      toast.error("Cloud sync failed");
+      setIsDeleting(false);
     }
   };
 
-  // Fallback missing properties gracefully
-  const title = doc.filename || "Untitled Document";
-  const language = doc.language || "Unknown";
+  const title = doc.filename || "Untitled Architect";
+  const language = doc.language || "Plaintext";
   
-  // Custom date formatter using native JS
   const formatDate = (dateString) => {
     if (!dateString) return "Recently";
     const d = new Date(dateString);
-    return d.toLocaleString('en-US', { 
-      month: 'short', day: 'numeric', year: 'numeric', 
-      hour: 'numeric', minute: '2-digit', hour12: true 
-    });
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
   
   const date = formatDate(doc.generatedAt);
-  const previewText = doc.content ? doc.content.substring(0, 150) + "..." : "No preview available.";
+  const previewText = doc.content ? doc.content.substring(0, 120) + "..." : "Initial draft pending...";
   
-  const handleView = () => {
-    window.open(`/doc/${doc._id}`, '_blank');
-  };
+  const handleView = () => window.open(`/doc/${doc._id}`, '_blank');
 
   const handleCopy = () => {
     if (!doc.content) return;
     navigator.clipboard.writeText(doc.content)
-      .then(() => toast.success("Copied to clipboard!"))
-      .catch(() => toast.error("Failed to copy"));
+      .then(() => toast.success("Copied to clipboard"))
+      .catch(() => toast.error("Copy failed"));
   };
 
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/doc/${doc._id}`;
     if (navigator.share) {
       try {
-        await navigator.share({
-          title: `QuillStack AI - ${title}`,
-          text: 'Check out this generated documentation!',
-          url: shareUrl,
-        });
+        await navigator.share({ title: `QuillStack AI - ${title}`, url: shareUrl });
         return;
-      } catch (err) {
-        if (err.name === "AbortError") return;
-      }
+      } catch (err) {}
     }
     navigator.clipboard.writeText(shareUrl)
-      .then(() => toast.success("Share link copied!"))
-      .catch(() => toast.error("Failed to copy link"));
+      .then(() => toast.success("Share link ready"))
+      .catch(() => toast.error("Link sync failed"));
   };
 
   const handleDownloadPdf = async () => {
     setIsGeneratingPdf(true);
     try {
       const html2pdf = (await import('html2pdf.js')).default;
-      
       const element = document.createElement('div');
-      element.innerHTML = `<div class="pdf-markdown-content" style="font-family: Arial, Helvetica, sans-serif; padding: 10px 20px; background-color: white; color: #1f2937;">${doc.content.replace(/\n/g, '<br>')}</div>`;
-      document.body.appendChild(element);
-
+      element.innerHTML = `<div style="font-family: sans-serif; padding: 40px; color: #111;">${doc.content.replace(/\n/g, '<br>')}</div>`;
+      
       const opt = {
-        margin: [20, 15, 20, 15],
-        filename: `${title.replace(/[^a-z0-9]/gi, '_')}.pdf`,
+        margin: 10,
+        filename: `${title}.pdf`,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true, logging: false },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      const worker = html2pdf().from(element).set(opt);
-      await worker.toPdf().get('pdf').then((pdf) => {
-        const totalPages = pdf.internal.getNumberOfPages();
-        for (let i = 1; i <= totalPages; i++) {
-          pdf.setPage(i);
-          pdf.setFontSize(10);
-          pdf.setTextColor(100);
-          pdf.text('QuillStack AI Documentation', 15, 12);
-          pdf.setDrawColor(200);
-          pdf.setLineWidth(0.5);
-          pdf.line(15, 15, pdf.internal.pageSize.getWidth() - 15, 15);
-          pdf.line(15, pdf.internal.pageSize.getHeight() - 15, pdf.internal.pageSize.getWidth() - 15, pdf.internal.pageSize.getHeight() - 15);
-          pdf.text('Generated by QuillStack AI', 15, pdf.internal.pageSize.getHeight() - 10);
-          pdf.text(`Page ${i} of ${totalPages}`, pdf.internal.pageSize.getWidth() - 35, pdf.internal.pageSize.getHeight() - 10);
-        }
-      });
-      await worker.save();
-      
-      document.body.removeChild(element);
-      toast.success("PDF Downloaded!");
+      await html2pdf().from(element).set(opt).save();
+      toast.success("PDF Blueprint exported");
     } catch (err) {
-      console.error(err);
-      toast.error("Failed to generate PDF");
+      toast.error("Export failed");
     } finally {
       setIsGeneratingPdf(false);
     }
   };
 
   return (
-    <div className="group flex flex-col sm:flex-row items-start sm:items-center justify-between p-5 bg-[#181C2A] border border-gray-800 hover:border-fuchsia-500/40 rounded-xl hover:bg-[#1E2335] shadow-sm hover:shadow-[0_4px_20px_rgba(138,79,255,0.1)] transition-all duration-300 w-full">
-      {/* Left Section: Info */}
-      <div 
-        className="flex-1 cursor-pointer pr-0 sm:pr-6 w-full sm:w-auto mb-4 sm:mb-0" 
-        onClick={handleView}
-      >
-        <div className="flex items-center gap-3 mb-2">
-          <h3 className="text-lg font-bold text-white group-hover:text-fuchsia-400 transition-colors line-clamp-1" title={title}>
+    <div className="group glass p-6 rounded-[32px] border-white/5 hover:border-accent-primary/20 hover:bg-white/5 transition-all duration-500 flex flex-col md:flex-row items-start md:items-center gap-6">
+      <div className="w-12 h-12 rounded-2xl bg-accent-primary/10 flex items-center justify-center text-accent-primary shrink-0 group-hover:scale-110 transition-transform duration-500">
+        <HiOutlineDocumentText className="text-2xl" />
+      </div>
+
+      <div className="flex-1 min-w-0 space-y-1 cursor-pointer" onClick={handleView}>
+        <div className="flex items-center gap-3">
+          <h3 className="text-lg font-bold text-white group-hover:text-accent-primary transition-colors truncate">
             {title}
           </h3>
-          <span className="bg-fuchsia-700/20 text-fuchsia-300 text-[10px] px-2.5 py-0.5 rounded-full border border-fuchsia-700/30 whitespace-nowrap">
+          <span className="px-2 py-0.5 rounded-lg bg-white/5 border border-white/5 text-[10px] uppercase font-bold text-gray-500 tracking-widest">
             {language}
           </span>
         </div>
-        
-        <p className="text-sm text-gray-400 line-clamp-2 mb-3 max-w-4xl">
+        <p className="text-sm text-gray-500 line-clamp-1">
           {previewText}
         </p>
-        
-        <div className="flex items-center text-xs text-gray-500">
-          <svg className="w-3.5 h-3.5 mr-1.5 opacity-70" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        <div className="flex items-center gap-2 text-[10px] text-gray-600 font-bold uppercase tracking-widest">
+          <HiOutlineCalendar />
           {date}
         </div>
       </div>
 
-      {/* Right Section: Actions */}
-      <div className="flex flex-wrap sm:flex-nowrap items-center gap-2 sm:ml-4 w-full sm:w-auto justify-end sm:justify-start border-t sm:border-t-0 border-gray-800 pt-4 sm:pt-0">
-        <button onClick={(e) => { e.stopPropagation(); handleView(); }} className="p-2.5 rounded-lg bg-gray-800/80 hover:bg-fuchsia-700/20 text-gray-300 hover:text-fuchsia-400 transition-colors border border-transparent hover:border-fuchsia-700/30 flex items-center justify-center" title="View Full Document">
-          <FaEye className="text-[16px]" />
+      <div className="flex items-center gap-2 w-full md:w-auto pt-4 md:pt-0 border-t md:border-t-0 border-white/5">
+        <button onClick={handleView} className="flex-1 md:flex-none p-3 rounded-xl bg-white/5 hover:bg-accent-primary/10 text-gray-400 hover:text-accent-primary transition-all border border-white/5">
+          <HiOutlineEye className="text-xl mx-auto" />
         </button>
-        <button onClick={(e) => { e.stopPropagation(); handleDownloadPdf(); }} disabled={isGeneratingPdf} className="p-2.5 rounded-lg bg-gray-800/80 hover:bg-fuchsia-700/20 text-gray-300 hover:text-fuchsia-400 transition-colors border border-transparent hover:border-fuchsia-700/30 disabled:opacity-50 flex items-center justify-center" title="Download PDF">
-          <FaFilePdf className="text-[16px]" />
+        <button onClick={handleDownloadPdf} disabled={isGeneratingPdf} className="flex-1 md:flex-none p-3 rounded-xl bg-white/5 hover:bg-accent-primary/10 text-gray-400 hover:text-accent-primary transition-all border border-white/5 disabled:opacity-30">
+          <HiOutlineDocumentArrowDown className="text-xl mx-auto" />
         </button>
-        <button onClick={(e) => { e.stopPropagation(); handleCopy(); }} className="p-2.5 rounded-lg bg-gray-800/80 hover:bg-fuchsia-700/20 text-gray-300 hover:text-fuchsia-400 transition-colors border border-transparent hover:border-fuchsia-700/30 flex items-center justify-center" title="Copy Content">
-          <FaCopy className="text-[16px]" />
+        <button onClick={handleCopy} className="flex-1 md:flex-none p-3 rounded-xl bg-white/5 hover:bg-accent-primary/10 text-gray-400 hover:text-accent-primary transition-all border border-white/5">
+          <HiOutlineClipboardDocumentList className="text-xl mx-auto" />
         </button>
-        <button onClick={(e) => { e.stopPropagation(); handleShare(); }} className="p-2.5 rounded-lg bg-gray-800/80 hover:bg-fuchsia-700/20 text-gray-300 hover:text-fuchsia-400 transition-colors border border-transparent hover:border-fuchsia-700/30 flex items-center justify-center" title="Share Link">
-          <FaShareAlt className="text-[16px]" />
+        <button onClick={handleShare} className="flex-1 md:flex-none p-3 rounded-xl bg-white/5 hover:bg-accent-primary/10 text-gray-400 hover:text-accent-primary transition-all border border-white/5">
+          <HiOutlineShare className="text-xl mx-auto" />
         </button>
-        <button onClick={handleDelete} disabled={isDeleting} className="p-2.5 rounded-lg bg-gray-800/80 hover:bg-red-500/20 text-gray-300 hover:text-red-400 transition-colors border border-transparent hover:border-red-500/30 disabled:opacity-50 flex items-center justify-center sm:ml-2" title="Delete Document">
-          <FaTrash className="text-[16px]" />
+        <button onClick={handleDelete} disabled={isDeleting} className="flex-1 md:flex-none p-3 rounded-xl bg-white/5 hover:bg-red-500/10 text-gray-400 hover:text-red-500 transition-all border border-white/5 disabled:opacity-30">
+          <HiOutlineTrash className="text-xl mx-auto" />
         </button>
       </div>
     </div>
   );
 }
+

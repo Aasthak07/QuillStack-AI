@@ -54,67 +54,38 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-[#0B0F1C] relative">
-      {/* Faint fuchsia/purple radial glow */}
-      <style jsx>{`
-        @keyframes flow-diagonal {
-          0% { transform: translate(-20%, -20%) rotate(-25deg); opacity: 0.25; }
-          50% { transform: translate(20%, -40%) rotate(-25deg); opacity: 0.4; }
-          100% { transform: translate(-20%, -20%) rotate(-25deg); opacity: 0.25; }
-        }
-      `}</style>
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <div
-          className="absolute left-0 top-1/4 w-[60vw] h-[40vw] max-w-2xl max-h-[30vh] rounded-full bg-fuchsia-700 opacity-30 blur-3xl rotate-[-25deg]"
-          style={{
-            animation: "flow-diagonal 6s ease-in-out infinite",
-          }}
-        ></div>
-      </div>
-
+    <div className="min-h-screen flex items-center justify-center px-6 py-12 bg-[#060910] bg-mesh relative overflow-hidden">
       <motion.div
-        className="relative z-10 w-full max-w-md bg-white/5 backdrop-blur-sm rounded-2xl px-8 py-8 shadow-2xl border border-white/10"
-        style={{
-          rotateX: cardPos.x,
-          rotateY: cardPos.y,
-          scale: isHovered ? 1.04 : 1,
-          boxShadow: isHovered
-            ? "0 0 40px 8px rgba(234, 0, 255, 0.25), 0 2px 32px 0 rgba(138, 79, 255, 0.25)"
-            : "0 2px 32px 0 rgba(138, 79, 255, 0.10)",
-          transition: "box-shadow 0.3s, scale 0.3s",
-        }}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={() => {
-          setCardPos({ x: 0, y: 0 });
-          setIsHovered(false);
-        }}
-        onMouseEnter={() => setIsHovered(true)}
+        className="relative z-10 w-full max-w-lg glass-dark p-10 rounded-[40px] border-white/5 shadow-2xl"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
       >
-        <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold text-white mb-2">Forgot Password</h1>
-          <p className="text-sm text-gray-400">
-            Enter your email and we'll send you a link to reset your password
-          </p>
+        <div className="text-center space-y-2 mb-10">
+          <h1 className="text-3xl font-extrabold tracking-tight text-white">
+            Reset <span className="text-gradient">Key.</span>
+          </h1>
+          <p className="text-sm text-gray-400">Recover your developer account</p>
         </div>
 
         {message && (
-          <div className={`mb-6 p-3 rounded-md text-sm ${isError ? 'bg-red-500/10 text-red-400' : 'bg-green-500/10 text-green-400'}`}>
+          <motion.div 
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            className={`mb-6 p-4 rounded-2xl text-xs text-center font-bold border ${isError ? 'bg-red-500/10 border-red-500/20 text-red-400' : 'bg-accent-primary/10 border-accent-primary/20 text-accent-primary'}`}
+          >
             {message}
-          </div>
+          </motion.div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-1">
-              Email address
-            </label>
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Email Address</label>
             <input
               type="email"
-              id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-white/5 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200"
-              placeholder="your@email.com"
+              className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-accent-primary/50 focus:bg-white/10 outline-none transition-all text-white placeholder-gray-600"
+              placeholder="id@quillstack.ai"
               disabled={isSubmitting}
             />
           </div>
@@ -122,18 +93,15 @@ export default function ForgotPasswordPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white py-3 rounded-lg font-semibold transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full py-5 rounded-2xl bg-accent-primary text-white font-bold shadow-2xl shadow-accent-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
           >
-            {isSubmitting ? 'Sending...' : 'Send Reset Link'}
+            {isSubmitting ? "Requesting..." : "Send Reset link"}
           </button>
         </form>
 
-        <div className="mt-6 text-center">
-          <Link 
-            href="/login" 
-            className="text-sm text-purple-400 hover:underline font-medium"
-          >
-            Back to Sign In
+        <div className="mt-8 pt-8 border-t border-white/5 text-center">
+          <Link href="/login" className="text-[10px] font-bold uppercase tracking-widest text-accent-primary hover:underline">
+            Back to Access Session
           </Link>
         </div>
       </motion.div>

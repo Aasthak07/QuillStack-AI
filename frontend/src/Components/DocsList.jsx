@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import DocumentRow from "./DocumentRow";
-import { FaFileAlt, FaSpinner } from "react-icons/fa";
+import { HiOutlineDocumentText, HiOutlineArrowPath } from "react-icons/hi2";
 
 export default function DocsList() {
   const [docs, setDocs] = useState([]);
@@ -18,14 +18,11 @@ export default function DocsList() {
           headers: token ? { Authorization: `Bearer ${token}` } : {},
         });
         
-        if (!response.ok) {
-          throw new Error("Failed to fetch documents");
-        }
+        if (!response.ok) throw new Error("Failed to fetch documents");
         
         const data = await response.json();
         setDocs(data);
       } catch (err) {
-        console.error(err);
         setError("Failed to fetch documents. Please try again later.");
       } finally {
         setIsLoading(false);
@@ -37,23 +34,23 @@ export default function DocsList() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 min-h-[50vh]">
-        <FaSpinner className="animate-spin text-fuchsia-500 text-4xl mb-4" />
-        <p className="text-gray-400 font-medium">Loading your generated documents...</p>
+      <div className="flex flex-col items-center justify-center py-32 space-y-4">
+        <div className="w-12 h-12 border-4 border-accent-primary/20 border-t-accent-primary rounded-full animate-spin" />
+        <p className="text-gray-500 font-bold text-sm tracking-widest uppercase">Syncing Library...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center py-20 min-h-[50vh]">
-        <div className="bg-red-500/10 border border-red-500/50 rounded-xl p-6 text-center max-w-md">
-          <p className="text-red-400 font-medium mb-2">{error}</p>
+      <div className="flex flex-col items-center justify-center py-20 min-h-[40vh]">
+        <div className="glass p-8 rounded-[32px] border-red-500/20 text-center max-w-md space-y-6">
+          <p className="text-red-400 font-medium">{error}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="text-sm bg-red-500/20 hover:bg-red-500/40 text-red-300 px-4 py-2 rounded-lg transition-colors mt-2"
+            className="px-6 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-xl transition-all font-bold text-sm"
           >
-            Retry
+            Retry Connection
           </button>
         </div>
       </div>
@@ -62,19 +59,24 @@ export default function DocsList() {
 
   if (docs.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-32 min-h-[50vh] text-center">
-        <div className="w-24 h-24 bg-fuchsia-700/10 rounded-full flex items-center justify-center mb-6 border border-fuchsia-700/30">
-          <FaFileAlt className="text-fuchsia-500/50 text-4xl" />
+      <div className="flex flex-col items-center justify-center py-32 text-center space-y-8">
+        <div className="relative">
+          <div className="absolute inset-0 bg-accent-primary/10 blur-3xl rounded-full" />
+          <div className="relative w-24 h-24 glass rounded-[40px] flex items-center justify-center border-white/5 shadow-2xl">
+            <HiOutlineDocumentText className="text-4xl text-accent-primary/50" />
+          </div>
         </div>
-        <h3 className="text-2xl font-bold text-white mb-3">No documents generated yet</h3>
-        <p className="text-gray-400 max-w-md mx-auto mb-8">
-          You haven't generated any AI documentation yet. Head over to the generator to create your first document!
-        </p>
+        <div className="space-y-2">
+          <h3 className="text-2xl font-bold text-white">Empty Repository</h3>
+          <p className="text-gray-500 max-w-sm mx-auto leading-relaxed">
+            Your collection is currently empty. Start architecting your first document with our AI engine.
+          </p>
+        </div>
         <a 
           href="/generate-docs" 
-          className="bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-medium px-6 py-3 rounded-xl shadow-lg transition-all"
+          className="inline-flex items-center gap-2 px-8 py-4 bg-accent-primary text-white font-bold rounded-2xl shadow-2xl shadow-accent-primary/20 hover:scale-[1.05] transition-all"
         >
-          Generate Documentation
+          Architect New Doc
         </a>
       </div>
     );
@@ -85,10 +87,11 @@ export default function DocsList() {
   };
 
   return (
-    <div className="flex flex-col space-y-4 w-full max-w-5xl mx-auto">
+    <div className="grid grid-cols-1 gap-6 w-full max-w-6xl mx-auto">
       {docs.map((doc) => (
         <DocumentRow key={doc._id} doc={doc} onDelete={handleRemoveDoc} />
       ))}
     </div>
   );
 }
+

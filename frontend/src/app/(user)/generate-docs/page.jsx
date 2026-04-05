@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import FileUpload from "@/components/FileUpload";
 import ReactMarkdown from "react-markdown";
 import toast from "react-hot-toast";
+import { HiOutlineSparkles } from "react-icons/hi2";
 import ActionButtons from "@/components/ActionButtons";
 import OutputContainer from "@/components/OutputContainer";
 
@@ -97,71 +98,71 @@ export default function GenerateDocsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0B0F1C] relative overflow-hidden flex flex-col">
-      {/* Animated fuchsia radial background */}
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          @keyframes flow-diagonal {
-            0% { transform: translate(-20%, -20%) rotate(-25deg); opacity: 0.25; }
-            50% { transform: translate(20%, -40%) rotate(-25deg); opacity: 0.4; }
-            100% { transform: translate(-20%, -20%) rotate(-25deg); opacity: 0.25; }
-          }
-        `
-      }} />
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <div
-          className="absolute left-0 top-1/4 w-[60vw] h-[40vw] max-w-2xl max-h-[30vh] rounded-full bg-fuchsia-700 opacity-30 blur-3xl rotate-[-25deg]"
-          style={{ animation: "flow-diagonal 6s ease-in-out infinite" }}
-        ></div>
-      </div>
-
-      {/* Two Panel Layout - Shifted up, Responsive Grid */}
-      <div className="relative z-10 flex-1 flex flex-col lg:flex-row pt-24 pb-12 px-4 sm:px-6 lg:px-8 max-w-[1600px] mx-auto w-full gap-8 lg:gap-12 items-start justify-start">
-        {/* Left Panel - Upload & Generate */}
+    <div className="min-h-screen bg-[#060910] text-[#F8FAFC] selection:bg-accent-primary/20 pt-32 pb-20 px-6 bg-mesh">
+      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 items-start">
+        
+        {/* Left Panel */}
         <motion.div
-          className="w-full lg:w-4/12 flex flex-col justify-start"
-          initial={{ opacity: 0, x: -30 }}
+          className="w-full lg:w-1/3 space-y-8 lg:sticky lg:top-32"
+          initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6 }}
         >
-          <div className="w-full lg:sticky top-24">
-            <motion.h1
-              className="text-3xl sm:text-4xl font-extrabold text-white mb-3 tracking-tight drop-shadow"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
+          <div className="space-y-4">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-primary/10 border border-accent-primary/20 text-xs font-bold text-accent-primary uppercase tracking-widest"
             >
-              Generate <span className="text-[#8A4FFF]">Docs</span>
-            </motion.h1>
-            <motion.p
-              className="text-base text-fuchsia-200/80 mb-8 max-w-sm"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
-              Upload your code file to let <span className="text-fuchsia-400 font-semibold">QuillStackAI</span> generate documentation with intelligent context instantly.
-            </motion.p>
-            <FileUpload onUploadSuccess={setDoc} />
-            {error && <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-lg text-center">{error}</div>}
+              <HiOutlineSparkles />
+              <span>AI Engine Active</span>
+            </motion.div>
+            <h1 className="text-4xl font-extrabold tracking-tight">
+              Generate <span className="text-gradient">Docs.</span>
+            </h1>
+            <p className="text-gray-400 leading-relaxed">
+              Upload your source code and let our AI architect map out your project's logic and structure.
+            </p>
           </div>
+
+          <FileUpload onUploadSuccess={setDoc} />
+          
+          <AnimatePresence>
+            {error && (
+              <motion.div 
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                exit={{ opacity: 0, height: 0 }}
+                className="p-4 bg-red-500/10 border border-red-500/20 text-red-400 text-sm rounded-2xl flex items-center gap-3"
+              >
+                <div className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+                {error}
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
 
-        {/* Right Panel - Generated Documentation */}
+        {/* Right Panel */}
         <motion.div
-          className="w-full lg:w-8/12 flex flex-col h-[calc(100vh-140px)] min-h-[600px] pb-6"
-          initial={{ opacity: 0, x: 30 }}
+          className="w-full lg:w-2/3 space-y-6"
+          initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ delay: 0.1 }}
         >
-          <ActionButtons 
-            doc={doc}
-            isGeneratingPdf={isGeneratingPdf}
-            onExportMarkdown={handleExportMarkdown}
-            onDownloadPdf={handleDownloadPdf}
-            onCopy={handleCopy}
-            onShare={handleShare}
-          />
-          <OutputContainer doc={doc} />
+          <div className="glass rounded-3xl border-white/5 overflow-hidden flex flex-col min-h-[600px]">
+            <div className="p-4 border-b border-white/5 bg-white/5 backdrop-blur-md">
+              <ActionButtons 
+                doc={doc}
+                isGeneratingPdf={isGeneratingPdf}
+                onExportMarkdown={handleExportMarkdown}
+                onDownloadPdf={handleDownloadPdf}
+                onCopy={handleCopy}
+                onShare={handleShare}
+              />
+            </div>
+            <div className="flex-1 p-0 overflow-y-auto">
+              <OutputContainer doc={doc} />
+            </div>
+          </div>
         </motion.div>
       </div>
 

@@ -1,225 +1,139 @@
 "use client";
+
 import { motion } from "framer-motion";
-import { FaGithub, FaLinkedin, FaCheckCircle, FaFileAlt, FaCogs, FaRocket, FaRobot, FaLink, FaFileExport, FaBrain, FaGlobe, FaUserGraduate, FaEnvelope, FaTools, FaHandshake, FaStar, FaDiscord, FaBookOpen } from "react-icons/fa";
-
-const features = [
-  { icon: <FaRobot className="text-[#6366F1] text-4xl md:text-5xl" />, label: "AI-generated full documentation" },
-  { icon: <FaLink className="text-[#6366F1] text-4xl md:text-5xl" />, label: "GitHub repo sync (planned)" },
-  { icon: <FaFileExport className="text-[#6366F1] text-4xl md:text-5xl" />, label: "Export as .md, .pdf, .html" },
-  { icon: <FaBrain className="text-[#6366F1] text-4xl md:text-5xl" />, label: "Learns project structure" },
-  { icon: <FaGlobe className="text-[#6366F1] text-4xl md:text-5xl" />, label: "Powered by Gemini AI" },
-];
-
-const standApart = [
-  "Project-level docs, not just snippets",
-  "Uses Gemini AI for rich, dynamic generation",
-  "GitHub integration (planned real-time sync)",
-  "Multiple export options + live editor",
-  "Versioning & collaboration (coming soon)",
-  "Custom-built using MERN stack (no templates)",
-];
-
-const contactLinks = [
-  { icon: <FaEnvelope className="text-[#6366F1] text-2xl" />, label: "feedback@quillstackai.com", href: "mailto:feedback@quillstackai.com" },
-  { icon: <FaTools className="text-[#6366F1] text-2xl" />, label: "GitHub Repo", href: "https://github.com/your-repo" },
-  { icon: <FaHandshake className="text-[#6366F1] text-2xl" />, label: "hello@quillstackai.com", href: "mailto:hello@quillstackai.com" },
-  { icon: <FaStar className="text-yellow-400 text-2xl" />, label: "Star us on GitHub", href: "https://github.com/your-repo" },
-  { icon: <FaDiscord className="text-indigo-400 text-2xl" />, label: "Join our Discord (coming soon)", href: "#" },
-];
-
-const zigzagSections = [
-  {
-    key: "mission",
-    icon: <FaRocket className="text-[#6366F1] text-5xl md:text-6xl drop-shadow-lg" />,
-    heading: "Our Mission",
-    content: (
-      <>
-        <ul className="list-disc ml-6 space-y-1 text-lg">
-          <li>Great code deserves great documentation — without grunt work</li>
-          <li>AI automation + intuitive workflows</li>
-        </ul>
-        <div className="mt-4 grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="flex items-center gap-2"><FaFileAlt className="text-[#6366F1]" />Generate accurate docs from code</div>
-          <div className="flex items-center gap-2"><FaCogs className="text-[#6366F1]" />Maintain consistency across teams</div>
-          <div className="flex items-center gap-2"><FaRocket className="text-[#6366F1]" />Help developers focus on building</div>
-        </div>
-      </>
-    ),
-  },
-  {
-    key: "who",
-    icon: <FaBookOpen className="text-[#6366F1] text-5xl md:text-6xl drop-shadow-lg" />,
-    heading: "Who We Are",
-    content: (
-      <>
-        <blockquote className="border-l-4 border-[#6366F1] pl-4 italic text-gray-300 mb-3">
-          “QuillStackAI is an AI-powered documentation assistant designed to simplify how developers generate, manage, and export project documentation — all with a single click.”
-        </blockquote>
-        <ul className="list-disc ml-6 space-y-1">
-          <li>Final-year B.Tech project</li>
-          <li>Built using <span className="font-bold text-[#6366F1]">MERN + Gemini AI</span></li>
-          <li>Developer-first approach, real-world pain → solved with tech</li>
-        </ul>
-      </>
-    ),
-  },
-  {
-    key: "features",
-    icon: <FaBrain className="text-[#6366F1] text-5xl md:text-6xl drop-shadow-lg" />,
-    heading: "Key Features",
-    content: (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {features.map((f, i) => (
-          <motion.div key={f.label} whileHover={{ scale: 1.04, backgroundColor: 'rgba(99,102,241,0.08)' }} className="flex items-center gap-3 p-4 rounded-xl bg-white/5 backdrop-blur-md border border-[#6366F1]/20 shadow-lg transition">
-            {f.icon}
-            <span className="text-base font-medium">{f.label}</span>
-          </motion.div>
-        ))}
-      </div>
-    ),
-  },
-  {
-    key: "creator",
-    icon: <FaUserGraduate className="text-[#6366F1] text-5xl md:text-6xl drop-shadow-lg" />,
-    heading: "About the Creator",
-    content: (
-      <div className="flex flex-col sm:flex-row items-center gap-4">
-        <div className="flex items-center gap-3">
-          <FaUserGraduate className="text-[#6366F1] text-3xl" />
-          <div>
-            <div className="font-semibold text-lg">Aastha Kumari</div>
-            <div className="text-gray-400 text-sm">Final-year IT student</div>
-            <div className="text-gray-400 text-sm">Passionate about AI, automation & dev experience</div>
-          </div>
-        </div>
-        <div className="flex gap-4 mt-2 sm:mt-0">
-          <motion.a href="https://github.com/your-github" target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.2, color: '#6366F1' }} className="text-gray-400 hover:text-[#6366F1] transition">
-            <FaGithub size={28} />
-          </motion.a>
-          <motion.a href="https://linkedin.com/in/your-linkedin" target="_blank" rel="noopener noreferrer" whileHover={{ scale: 1.2, color: '#6366F1' }} className="text-gray-400 hover:text-[#6366F1] transition">
-            <FaLinkedin size={28} />
-          </motion.a>
-        </div>
-      </div>
-    ),
-  },
-  {
-    key: "standapart",
-    icon: <FaCheckCircle className="text-green-400 text-5xl md:text-6xl drop-shadow-lg" />,
-    heading: "How QuillStackAI Stands Apart",
-    content: (
-      <>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-          {standApart.map((item, i) => (
-            <motion.div key={item} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} whileHover={{ scale: 1.03, backgroundColor: 'rgba(99,102,241,0.08)' }} viewport={{ once: true }} transition={{ duration: 0.4, delay: i * 0.05 }} className="flex items-center gap-2 p-4 rounded-xl bg-white/5 backdrop-blur-md border border-[#6366F1]/20 shadow-lg">
-              <FaCheckCircle className="text-green-400" />
-              <span>{item}</span>
-            </motion.div>
-          ))}
-        </div>
-        {/* Comparison table removed as requested */}
-      </>
-    ),
-  },
-  {
-    key: "workflow",
-    icon: <FaCogs className="text-[#6366F1] text-5xl md:text-6xl drop-shadow-lg" />,
-    heading: "How It Works",
-    content: (
-      <div className="bg-white/5 backdrop-blur-md rounded-xl p-4 border border-[#6366F1]/20 overflow-x-auto shadow-lg">
-        <pre className="text-xs md:text-sm text-gray-300 bg-transparent p-0 m-0"><code>{`
-          graph TD
-            A[Import Code] --> B(Gemini AI Analysis)
-            B --> C[Generate Draft]
-            C --> D{Edit?}
-            D -->|Yes| E[Live Editor]
-            D -->|No| F[Export]
-        `}</code></pre>
-      </div>
-    ),
-  },
-  {
-    key: "vision",
-    icon: <FaRocket className="text-[#6366F1] text-5xl md:text-6xl drop-shadow-lg" />,
-    heading: "Our Vision",
-    content: (
-      <blockquote className="border-l-4 border-[#6366F1] pl-4 italic text-gray-300">
-        “To evolve QuillStackAI into a go-to AI platform for fast, clean, exportable, and collaborative documentation that scales with teams and solo devs alike.”
-      </blockquote>
-    ),
-  },
-  {
-    key: "contact",
-    icon: <FaEnvelope className="text-[#6366F1] text-5xl md:text-6xl drop-shadow-lg" />,
-    heading: "Contact & Collaboration",
-    content: (
-      <div className="flex flex-wrap gap-4">
-        {contactLinks.map((c) => (
-          <motion.a
-            key={c.label}
-            href={c.href}
-            target={c.href.startsWith('http') ? '_blank' : undefined}
-            rel="noopener noreferrer"
-            whileHover={{ scale: 1.08, color: '#6366F1' }}
-            className="flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 backdrop-blur-md border border-[#6366F1]/20 text-gray-300 hover:text-[#6366F1] transition shadow-lg"
-          >
-            {c.icon}
-            <span>{c.label}</span>
-          </motion.a>
-        ))}
-      </div>
-    ),
-  },
-];
-
-// Add custom shine animation style
-const shineStyle = `
-@keyframes shine {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-`;
+import { HiOutlineRocketLaunch, HiOutlineLightBulb, HiOutlineStar, HiOutlineUserCircle, HiOutlineGlobeAlt, HiOutlineCodeBracketSquare, HiOutlineArrowRight } from "react-icons/hi2";
+import Link from "next/link";
 
 export default function AboutUsPage() {
   return (
-    <>
-      <style>{shineStyle}</style>
-      <div className="min-h-screen bg-[#0B0F1C] bg-gradient-to-br from-[#0B0F1C] via-[#181028] to-[#6366F1]/10 text-gray-200 font-sans">
-        <div className="max-w-4xl mx-auto px-4 py-16 space-y-32">
-          {zigzagSections.map((section, idx) => (
-            <motion.section
-              key={section.key}
-              initial={{ opacity: 0, x: idx % 2 === 0 ? -60 : 60 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7, delay: idx * 0.1 }}
-              className={`flex flex-col md:flex-row items-center gap-12 md:gap-20 ${idx % 2 === 1 ? 'md:flex-row-reverse' : ''} mt-12 md:mt-24`}
-            >
-              <div className="w-full">
-                <h2 className="text-3xl sm:text-4xl font-extrabold mb-6 flex items-center gap-3 tracking-tight">
-                  <span
-                    className="bg-gradient-to-r from-[#3B82F6] via-[#a78bfa] to-[#6366F1] bg-[length:200%_100%] bg-clip-text text-transparent animate-shine"
-                    style={{
-                      backgroundImage: 'linear-gradient(90deg, #3B82F6, #a78bfa, #6366F1, #3B82F6)',
-                      animation: 'shine 2.5s linear infinite',
-                    }}
-                  >
-                    {section.heading}
-                  </span>
-                </h2>
-                <div className="rounded-2xl bg-white/10 backdrop-blur-lg border border-[#6366F1]/20 shadow-2xl p-7 md:p-10 text-lg md:text-xl leading-relaxed w-full">
-                  {section.content}
+    <div className="min-h-screen bg-[#060910] text-[#F8FAFC] selection:bg-accent-primary/20 pt-32 pb-20 px-6">
+      <div className="max-w-6xl mx-auto space-y-32">
+        
+        {/* Hero Section */}
+        <header className="text-center space-y-6 max-w-3xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-primary/10 border border-accent-primary/20 text-sm font-bold text-accent-primary uppercase tracking-widest"
+          >
+            <HiOutlineLightBulb />
+            <span>The Vision</span>
+          </motion.div>
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-4xl md:text-6xl font-extrabold tracking-tight"
+          >
+            Elevating the <span className="text-gradient">Standard of Code</span> documentation.
+          </motion.h1>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-lg text-gray-400 leading-relaxed"
+          >
+            QuillStack AI was born out of a simple frustration: developers spend too much time writing docs and not enough time writing code. We're here to change that.
+          </motion.p>
+        </header>
+
+        {/* Story Section */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="space-y-8">
+            <h2 className="text-3xl font-bold">Why we built QuillStack</h2>
+            <div className="space-y-6 text-gray-400">
+              <p>
+                As developers, we know that great projects often fail not because of bad code, but because of poor communication. Documentation is the bridge between a codebase and its contributors.
+              </p>
+              <p>
+                QuillStack leverages the power of Gemini AI to bridge this gap automatically. It doesn't just "summarize"—it understands the underlying logic, detects edge cases, and provides context that humans often miss.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-4 pt-4">
+              <div className="glass px-6 py-4 rounded-2xl border-white/5 flex flex-col gap-1">
+                <span className="text-2xl font-bold text-white">90%</span>
+                <span className="text-xs text-gray-500 uppercase tracking-widest font-bold">Time Saved</span>
+              </div>
+              <div className="glass px-6 py-4 rounded-2xl border-white/5 flex flex-col gap-1">
+                <span className="text-2xl font-bold text-white">2.4k+</span>
+                <span className="text-xs text-gray-500 uppercase tracking-widest font-bold">Repos Synced</span>
+              </div>
+            </div>
+          </div>
+          <div className="relative">
+            <div className="absolute inset-0 bg-accent-primary/20 blur-[100px] -z-10" />
+            <div className="glass rounded-3xl p-8 border-white/10 shadow-2xl space-y-6">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-accent-primary/10 flex items-center justify-center text-accent-primary">
+                  <HiOutlineRocketLaunch className="text-2xl" />
+                </div>
+                <div>
+                  <h3 className="font-bold">Our Mission</h3>
+                  <p className="text-sm text-gray-400">To make "documentation debt" a thing of the past.</p>
                 </div>
               </div>
-            </motion.section>
-          ))}
-        </div>
-        {/* Footer */}
-        <footer className="border-t border-[#6366F1]/20 py-8 text-center text-gray-400 text-base mt-24">
-          <div className="mb-2">© 2024 <span className="text-[#6366F1] font-bold">QuillStackAI</span> • Built with <span className="text-[#6366F1]">💜</span> by Aastha Kumari</div>
-          <div>Powered by students. Inspired by developers. Driven by AI.</div>
-        </footer>
+              <div className="h-px bg-white/5 w-full" />
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-accent-primary/10 flex items-center justify-center text-accent-primary">
+                  <HiOutlineGlobeAlt className="text-2xl" />
+                </div>
+                <div>
+                  <h3 className="font-bold">Global Scale</h3>
+                  <p className="text-sm text-gray-400">Supporting teams across 40+ countries.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* The Creator Section */}
+        <section className="glass rounded-[40px] p-8 md:p-16 border-white/5 flex flex-col md:flex-row items-center gap-12 relative overflow-hidden">
+          <div className="absolute bottom-0 right-0 w-1/3 h-full bg-accent-primary/5 blur-[80px] pointer-events-none" />
+          
+          <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white text-5xl font-black shadow-2xl">
+            AK
+          </div>
+          <div className="flex-1 space-y-4 text-center md:text-left">
+            <h2 className="text-2xl font-bold">Aastha Kumari</h2>
+            <p className="text-accent-primary font-semibold uppercase tracking-widest text-xs">Founder & Lead Architect</p>
+            <p className="text-gray-400 max-w-xl">
+              "QuillStack was my final-year project at B.Tech IT, born from the need for cleaner, more maintainable code documentation in collaborative student projects."
+            </p>
+            <div className="flex justify-center md:justify-start gap-4 pt-4">
+              <a href="#" className="p-3 glass rounded-xl border-white/10 hover:text-accent-primary transition-all">
+                <HiOutlineCodeBracketSquare className="text-xl" />
+              </a>
+              <a href="#" className="p-3 glass rounded-xl border-white/10 hover:text-accent-primary transition-all">
+                <HiOutlineGlobeAlt className="text-xl" />
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* Tech Section */}
+        <section className="text-center space-y-12">
+          <h2 className="text-3xl font-bold">Cutting-edge Stack</h2>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {["Next.js 15", "Google Gemini AI", "MongoDB", "Node.js"].map((tech) => (
+              <div key={tech} className="p-6 glass rounded-2xl border-white/5 hover:border-accent-primary/30 transition-all group">
+                <span className="text-gray-400 group-hover:text-white transition-colors font-medium">{tech}</span>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Final CTA */}
+        <section className="text-center space-y-8 bg-gradient-to-b from-transparent to-accent-primary/5 p-12 rounded-[40px]">
+          <HiOutlineStar className="text-accent-secondary text-4xl mx-auto animate-spin-slow" />
+          <h2 className="text-3xl md:text-4xl font-bold">Join the documentation revolution.</h2>
+          <div className="flex justify-center">
+            <Link href="/signup" className="px-10 py-4 rounded-2xl bg-white text-black font-bold hover:scale-105 active:scale-95 transition-all flex items-center gap-2">
+              Get Started for Free <HiOutlineArrowRight />
+            </Link>
+          </div>
+        </section>
+
       </div>
-    </>
+    </div>
   );
 }
+

@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiGithub, FiLinkedin, FiTwitter, FiMail, FiMapPin } from 'react-icons/fi';
+import { HiOutlineEnvelope, HiOutlineMapPin, HiOutlineChatBubbleLeftRight, HiOutlineArrowRight } from 'react-icons/hi2';
 import { toast } from 'react-hot-toast';
 
-const ContactPage = () => {
+export default function ContactPage() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -16,10 +16,7 @@ const ContactPage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -27,221 +24,124 @@ const ContactPage = () => {
     setIsSubmitting(true);
     
     try {
-      // TODO: Replace with your actual API endpoint
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        toast.success('Message sent successfully!');
-        setFormData({ name: '', email: '', message: '' });
-      } else {
-        throw new Error('Failed to send message');
-      }
+      // Mock API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      toast.success('Message sent! We\'ll get back to you soon.');
+      setFormData({ name: '', email: '', message: '' });
     } catch (error) {
-      console.error('Error:', error);
       toast.error('Failed to send message. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        duration: 0.5
-      }
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-[#0B0F1C] relative overflow-hidden py-12 px-4 sm:px-6 lg:px-8">
-      <style dangerouslySetInnerHTML={{
-        __html: `
-          @keyframes flow-diagonal {
-            0% { transform: translate(-20%, -20%) rotate(-25deg); opacity: 0.25; }
-            50% { transform: translate(20%, -40%) rotate(-25deg); opacity: 0.4; }
-            100% { transform: translate(-20%, -20%) rotate(-25deg); opacity: 0.25; }
-          }
-        `
-      }} />
-      <div className="pointer-events-none absolute inset-0 z-0">
-        <div
-          className="absolute left-0 top-1/4 w-[60vw] h-[40vw] max-w-2xl max-h-[30vh] rounded-full bg-fuchsia-700 opacity-30 blur-3xl rotate-[-25deg]"
-          style={{
-            animation: "flow-diagonal 6s ease-in-out infinite",
-          }}
-        ></div>
-      </div>
-      <motion.div
-        className="max-w-3xl mx-auto relative z-10"
-        initial="hidden"
-        animate="visible"
-        variants={containerVariants}
-      >
-        <motion.div 
-          className="text-center mb-12"
-          variants={itemVariants}
-        >
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Get in Touch with <span className="text-blue-400">QuillStack AI</span>
-          </h1>
-          <p className="text-xl text-gray-300">
-            Have questions, suggestions, or need support? Reach out to us.
-          </p>
-        </motion.div>
+    <div className="min-h-screen bg-[#060910] text-gray-200 pt-32 pb-20 px-6 bg-mesh">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
+        
+        {/* Info Column */}
+        <div className="space-y-12">
+          <div className="space-y-6">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-primary/10 border border-accent-primary/20 text-sm font-bold text-accent-primary uppercase tracking-widest"
+            >
+              <HiOutlineChatBubbleLeftRight />
+              <span>Contact Us</span>
+            </motion.div>
+            <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight">
+              Let's talk about <span className="text-gradient">your project.</span>
+            </h1>
+            <p className="text-lg text-gray-400 leading-relaxed">
+              Have a question about QuillStack? Want to suggest a feature? Or just want to say hi? We're all ears.
+            </p>
+          </div>
 
+          <div className="space-y-8">
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl glass border-white/5 flex items-center justify-center text-accent-primary shrink-0">
+                <HiOutlineEnvelope className="text-2xl" />
+              </div>
+              <div>
+                <h3 className="font-bold text-white">Email us</h3>
+                <p className="text-sm text-gray-400 mb-2">For support and inquiries</p>
+                <a href="mailto:hello@quillstackai.com" className="text-accent-primary hover:underline font-medium">hello@quillstackai.com</a>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4">
+              <div className="w-12 h-12 rounded-2xl glass border-white/5 flex items-center justify-center text-accent-primary shrink-0">
+                <HiOutlineMapPin className="text-2xl" />
+              </div>
+              <div>
+                <h3 className="font-bold text-white">Our Location</h3>
+                <p className="text-sm text-gray-400 mb-2">Remote-first team</p>
+                <p className="text-accent-primary font-medium">Based in India</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Form Column */}
         <motion.div 
-          className="bg-gray-900/70 backdrop-blur-sm border border-gray-800 shadow-2xl rounded-2xl p-8 mb-12"
-          variants={itemVariants}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="glass p-8 md:p-10 rounded-[40px] border-white/5 shadow-2xl relative"
         >
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                Full Name
-              </label>
+          <div className="absolute -top-12 -right-12 w-64 h-64 bg-accent-primary/10 blur-[80px] pointer-events-none" />
+          
+          <form onSubmit={handleSubmit} className="space-y-6 relative">
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Full Name</label>
               <input
                 type="text"
-                id="name"
                 name="name"
                 required
                 value={formData.name}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-800 text-white placeholder-gray-400 transition-all"
+                className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-accent-primary/50 focus:bg-white/10 outline-none transition-all"
                 placeholder="John Doe"
               />
             </div>
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
-                Email Address
-              </label>
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Email Address</label>
               <input
                 type="email"
-                id="email"
                 name="email"
                 required
                 value={formData.email}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-800 text-white placeholder-gray-400 transition-all"
-                placeholder="you@example.com"
+                className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-accent-primary/50 focus:bg-white/10 outline-none transition-all"
+                placeholder="john@example.com"
               />
             </div>
 
-            <div>
-              <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2">
-                Message
-              </label>
+            <div className="space-y-2">
+              <label className="text-xs font-bold uppercase tracking-widest text-gray-500 ml-1">Message</label>
               <textarea
-                id="message"
                 name="message"
-                rows="5"
+                rows="4"
                 required
                 value={formData.message}
                 onChange={handleChange}
-                className="w-full px-4 py-3 rounded-xl border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-gray-800 text-white placeholder-gray-400 transition-all"
-                placeholder="Your message here..."
-              ></textarea>
+                className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-accent-primary/50 focus:bg-white/10 outline-none transition-all resize-none"
+                placeholder="Tell us what's on your mind..."
+              />
             </div>
 
-            <div className="pt-2">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-medium py-3 px-6 rounded-xl hover:from-blue-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all shadow-lg hover:shadow-xl disabled:opacity-70 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? 'Sending...' : 'Send Message'}
-              </button>
-            </div>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-5 rounded-2xl bg-accent-primary text-white font-bold shadow-2xl shadow-accent-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50 disabled:scale-100 flex items-center justify-center gap-2"
+            >
+              {isSubmitting ? "Sending..." : <>Send Message <HiOutlineArrowRight /></>}
+            </button>
           </form>
         </motion.div>
 
-        <motion.div 
-          className="bg-gray-900/70 backdrop-blur-sm border border-gray-800 shadow-2xl rounded-2xl p-8"
-          variants={itemVariants}
-        >
-          <h2 className="text-2xl font-semibold text-white mb-6">Contact Information</h2>
-          
-          <div className="space-y-6">
-            <div className="flex items-start">
-              <div className="flex-shrink-0 bg-blue-100 dark:bg-blue-900/30 p-3 rounded-lg">
-                <FiMail className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div className="ml-4">
-                <h3 className="text-lg font-medium text-white">Email</h3>
-                <a 
-                  href="mailto:support@quillstack.ai" 
-                  className="text-blue-400 hover:text-blue-300 hover:underline transition-colors"
-                >
-                  support@quillstack.ai
-                </a>
-              </div>
-            </div>
-
-            <div className="flex items-start">
-              <div className="flex-shrink-0 bg-blue-100 dark:bg-blue-900/30 p-3 rounded-lg">
-                <FiMapPin className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div className="ml-4">
-                <h3 className="text-lg font-medium text-white">Location</h3>
-                <p className="text-gray-300">San Francisco, CA</p>
-              </div>
-            </div>
-
-            <div className="pt-4">
-              <h3 className="text-lg font-medium text-white mb-4">Connect With Us</h3>
-              <div className="flex space-x-4">
-                <a
-                  href="https://github.com/QuillStack-AI"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"
-                  aria-label="GitHub"
-                >
-                  <FiGithub className="h-6 w-6 text-white" />
-                </a>
-                <a
-                  href="https://linkedin.com/company/quillstack-ai"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"
-                  aria-label="LinkedIn"
-                >
-                  <FiLinkedin className="h-6 w-6 text-blue-700 dark:text-blue-400" />
-                </a>
-                <a
-                  href="https://twitter.com/QuillStackAI"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-3 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"
-                  aria-label="Twitter"
-                >
-                  <FiTwitter className="h-6 w-6 text-blue-400 dark:text-blue-300" />
-                </a>
-              </div>
-            </div>
-          </div>
-        </motion.div>
-      </motion.div>
+      </div>
     </div>
   );
-};
-
-export default ContactPage;
+}
