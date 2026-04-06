@@ -14,7 +14,7 @@ export default function AboutUsPage() {
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-primary/10 border border-accent-primary/20 text-sm font-bold text-accent-primary uppercase tracking-widest"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-orange/10 border border-accent-orange/20 text-sm font-bold text-accent-orange uppercase tracking-widest"
           >
             <HiOutlineLightBulb />
             <span>The Vision</span>
@@ -24,7 +24,7 @@ export default function AboutUsPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-6xl font-extrabold tracking-tight"
           >
-            Elevating the <span className="text-gradient">Standard of Code</span> documentation.
+            Elevating the <span className="text-gradient-orange">Standard of Code</span> documentation.
           </motion.h1>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
@@ -86,15 +86,15 @@ export default function AboutUsPage() {
         </section>
 
         {/* The Creator Section */}
-        <section className="glass rounded-[40px] p-8 md:p-16 border-white/5 flex flex-col md:flex-row items-center gap-12 relative overflow-hidden">
-          <div className="absolute bottom-0 right-0 w-1/3 h-full bg-accent-primary/5 blur-[80px] pointer-events-none" />
+        <section className="glass rounded-[40px] p-8 md:p-16 border-white/5 flex flex-col md:flex-row items-center gap-12 relative overflow-hidden bg-mesh-warm">
+          <div className="absolute bottom-0 right-0 w-1/3 h-full bg-accent-orange/5 blur-[80px] pointer-events-none" />
           
-          <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center text-white text-5xl font-black shadow-2xl">
+          <div className="w-32 h-32 rounded-3xl bg-gradient-to-br from-accent-orange to-accent-primary flex items-center justify-center text-white text-5xl font-black shadow-2xl">
             AK
           </div>
           <div className="flex-1 space-y-4 text-center md:text-left">
             <h2 className="text-2xl font-bold">Aastha Kumari</h2>
-            <p className="text-accent-primary font-semibold uppercase tracking-widest text-xs">Founder & Lead Architect</p>
+            <p className="text-accent-orange font-semibold uppercase tracking-widest text-xs">Founder & Lead Architect</p>
             <p className="text-gray-400 max-w-xl">
               "QuillStack was my final-year project at B.Tech IT, born from the need for cleaner, more maintainable code documentation in collaborative student projects."
             </p>

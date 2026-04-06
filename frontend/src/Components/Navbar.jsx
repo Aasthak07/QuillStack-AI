@@ -33,11 +33,11 @@ export default function Navbar() {
       <div className="w-full max-w-7xl glass rounded-2xl px-6 h-16 flex items-center justify-between shadow-2xl transition-all duration-300">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-primary to-accent-secondary flex items-center justify-center font-bold text-white shadow-lg group-hover:scale-110 transition-transform">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-accent-orange to-accent-primary flex items-center justify-center font-bold text-white shadow-lg group-hover:scale-110 transition-transform">
             Q
           </div>
           <span className="text-xl font-bold tracking-tight text-white select-none">
-            QuillStack<span className="text-accent-primary">AI</span>
+            QuillStack<span className="text-accent-orange">AI</span>
           </span>
         </Link>
 
@@ -91,7 +91,7 @@ export default function Navbar() {
               </Link>
               <Link
                 href="/signup"
-                className="px-5 py-2 rounded-xl bg-accent-primary text-white text-sm font-bold shadow-lg shadow-accent-primary/20 hover:scale-105 active:scale-95 transition-all"
+                className="px-5 py-2 rounded-xl bg-gradient-to-r from-accent-orange to-accent-amber text-white text-sm font-bold shadow-lg shadow-orange-500/20 hover:scale-105 active:scale-95 transition-all"
               >
                 Get Started
               </Link>

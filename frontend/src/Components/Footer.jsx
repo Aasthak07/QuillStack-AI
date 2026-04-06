@@ -6,7 +6,7 @@ const Footer = () => {
   return (
     <footer className="relative bg-[#060910] border-t border-white/5 py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
       {/* Background decorative glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-accent-primary/50 to-transparent opacity-20" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-px bg-gradient-to-r from-transparent via-accent-orange/50 to-transparent opacity-20" />
       
       <div className="relative max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
@@ -14,11 +14,11 @@ const Footer = () => {
           {/* Brand Column */}
           <div className="space-y-4">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-accent-primary flex items-center justify-center font-bold text-white shadow-lg shadow-accent-primary/20">
+              <div className="w-8 h-8 rounded-lg bg-accent-orange flex items-center justify-center font-bold text-white shadow-lg shadow-orange-500/20">
                 Q
               </div>
               <span className="text-xl font-bold tracking-tight text-white select-none">
-                QuillStack<span className="text-accent-primary">AI</span>
+                QuillStack<span className="text-accent-orange">AI</span>
               </span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed max-w-xs">
@@ -32,7 +32,7 @@ const Footer = () => {
             <ul className="space-y-3">
               {['Features', 'Integrations', 'Changelog', 'Roadmap'].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-gray-400 hover:text-accent-primary transition-colors text-sm">{item}</a>
+                  <a href="#" className="text-gray-400 hover:text-accent-orange transition-colors text-sm">{item}</a>
                 </li>
               ))}
             </ul>
@@ -44,7 +44,7 @@ const Footer = () => {
             <ul className="space-y-3">
               {['Documentation', 'Community', 'Contact Us', 'Feedback'].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-gray-400 hover:text-accent-primary transition-colors text-sm">{item}</a>
+                  <a href="#" className="text-gray-400 hover:text-accent-orange transition-colors text-sm">{item}</a>
                 </li>
               ))}
             </ul>
@@ -58,7 +58,7 @@ const Footer = () => {
                 <a 
                   key={platform}
                   href="#" 
-                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-accent-primary/10 hover:border-accent-primary/20 transition-all"
+                  className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-gray-400 hover:text-white hover:bg-accent-orange/10 hover:border-accent-orange/20 transition-all"
                   aria-label={platform}
                 >
                   <span className="text-xs font-bold">{platform[0]}</span>
@@ -80,7 +80,7 @@ const Footer = () => {
           </div>
 
           <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold uppercase tracking-widest text-gray-500">
-            <div className="w-1 h-1 rounded-full bg-accent-primary animate-pulse" />
+            <div className="w-1 h-1 rounded-full bg-accent-orange animate-pulse" />
             System Status: Operational
           </div>
         </div>

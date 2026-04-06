@@ -617,7 +617,7 @@ Be specific and avoid generic statements. Use actual function names, variables, 
 // Keep existing functions (getAllDocs, updateDoc, getDocById, exportDoc) unchanged
 const getAllDocs = async (req, res) => {
   try {
-    const docs = await Documentation.find()
+    const docs = await Documentation.find({ userId: req.user._id })
       .select('filename content language generatedAt version wordCount codeLines')
       .sort({ createdAt: -1 });
     res.json(docs);
@@ -803,10 +803,11 @@ async function convertToPdf(markdown) {
 const deleteDoc = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedDoc = await Documentation.findByIdAndDelete(id);
+    // Ensure the document belongs to the requesting user
+    const deletedDoc = await Documentation.findOneAndDelete({ _id: id, userId: req.user._id });
     
     if (!deletedDoc) {
-      return res.status(404).json({ error: "Document not found" });
+      return res.status(404).json({ error: "Document not found or access denied" });
     }
     
     res.status(200).json({ success: true, message: "Document deleted successfully" });

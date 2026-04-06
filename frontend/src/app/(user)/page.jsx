@@ -54,13 +54,14 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 px-4 overflow-hidden">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-6xl h-[500px] bg-accent-primary/5 blur-[120px] -z-10 rounded-full" />
+        <div className="absolute top-20 right-0 w-96 h-96 bg-accent-orange/10 blur-[100px] -z-10 rounded-full" />
         
         <div className="max-w-6xl mx-auto text-center space-y-8">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border-white/10 text-sm font-medium text-accent-primary"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border-white/10 text-sm font-medium text-accent-orange"
           >
             <HiOutlineSparkles className="animate-pulse" />
             <span>Introducing QuillStack v2.0</span>
@@ -72,7 +73,7 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-5xl md:text-7xl font-extrabold tracking-tight"
           >
-            Your Code, <span className="text-gradient">Documented</span> <br />
+            Your Code, <span className="text-gradient-orange">Documented</span> <br />
             by Intelligence.
           </motion.h1>
           
@@ -91,7 +92,7 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
           >
-            <Link href="/signup" className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-accent-primary text-white font-bold shadow-2xl shadow-accent-primary/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+            <Link href="/signup" className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-orange to-accent-amber text-white font-bold shadow-2xl shadow-orange-500/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">
               Start Building Free <HiOutlineArrowRight />
             </Link>
             <button className="w-full sm:w-auto px-8 py-4 rounded-2xl glass border-white/10 font-bold hover:bg-white/5 transition-all">
@@ -160,7 +161,7 @@ export default function LandingPage() {
                 <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
                 <div className="w-3 h-3 rounded-full bg-green-500/50" />
               </div>
-              <code className="text-xs md:text-sm text-accent-primary block space-y-1">
+              <code className="text-xs md:text-sm text-accent-orange block space-y-1">
                 <p className="opacity-50">// QuillStack AI - AutoDoc</p>
                 <p className="text-white">analyze_project(<span className="text-accent-secondary">"./src"</span>) {'{'}</p>
                 <p className="ml-4">context = parse_AST();</p>
@@ -171,11 +172,11 @@ export default function LandingPage() {
               <motion.div 
                 initial={{ x: -20, opacity: 0 }}
                 whileInView={{ x: 0, opacity: 1 }}
-                className="absolute -bottom-6 -right-6 p-4 glass rounded-2xl border-accent-primary/30 shadow-2xl"
+                className="absolute -bottom-6 -right-6 p-4 glass rounded-2xl border-accent-orange/30 shadow-2xl"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
-                    <HiOutlineSparkles className="text-green-500" />
+                  <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
+                    <HiOutlineSparkles className="text-accent-orange" />
                   </div>
                   <div>
                     <p className="text-xs font-bold text-white">Documentation Ready</p>
@@ -189,11 +190,11 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="max-w-4xl mx-auto px-6 py-24 text-center space-y-8">
-        <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight">Ready to reclaim <span className="text-gradient">your time?</span></h2>
+      <section className="max-w-4xl mx-auto px-6 py-24 text-center space-y-8 bg-mesh-warm rounded-[40px] border border-white/5 shadow-inner">
+        <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight">Ready to reclaim <span className="text-gradient-orange">your time?</span></h2>
         <p className="text-gray-400 text-lg">Join 2,000+ developers documenting the future with QuillStack AI.</p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link href="/signup" className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-accent-primary text-white font-bold shadow-2xl shadow-accent-primary/20 hover:scale-105 active:scale-95 transition-all">
+          <Link href="/signup" className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-gradient-to-r from-accent-orange to-accent-amber text-white font-bold shadow-2xl shadow-orange-500/30 hover:scale-105 active:scale-95 transition-all">
             Get Started For Free
           </Link>
           <form 
@@ -208,7 +209,7 @@ export default function LandingPage() {
               value={email}
               onChange={e => setEmail(e.target.value)}
             />
-            <button className="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-sm font-bold transition-all">
+            <button className="px-4 py-2 rounded-xl bg-accent-orange/10 hover:bg-accent-orange/20 text-accent-orange text-sm font-bold transition-all">
               {subscribed ? "Done!" : "Subscribe"}
             </button>
           </form>

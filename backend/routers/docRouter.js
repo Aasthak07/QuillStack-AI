@@ -42,6 +42,7 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
       
       // Save to database
       const doc = new Documentation({
+        userId: req.user._id,
         filename: fileName,
         content: docText,
         originalContent: fileContent,
@@ -69,6 +70,7 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
         
         // Save to database
         const doc = new Documentation({
+          userId: req.user._id,
           filename: fileName,
           content: docText,
           originalContent: fileContent,

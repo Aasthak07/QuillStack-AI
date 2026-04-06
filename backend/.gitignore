@@ -43,3 +43,9 @@ temp/
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# backend debug/utility scripts (not for production)
+checkModels.js
+listModels.js
+testGeminiModels.js
+available_models.txt

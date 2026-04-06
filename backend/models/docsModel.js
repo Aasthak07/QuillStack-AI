@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const DocumentationSchema = new mongoose.Schema({
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true, index: true },
   filename: { type: String, required: true },
   content: { type: String, required: true },
   originalContent: { type: String }, // Store original code for reference/regeneration

@@ -2,6 +2,27 @@ const express = require('express');
 const Model = require('../models/User');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const { body, validationResult } = require('express-validator');
+
+// Reusable middleware: collect validation errors and respond early
+const validate = (req, res, next) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ message: errors.array()[0].msg });
+    }
+    next();
+};
+
+// Admin login validation rules
+const adminLoginRules = [
+    body('email')
+        .trim()
+        .notEmpty().withMessage('Email is required')
+        .isEmail().withMessage('Invalid email address')
+        .normalizeEmail(),
+    body('password')
+        .notEmpty().withMessage('Password is required'),
+];
 
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
@@ -36,7 +57,7 @@ const verifyAdmin = async (req, res, next) => {
 };
 
 // Admin login route
-router.post('/login', async (req, res) => {
+router.post('/login', adminLoginRules, validate, async (req, res) => {
     try {
         const { email, password } = req.body;
         
@@ -120,15 +141,43 @@ router.get('/dashboard/stats', verifyToken, verifyAdmin, async (req, res) => {
     }
 });
 
-// Get all users (admin only)
-router.get('/users', verifyToken, verifyAdmin, (req, res) => {
-    Model.find({}, { password: 0 }) // Exclude password field
-        .then((result) => {
-            res.status(200).json(result);
-        }).catch((err) => {
-            console.log(err);
-            res.status(500).json({ message: 'Internal server error' });
+// Get all users with pagination and search (admin only)
+router.get('/users', verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const page = Math.max(1, parseInt(req.query.page) || 1);
+        const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 10));
+        const search = req.query.search?.trim() || '';
+        const skip = (page - 1) * limit;
+
+        // Build search filter
+        const filter = search
+            ? {
+                $or: [
+                    { name: { $regex: search, $options: 'i' } },
+                    { email: { $regex: search, $options: 'i' } }
+                ]
+              }
+            : {};
+
+        const [users, total] = await Promise.all([
+            Model.find(filter, { password: 0 })
+                .sort({ createdAt: -1 })
+                .skip(skip)
+                .limit(limit),
+            Model.countDocuments(filter)
+        ]);
+
+        res.status(200).json({
+            success: true,
+            users,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit)
         });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 });
 
 // Get user by ID (admin only)
