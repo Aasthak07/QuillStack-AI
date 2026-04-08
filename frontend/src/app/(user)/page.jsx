@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import { HiOutlineSparkles, HiOutlineCube, HiOutlineShieldCheck, HiOutlineArrowRight, HiOutlineCommandLine, HiOutlineCloudArrowUp, HiOutlineUserGroup, HiOutlineShare } from "react-icons/hi2";
 import Link from "next/link";
 import ProductTourModal from "@/components/ProductTourModal";
+import { useAuth } from "@/context/AuthContext";
+
 
 const features = [
   { 
@@ -49,6 +51,10 @@ export default function LandingPage() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [showTour, setShowTour] = useState(false);
+  const { user } = useAuth();
+
+  const ctaHref = user ? "/generate-docs" : "/signup";
+  const ctaLabel = user ? "Go to Generate Docs" : "Start Building Free";
 
   return (
     <div className="bg-[#060910] min-h-screen text-gray-200 selection:bg-accent-primary/20 bg-mesh pb-20">
@@ -86,8 +92,8 @@ export default function LandingPage() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
           >
-            <Link href="/signup" className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-orange to-accent-amber text-white font-bold shadow-2xl shadow-orange-500/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">
-              Start Building Free <HiOutlineArrowRight />
+            <Link href={ctaHref} className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-orange to-accent-amber text-white font-bold shadow-2xl shadow-orange-500/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">
+              {ctaLabel} <HiOutlineArrowRight />
             </Link>
             <button
               onClick={() => setShowTour(true)}
@@ -191,8 +197,8 @@ export default function LandingPage() {
         <h2 className="text-4xl md:text-6xl font-extrabold tracking-tight">Ready to reclaim <span className="text-gradient-orange">your time?</span></h2>
         <p className="text-gray-400 text-lg">Join 2,000+ developers documenting the future with QuillStack AI.</p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Link href="/signup" className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-gradient-to-r from-accent-orange to-accent-amber text-white font-bold shadow-2xl shadow-orange-500/30 hover:scale-105 active:scale-95 transition-all">
-            Get Started For Free
+          <Link href={ctaHref} className="w-full sm:w-auto px-10 py-5 rounded-2xl bg-gradient-to-r from-accent-orange to-accent-amber text-white font-bold shadow-2xl shadow-orange-500/30 hover:scale-105 active:scale-95 transition-all">
+            {user ? "Go to Generate Docs" : "Get Started For Free"}
           </Link>
           <form 
             onSubmit={e => { e.preventDefault(); setSubscribed(true); }}
