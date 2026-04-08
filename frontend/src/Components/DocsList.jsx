@@ -2,7 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import DocumentRow from "./DocumentRow";
-import { HiOutlineDocumentText, HiOutlineArrowPath } from "react-icons/hi2";
+import Link from "next/link";
+import { HiOutlineDocumentText, HiOutlineLockClosed, HiOutlineArrowPath } from "react-icons/hi2";
 
 export default function DocsList() {
   const [docs, setDocs] = useState([]);
@@ -12,10 +13,16 @@ export default function DocsList() {
   const token = typeof window !== 'undefined' ? localStorage.getItem("token") : null;
 
   useEffect(() => {
+    // If not logged in, skip the fetch entirely
+    if (!token) {
+      setIsLoading(false);
+      return;
+    }
+
     const fetchDocs = async () => {
       try {
         const response = await fetch("http://localhost:5000/api/docs/my-docs", {
-          headers: token ? { Authorization: `Bearer ${token}` } : {},
+          headers: { Authorization: `Bearer ${token}` },
         });
         
         if (!response.ok) throw new Error("Failed to fetch documents");
@@ -37,6 +44,39 @@ export default function DocsList() {
       <div className="flex flex-col items-center justify-center py-32 space-y-4">
         <div className="w-12 h-12 border-4 border-accent-primary/20 border-t-accent-primary rounded-full animate-spin" />
         <p className="text-gray-500 font-bold text-sm tracking-widest uppercase">Syncing Library...</p>
+      </div>
+    );
+  }
+
+  // Not logged in — show a meaningful prompt
+  if (!token) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20 min-h-[40vh]">
+        <div className="glass p-10 rounded-[32px] border border-white/5 text-center max-w-md space-y-6">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-accent-primary/10 flex items-center justify-center border border-accent-primary/20">
+            <HiOutlineLockClosed className="text-3xl text-accent-primary" />
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-xl font-bold text-white">Sign In to View Your Docs</h3>
+            <p className="text-gray-400 text-sm leading-relaxed">
+              Your generated documentation is private and secure. Log in to access your full document library.
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/login"
+              className="px-6 py-3 bg-accent-primary text-white font-bold rounded-2xl hover:scale-105 transition-all text-sm"
+            >
+              Log In
+            </Link>
+            <Link
+              href="/signup"
+              className="px-6 py-3 bg-white/5 border border-white/10 text-gray-300 font-bold rounded-2xl hover:bg-white/10 transition-all text-sm"
+            >
+              Create Account
+            </Link>
+          </div>
+        </div>
       </div>
     );
   }

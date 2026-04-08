@@ -6,6 +6,7 @@ import { HiOutlineSparkles, HiOutlineCube, HiOutlineShieldCheck, HiOutlineArrowR
 import Link from "next/link";
 import ProductTourModal from "@/components/ProductTourModal";
 import { useAuth } from "@/context/AuthContext";
+import LiveDemoSection from "@/components/LiveDemoSection";
 
 
 const features = [
@@ -54,7 +55,7 @@ export default function LandingPage() {
   const { user } = useAuth();
 
   const ctaHref = user ? "/generate-docs" : "/signup";
-  const ctaLabel = user ? "Go to Generate Docs" : "Start Building Free";
+  const ctaLabel = user ? "Go to Generate Docs" : "Start Documenting";
 
   return (
     <div className="bg-[#060910] min-h-screen text-gray-200 selection:bg-accent-primary/20 bg-mesh pb-20">
@@ -97,7 +98,7 @@ export default function LandingPage() {
             </Link>
             <button
               onClick={() => setShowTour(true)}
-              className="w-full sm:w-auto px-8 py-4 rounded-2xl glass border-white/10 font-bold hover:bg-white/5 transition-all"
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-indigo-600/20 border border-indigo-500/40 text-indigo-300 font-bold hover:bg-indigo-600/30 hover:border-indigo-400/60 hover:text-white transition-all"
             >
               Watch Product Tour
             </button>
@@ -132,65 +133,8 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Proof/Illustration Section */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <div className="glass rounded-[40px] p-8 md:p-16 border-white/5 relative overflow-hidden flex flex-col lg:flex-row items-center gap-16">
-          <div className="absolute top-0 right-0 w-1/2 h-full bg-accent-primary/10 blur-[100px] pointer-events-none" />
-          
-          <div className="flex-1 space-y-8">
-            <h2 className="text-3xl md:text-5xl font-bold leading-tight">Docs that stay in sync with every commit.</h2>
-            <div className="space-y-6">
-              {[
-                "Automatic type detection & mapping",
-                "Project-wide architectual summaries",
-                "Internal cross-referencing",
-                "Export as Markdown, PDF, or interactive Web"
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <HiOutlineShieldCheck className="text-accent-primary text-xl" />
-                  <span className="text-gray-300 font-medium">{item}</span>
-                </div>
-              ))}
-            </div>
-            <button className="px-8 py-3 rounded-xl bg-white text-black font-bold hover:bg-gray-200 transition-all">
-              Try Interactive Demo
-            </button>
-          </div>
-          
-          <div className="flex-1 w-full max-w-md lg:max-w-none">
-            <div className="glass-dark rounded-2xl p-4 border-white/10 shadow-2xl relative">
-              <div className="flex gap-2 mb-4">
-                <div className="w-3 h-3 rounded-full bg-red-500/50" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500/50" />
-                <div className="w-3 h-3 rounded-full bg-green-500/50" />
-              </div>
-              <code className="text-xs md:text-sm text-accent-orange block space-y-1">
-                <p className="opacity-50">// QuillStack AI - AutoDoc</p>
-                <p className="text-white">analyze_project(<span className="text-accent-secondary">"./src"</span>) {'{'}</p>
-                <p className="ml-4">context = parse_AST();</p>
-                <p className="ml-4 text-accent-secondary">generate_markdown(context);</p>
-                <p className="ml-4 text-green-400">deploy_to_hosted_url();</p>
-                <p>{'}'}</p>
-              </code>
-              <motion.div 
-                initial={{ x: -20, opacity: 0 }}
-                whileInView={{ x: 0, opacity: 1 }}
-                className="absolute -bottom-6 -right-6 p-4 glass rounded-2xl border-accent-orange/30 shadow-2xl"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center">
-                    <HiOutlineSparkles className="text-accent-orange" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-white">Documentation Ready</p>
-                    <p className="text-[10px] text-gray-400">142 files analyzed</p>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Live Animated Demo Section */}
+      <LiveDemoSection />
 
       {/* CTA Section */}
       <section className="max-w-4xl mx-auto px-6 py-24 text-center space-y-8 bg-mesh-warm rounded-[40px] border border-white/5 shadow-inner">
