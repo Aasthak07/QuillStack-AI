@@ -94,9 +94,9 @@ export default function LoginPage() {
       >
         <div className="text-center space-y-2 mb-10">
           <h1 className="text-3xl font-extrabold tracking-tight text-white">
-            Access <span className="text-gradient">Engine.</span>
+            Welcome <span className="text-gradient">Back.</span>
           </h1>
-          <p className="text-sm text-gray-400">Initialize your developer session</p>
+          <p className="text-sm text-gray-400">Sign in to your account</p>
         </div>
 
         {errors.form && (
@@ -147,10 +147,10 @@ export default function LoginPage() {
           <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest px-1">
             <label className="flex items-center gap-2 cursor-pointer text-gray-500 hover:text-white transition-colors">
               <input type="checkbox" className="accent-accent-primary" />
-              <span>Remember Session</span>
+              <span>Remember Me</span>
             </label>
             <Link href="/forgot-password" size="sm" className="text-accent-primary hover:underline">
-              Reset Key
+              Forgot Password
             </Link>
           </div>
 
@@ -159,19 +159,19 @@ export default function LoginPage() {
             disabled={isSubmitting}
             className="w-full py-5 rounded-2xl bg-accent-primary text-white font-bold shadow-2xl shadow-accent-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
           >
-            {isSubmitting ? "Syncing..." : "Initialize Session"}
+            {isSubmitting ? "Signing In..." : "Sign In"}
           </button>
         </form>
 
         <div className="mt-8 pt-8 border-t border-white/5 text-center space-y-4">
           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-            Internal Access Only?{' '}
+            Don't have an account?{' '}
             <Link href="/signup" className="text-accent-primary hover:underline">
-              Register Branch
+              Sign Up
             </Link>
           </p>
           <Link href="/admin-login" className="block text-[10px] font-bold uppercase tracking-widest text-gray-700 hover:text-gray-400 transition-colors">
-            System Admin Login
+            Admin Login
           </Link>
         </div>
       </motion.div>

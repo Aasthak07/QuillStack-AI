@@ -66,7 +66,15 @@ export default function LandingPage() {
         <div className="absolute top-20 right-0 w-96 h-96 bg-accent-orange/10 blur-[100px] -z-10 rounded-full" />
         
         <div className="max-w-6xl mx-auto text-center space-y-8">
-          <div className="inline-flex h-9" aria-hidden="true" />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border-white/10 text-sm font-medium text-accent-orange"
+          >
+            <HiOutlineSparkles className="animate-pulse" />
+            <span>AI-Powered Code Documentation</span>
+          </motion.div>
           
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}

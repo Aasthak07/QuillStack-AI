@@ -121,9 +121,9 @@ export default function SignUpPage() {
       >
         <div className="text-center space-y-2 mb-10">
           <h1 className="text-3xl font-extrabold tracking-tight text-white">
-            Register <span className="text-gradient">Branch.</span>
+            Create <span className="text-gradient">Account.</span>
           </h1>
-          <p className="text-sm text-gray-400">Join the QuillStack AI network</p>
+          <p className="text-sm text-gray-400">Join the QuillStack AI community</p>
         </div>
 
         <form onSubmit={handleFormSubmit} className="space-y-6">
@@ -135,7 +135,7 @@ export default function SignUpPage() {
               value={values.name}
               onChange={handleChange}
               className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-accent-primary/50 focus:bg-white/10 outline-none transition-all text-white placeholder-gray-600"
-              placeholder="Architect Name"
+              placeholder="Your Name"
             />
             {errors.name && <p className="text-[10px] text-red-400 font-bold ml-1">{errors.name}</p>}
           </div>
@@ -211,15 +211,15 @@ export default function SignUpPage() {
             disabled={isSubmitting}
             className="w-full py-5 rounded-2xl bg-accent-primary text-white font-bold shadow-2xl shadow-accent-primary/20 hover:scale-[1.02] active:scale-95 transition-all disabled:opacity-50"
           >
-            {isSubmitting ? "Deploying..." : "Join Network"}
+            {isSubmitting ? "Creating Account..." : "Sign Up"}
           </button>
         </form>
 
         <div className="mt-8 pt-8 border-t border-white/5 text-center">
           <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500">
-            Already Synced?{' '}
+            Already have an account?{' '}
             <Link href="/login" className="text-accent-primary hover:underline">
-              Access Session
+              Log In
             </Link>
           </p>
         </div>
@@ -231,7 +231,7 @@ export default function SignUpPage() {
               animate={{ opacity: 1, y: 0 }}
               className="mt-6 p-4 bg-accent-primary/10 border border-accent-primary/20 text-accent-primary rounded-2xl text-[10px] font-bold text-center uppercase tracking-widest"
             >
-              Network Auth Successful. Redirecting...
+              Account Created Successfully. Redirecting...
             </motion.div>
           )}
         </AnimatePresence>
