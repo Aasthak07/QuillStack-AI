@@ -7,9 +7,11 @@ import { motion } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import { getLoginErrors } from "@/utils/validators";
+import { HiOutlineEye, HiOutlineEyeSlash } from "react-icons/hi2";
 
 export default function LoginPage() {
   const [isHovered, setIsHovered] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [cardPos, setCardPos] = useState({ x: 0, y: 0 });
   const router = useRouter();
   const { login } = useAuth();
@@ -122,14 +124,24 @@ export default function LoginPage() {
 
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={values.password}
-              onChange={handleChange}
-              className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-accent-primary/50 focus:bg-white/10 outline-none transition-all text-white placeholder-gray-600"
-              placeholder="••••••••"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={values.password}
+                onChange={handleChange}
+                className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-accent-primary/50 focus:bg-white/10 outline-none transition-all text-white placeholder-gray-600"
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                tabIndex="-1"
+              >
+                {showPassword ? <HiOutlineEyeSlash className="text-xl" /> : <HiOutlineEye className="text-xl" />}
+              </button>
+            </div>
           </div>
 
           <div className="flex justify-between items-center text-[10px] font-bold uppercase tracking-widest px-1">

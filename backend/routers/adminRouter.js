@@ -68,9 +68,9 @@ router.post('/login', adminLoginRules, validate, async (req, res) => {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
         
-        // Check if password matches (assuming password is stored as plain text for now)
-        // In production, you should hash passwords
-        if (user.password !== password) {
+        // Check if password matches using secure comparison
+        const isMatch = await user.comparePassword(password);
+        if (!isMatch) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
         

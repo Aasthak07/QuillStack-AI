@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
+import { HiOutlineEye, HiOutlineEyeSlash } from "react-icons/hi2";
 import { useAuth } from "@/context/AuthContext";
 import { useAuthForm } from "@/hooks/useAuthForm";
 import { getSignupErrors } from "@/utils/validators";
@@ -20,6 +21,8 @@ const passwordRules = [
 export default function SignUpPage() {
   const [success, setSuccess] = useState(false);
   const [shake, setShake] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [cardPos, setCardPos] = useState({ x: 0, y: 0 });
   const router = useRouter();
@@ -152,14 +155,24 @@ export default function SignUpPage() {
 
           <div className="space-y-2">
             <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Password</label>
-            <input
-              type="password"
-              name="password"
-              value={values.password}
-              onChange={handleChange}
-              className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-accent-primary/50 focus:bg-white/10 outline-none transition-all text-white placeholder-gray-600"
-              placeholder="••••••••"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                name="password"
+                value={values.password}
+                onChange={handleChange}
+                className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-accent-primary/50 focus:bg-white/10 outline-none transition-all text-white placeholder-gray-600"
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                tabIndex="-1"
+              >
+                {showPassword ? <HiOutlineEyeSlash className="text-xl" /> : <HiOutlineEye className="text-xl" />}
+              </button>
+            </div>
             <div className="grid grid-cols-2 gap-2 mt-2 px-1">
               {passwordRules.map((rule, idx) => (
                 <div key={rule.label} className={`text-[9px] flex items-center gap-1.5 font-bold uppercase tracking-tighter ${values.password ? (passwordChecks[idx] ? "text-accent-primary" : "text-gray-700") : "text-gray-800"}`}>
@@ -168,6 +181,29 @@ export default function SignUpPage() {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Confirm Password</label>
+            <div className="relative">
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={values.confirmPassword}
+                onChange={handleChange}
+                className="w-full px-6 py-4 rounded-2xl bg-white/5 border border-white/10 focus:border-accent-primary/50 focus:bg-white/10 outline-none transition-all text-white placeholder-gray-600"
+                placeholder="••••••••"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white transition-colors"
+                tabIndex="-1"
+              >
+                {showConfirmPassword ? <HiOutlineEyeSlash className="text-xl" /> : <HiOutlineEye className="text-xl" />}
+              </button>
+            </div>
+            {errors.confirmPassword && <p className="text-[10px] text-red-500 font-bold ml-1">{errors.confirmPassword}</p>}
           </div>
 
           <button

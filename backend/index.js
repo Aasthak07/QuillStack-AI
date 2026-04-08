@@ -40,8 +40,8 @@ app.use(express.urlencoded({ limit: '10mb', extended: true }));
 // Auth routes (Signup & Login) mounted at /user — strict rate limited
 app.use('/user', authLimiter, require('./routers/userRouter'));
 
-// Admin routes mounted at /admin — strict rate limited
-app.use('/admin', authLimiter, require('./routers/adminRouter'));
+// Admin routes mounted at /admin — use general limiter to allow management tasks (searching/paging)
+app.use('/admin', generalLimiter, require('./routers/adminRouter'));
 
 app.use('/api/docs', generalLimiter, require('./routers/docRouter'));
 

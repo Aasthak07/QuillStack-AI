@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { HiOutlineArrowDownTray, HiOutlineClipboardDocumentList, HiOutlineShare, HiOutlineDocumentArrowDown } from "react-icons/hi2";
+import { HiOutlineArrowDownTray, HiOutlineClipboardDocumentList, HiOutlineShare, HiOutlineDocumentArrowDown, HiOutlineDocumentPlus } from "react-icons/hi2";
 
 export default function ActionButtons({
   doc,
@@ -10,6 +10,7 @@ export default function ActionButtons({
   onDownloadPdf,
   onCopy,
   onShare,
+  onGenerateNew,
 }) {
   const isDisabled = !doc;
 
@@ -37,6 +38,13 @@ export default function ActionButtons({
 
   return (
     <div className="flex flex-wrap items-center gap-3 w-full">
+      <Button 
+        onClick={onGenerateNew}
+        disabled={isDisabled}
+        icon={<HiOutlineDocumentPlus className="text-lg" />}
+        label="New"
+        tooltip="Generate docs first"
+      />
       <Button 
         onClick={onExportMarkdown}
         disabled={isDisabled}

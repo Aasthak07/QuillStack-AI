@@ -77,28 +77,34 @@ router.get('/getall', (req, res) => {
 });
 
 
-router.post('/authenticate', loginRules, validate, (req, res) => {
-    Model.findOne(req.body)
-        .then((result) => {
-            if (result) {
-                const { _id, name, email } = result;
-                const payload = { _id, name, email };
+router.post('/authenticate', loginRules, validate, async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await Model.findOne({ email });
+
+        if (user) {
+            const isMatch = await user.comparePassword(password);
+            if (isMatch) {
+                const { _id, name, email: userEmail } = user;
+                const payload = { _id, name, email: userEmail };
 
                 jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' }, (err, token) => {
                     if (err) {
                         console.log(err);
-                        res.status(500).json({ message: 'Error generating token' });
-                    } else {
-                        res.status(200).json({ token });
+                        return res.status(500).json({ message: 'Error generating token' });
                     }
+                    res.status(200).json({ token });
                 });
             } else {
                 res.status(401).json({ message: 'Invalid credentials' });
             }
-        }).catch((err) => {
-            res.status(500).json({ message: 'Internal Server Error' });
-            console.log(err);
-        });
+        } else {
+            res.status(401).json({ message: 'Invalid credentials' });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
 });
 
 module.exports = router;

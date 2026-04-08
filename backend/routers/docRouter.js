@@ -23,79 +23,99 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
 
   const filePath = req.file.path;
   const fileName = req.file.originalname;
+  const targetLanguage = req.body.language || "English";
+  const includeAudit = req.body.includeAudit === "true";
   let fileContent = "";
 
   try {
-    // Read and trim file content for quota
+    // Read file content
     fileContent = fs.readFileSync(filePath, "utf-8").slice(0, 10000);
 
-    // Prepare prompt for Gemini
-    const prompt = `Generate well-structured documentation for the following code. Explain functions, logic flow, and usage in a clear, concise way.\n\n${fileContent}`;
+    // Build the dynamic prompt (Standard Professional Version)
+    let prompt = `Act as an expert developer and technical mentor. Generate high-quality, professional, and clear documentation in ${targetLanguage} for the following code file:
 
-    // Try primary model
-    try {
-      const model = genAI.getGenerativeModel({ model: PRIMARY_MODEL });
-      const result = await model.generateContent(prompt);
-      const response = await result.response;
-      const docText = response.text();
-      console.log(`✅ [${fileName}] Documentation generated with PRIMARY model: ${PRIMARY_MODEL}`);
-      
-      // Save to database
-      const doc = new Documentation({
-        userId: req.user._id,
-        filename: fileName,
-        content: docText,
-        originalContent: fileContent,
-        wordCount: docText.split(/\s+/).length,
-        codeLines: fileContent.split('\n').length
-      });
-      await doc.save();
+FILENAME: ${fileName}
+CODE CONTENT:
+\`\`\`
+${fileContent}
+\`\`\`
 
-      // Always cleanup
-      fs.unlinkSync(filePath);
-      return res.json({
-        success: true,
-        modelUsed: PRIMARY_MODEL,
-        data: doc,
-      });
-    } catch (primaryErr) {
-      console.error(`❌ [${fileName}] Primary model (${PRIMARY_MODEL}) failed:`, primaryErr?.message || primaryErr);
-      // Try fallback model
+YOUR TASK:
+- **STRICT RULE**: Do NOT include any conversational filler, introductory remarks, or "As a senior architect" statements at the beginning. 
+- **START IMMEDIATELY** with a clear, professional title and the documentation body.
+- **TONE**: Use a professional, humanized developer-to-developer tone. Do not just list features; explain the *reasoning*, *intent*, and *thought process* behind the code.
+- **NO EMOJIS**: Keep headers standard (1., 2., 3.) for a professional report look.
+
+1. TECHNICAL OVERVIEW: Provide a clear, insightful summary of the file's architectural role and the specific problems it solves.
+2. DETAILED BREAKDOWN: Exhaustively explain the logic blocks, focusing on the developer's intent and how data flows through the system.
+3. USAGE & BEST PRACTICES: Provide practical code examples and human-centric advice for implementing this code in real-world scenarios.`;
+
+    // Add Architecture Diagram instruction (Strict Success Mode)
+    prompt += `\n4. ARCHITECTURE DIAGRAM: Provide a clear Mermaid.js flowchart visualizing the code logic.
+    - **STRICT SYNTAX**: Use only simple alphanumeric characters (A-Z, 0-9) and spaces in node labels.
+    - **NO SYMBOLS**: Never use parentheses (), brackets [], or any code-related symbols inside diagram text.
+    - **ID RULES**: Use short, simple IDs like A, B, C for nodes.
+    - **OUTPUT**: Provide only the \`\`\`mermaid block for this section.`;
+
+    // Add Audit instruction if requested
+    if (includeAudit) {
+      prompt += `\n5. SECURITY & PERFORMANCE AUDIT: 
+      - Identify technical security risks and their real-world implications.
+      - Pinpoint performance bottlenecks and provide specific, professional optimization advice.`;
+    }
+
+    prompt += `\n\nRESPONSE FORMAT: Use professional Markdown. Ensure all technical terms are correct for the context. Respond ONLY in ${targetLanguage}.`;
+
+    // Multi-tier Fallback System (Verified Preview Tiers)
+    const MODELS = ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-pro-exp-02-05"];
+    let docText = "";
+    let usedModel = "";
+    let lastError = null;
+
+    for (const modelName of MODELS) {
       try {
-        const fallbackModel = genAI.getGenerativeModel({ model: FALLBACK_MODEL });
-        const result = await fallbackModel.generateContent(prompt);
+        console.log(`🤖 [${fileName}] Attempting documentation with: ${modelName}...`);
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent(prompt);
         const response = await result.response;
-        const docText = response.text();
-        console.log(`✅ [${fileName}] Documentation generated with FALLBACK model: ${FALLBACK_MODEL}`);
-        
-        // Save to database
-        const doc = new Documentation({
-          userId: req.user._id,
-          filename: fileName,
-          content: docText,
-          originalContent: fileContent,
-          wordCount: docText.split(/\s+/).length,
-          codeLines: fileContent.split('\n').length
-        });
-        await doc.save();
-
-        // Always cleanup
-        fs.unlinkSync(filePath);
-        return res.json({
-          success: true,
-          modelUsed: FALLBACK_MODEL,
-          data: doc,
-        });
-      } catch (fallbackErr) {
-        console.error(`❌ [${fileName}] Fallback model (${FALLBACK_MODEL}) also failed:`, fallbackErr?.message || fallbackErr);
-        // Always cleanup
-        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-        return res.status(500).json({
-          success: false,
-          message: `Failed to generate documentation. Primary: ${primaryErr?.message || primaryErr}. Fallback: ${fallbackErr?.message || fallbackErr}`,
-        });
+        docText = response.text();
+        usedModel = modelName;
+        console.log(`✅ [${fileName}] Success with model: ${modelName}`);
+        break; // Exit loop on success
+      } catch (err) {
+        lastError = err?.message || err;
+        console.error(`❌ [${fileName}] Model ${modelName} failed:`, lastError);
+        continue; // Try next model
       }
     }
+
+    if (!docText) {
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      return res.status(500).json({
+        success: false,
+        message: `AI Engine Exhausted. All models failed. Last Error: ${lastError}`,
+      });
+    }
+
+    // Save to database
+    const doc = new Documentation({
+      userId: req.user._id,
+      filename: fileName,
+      content: docText,
+      originalContent: fileContent,
+      wordCount: docText.split(/\s+/).length,
+      codeLines: fileContent.split('\n').length
+    });
+    await doc.save();
+
+    // Always cleanup
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    
+    return res.json({
+      success: true,
+      modelUsed: usedModel,
+      data: doc,
+    });
   } catch (error) {
     // Always cleanup
     if (fs.existsSync(filePath)) fs.unlinkSync(filePath);

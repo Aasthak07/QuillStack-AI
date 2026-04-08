@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import FileUpload from "@/components/FileUpload";
 import ReactMarkdown from "react-markdown";
 import toast from "react-hot-toast";
-import { HiOutlineSparkles } from "react-icons/hi2";
+import { HiOutlineSparkles, HiOutlineLockClosed } from "react-icons/hi2";
 import ActionButtons from "@/components/ActionButtons";
 import OutputContainer from "@/components/OutputContainer";
 
@@ -13,6 +13,8 @@ export default function GenerateDocsPage() {
   const [doc, setDoc] = useState(null);
   const [error, setError] = useState("");
   const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [includeAudit, setIncludeAudit] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
 
   const handleExportMarkdown = () => {
     if (!doc?._id) return;
@@ -124,7 +126,29 @@ export default function GenerateDocsPage() {
             </p>
           </div>
 
-          <FileUpload onUploadSuccess={setDoc} />
+          <div className="space-y-6">
+            <div className="glass p-6 rounded-3xl border-white/5 flex items-center justify-between">
+              <div className="space-y-0.5">
+                <p className="text-sm font-bold text-white">Security & Performance Audit</p>
+                <p className="text-[10px] text-gray-500">Enable deep AI logic scan</p>
+              </div>
+              <button 
+                onClick={() => setIncludeAudit(!includeAudit)}
+                className={`w-12 h-6 rounded-full transition-colors relative ${includeAudit ? 'bg-accent-primary' : 'bg-white/10'}`}
+              >
+                <motion.div 
+                  animate={{ x: includeAudit ? 26 : 2 }}
+                  className="absolute top-1 left-0 w-4 h-4 rounded-full bg-white shadow-xl"
+                />
+              </button>
+            </div>
+
+            <FileUpload 
+              onUploadSuccess={setDoc} 
+              includeAudit={includeAudit} 
+              onRequestLogin={() => setShowLoginModal(true)}
+            />
+          </div>
           
           <AnimatePresence>
             {error && (
@@ -157,6 +181,7 @@ export default function GenerateDocsPage() {
                 onDownloadPdf={handleDownloadPdf}
                 onCopy={handleCopy}
                 onShare={handleShare}
+                onGenerateNew={() => setDoc(null)}
               />
             </div>
             <div className="flex-1 p-0 overflow-y-auto">
@@ -190,6 +215,48 @@ export default function GenerateDocsPage() {
           </div>
         </div>
       )}
+      {/* Login Required Modal - Placed at root to escape stacking contexts */}
+      <AnimatePresence>
+        {showLoginModal && (
+          <div className="fixed inset-0 z-[9999] flex items-center justify-center p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
+              onClick={() => setShowLoginModal(false)}
+            />
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-sm glass-dark p-8 rounded-3xl border border-white/10 shadow-2xl text-center space-y-6"
+            >
+              <div className="w-16 h-16 bg-accent-primary/10 rounded-2xl flex items-center justify-center mx-auto text-accent-primary">
+                <HiOutlineLockClosed className="text-3xl" />
+              </div>
+              <div className="space-y-2">
+                <h3 className="text-xl font-bold text-white uppercase tracking-tight">Authentication Required</h3>
+                <p className="text-sm text-gray-400">Please sign in to your account to continue generating documentation.</p>
+              </div>
+              <div className="flex flex-col gap-3 pt-2">
+                <button
+                  onClick={() => window.location.href = '/login'}
+                  className="w-full py-4 bg-accent-primary text-white rounded-2xl font-bold hover:scale-[1.02] shadow-xl shadow-accent-primary/20 transition-all active:scale-95"
+                >
+                  Sign In to Account
+                </button>
+                <button
+                  onClick={() => setShowLoginModal(false)}
+                  className="w-full py-4 bg-white/5 text-gray-400 rounded-2xl font-bold hover:bg-white/10 transition-all"
+                >
+                  Maybe Later
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

@@ -22,7 +22,11 @@ export default function AdminUsersPage() {
   const navbarHeight = 64;
 
   useEffect(() => {
-    fetchUsers();
+    const delayDebounceFn = setTimeout(() => {
+      fetchUsers();
+    }, 500);
+
+    return () => clearTimeout(delayDebounceFn);
   }, [currentPage, searchTerm]);
 
   const fetchUsers = async () => {

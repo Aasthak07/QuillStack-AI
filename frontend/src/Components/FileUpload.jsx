@@ -11,12 +11,11 @@ function getFileExt(filename) {
   return filename.split('.').pop().toLowerCase();
 }
 
-export default function FileUpload({ onUploadSuccess }) {
+export default function FileUpload({ onUploadSuccess, onRequestLogin, includeAudit = false }) {
   const [selectedFile, setSelectedFile] = useState(null);
   const [isDragActive, setIsDragActive] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState("");
-  const [showLoginModal, setShowLoginModal] = useState(false);
   const inputRef = useRef();
 
   const validateFile = (file) => {
@@ -35,7 +34,7 @@ export default function FileUpload({ onUploadSuccess }) {
     if (validateFile(file)) {
       const token = localStorage.getItem("token") || localStorage.getItem("userToken");
       if (!token) {
-        setShowLoginModal(true);
+        if (onRequestLogin) onRequestLogin();
         setSelectedFile(null);
         return;
       }
@@ -49,7 +48,7 @@ export default function FileUpload({ onUploadSuccess }) {
     if (!selectedFile) return;
     const token = localStorage.getItem("token") || localStorage.getItem("userToken");
     if (!token) {
-      setShowLoginModal(true);
+      if (onRequestLogin) onRequestLogin();
       return;
     }
     
@@ -57,6 +56,7 @@ export default function FileUpload({ onUploadSuccess }) {
     setError("");
     const formData = new FormData();
     formData.append("file", selectedFile);
+    formData.append("includeAudit", includeAudit.toString());
     try {
       const res = await fetch("http://localhost:5000/api/docs/upload", {
         method: "POST",
@@ -65,7 +65,7 @@ export default function FileUpload({ onUploadSuccess }) {
       });
       
       if (res.status === 401) {
-        setShowLoginModal(true);
+        if (onRequestLogin) onRequestLogin();
         return;
       }
       
@@ -78,10 +78,8 @@ export default function FileUpload({ onUploadSuccess }) {
         throw new Error(data.message || "No docs generated");
       }
     } catch (error) {
-      if (!showLoginModal) {
-        setError(error.message || "Network Error");
-        toast.error("Upload failed");
-      }
+      setError(error.message || "Network Error");
+      toast.error("Upload failed");
     } finally {
       setIsUploading(false);
     }
@@ -94,48 +92,6 @@ export default function FileUpload({ onUploadSuccess }) {
         style: { background: 'rgba(11, 15, 28, 0.8)', backdropFilter: 'blur(12px)' }
       }} />
 
-      {/* Login Required Modal */}
-      <AnimatePresence>
-        {showLoginModal && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-              onClick={() => setShowLoginModal(false)}
-            />
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="relative w-full max-w-sm glass-dark p-8 rounded-3xl border border-white/10 shadow-2xl text-center space-y-6"
-            >
-              <div className="w-16 h-16 bg-accent-primary/10 rounded-2xl flex items-center justify-center mx-auto text-accent-primary">
-                <HiOutlineLockClosed className="text-3xl" />
-              </div>
-              <div className="space-y-2">
-                <h3 className="text-xl font-bold text-white">Authentication Required</h3>
-                <p className="text-sm text-gray-400">Please sign in to your account to continue generating documentation.</p>
-              </div>
-              <div className="flex flex-col gap-3">
-                <button
-                  onClick={() => window.location.href = '/login'}
-                  className="w-full py-3 bg-accent-primary text-white rounded-xl font-bold hover:scale-[1.02] transition-all"
-                >
-                  Sign In
-                </button>
-                <button
-                  onClick={() => setShowLoginModal(false)}
-                  className="w-full py-3 bg-white/5 text-gray-300 rounded-xl font-bold hover:bg-white/10 transition-all"
-                >
-                  Maybe Later
-                </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
 
       <motion.div
         className={`relative group cursor-pointer rounded-3xl border-2 border-dashed transition-all p-10 text-center ${
