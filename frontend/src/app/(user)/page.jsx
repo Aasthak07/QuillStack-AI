@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { HiOutlineSparkles, HiOutlineCube, HiOutlineShieldCheck, HiOutlineArrowRight, HiOutlineCommandLine, HiOutlineCloudArrowUp, HiOutlineUserGroup, HiOutlineShare } from "react-icons/hi2";
 import Link from "next/link";
+import ProductTourModal from "@/components/ProductTourModal";
 
 const features = [
   { 
@@ -47,6 +48,7 @@ const howItWorks = [
 export default function LandingPage() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
+  const [showTour, setShowTour] = useState(false);
 
   return (
     <div className="bg-[#060910] min-h-screen text-gray-200 selection:bg-accent-primary/20 bg-mesh pb-20">
@@ -57,15 +59,7 @@ export default function LandingPage() {
         <div className="absolute top-20 right-0 w-96 h-96 bg-accent-orange/10 blur-[100px] -z-10 rounded-full" />
         
         <div className="max-w-6xl mx-auto text-center space-y-8">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass border-white/10 text-sm font-medium text-accent-orange"
-          >
-            <HiOutlineSparkles className="animate-pulse" />
-            <span>Introducing QuillStack v2.0</span>
-          </motion.div>
+          <div className="inline-flex h-9" aria-hidden="true" />
           
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
@@ -95,7 +89,10 @@ export default function LandingPage() {
             <Link href="/signup" className="w-full sm:w-auto px-8 py-4 rounded-2xl bg-gradient-to-r from-accent-orange to-accent-amber text-white font-bold shadow-2xl shadow-orange-500/20 hover:scale-105 active:scale-95 transition-all flex items-center justify-center gap-2">
               Start Building Free <HiOutlineArrowRight />
             </Link>
-            <button className="w-full sm:w-auto px-8 py-4 rounded-2xl glass border-white/10 font-bold hover:bg-white/5 transition-all">
+            <button
+              onClick={() => setShowTour(true)}
+              className="w-full sm:w-auto px-8 py-4 rounded-2xl glass border-white/10 font-bold hover:bg-white/5 transition-all"
+            >
               Watch Product Tour
             </button>
           </motion.div>
@@ -215,6 +212,8 @@ export default function LandingPage() {
           </form>
         </div>
       </section>
+
+      {showTour && <ProductTourModal onClose={() => setShowTour(false)} />}
     </div>
   );
 }
