@@ -2,7 +2,7 @@
 
 ## 2.1 Introduction to Literature Survey
 
-Before building any new software system, it is crucial to look at what already exists in the market. A literature survey helps researchers and developers understand the current technology landscape, identify what works well, and figure out where existing tools fall short. By reviewing other platforms, we can clearly see the "research gaps"—the problems that still need solving. Finding these gaps gives us the perfect reason to build something new, ensuring that our project actually brings value rather than just copying what others have already done.
+Before building any new software system, it is crucial to look at what already exists in the market. A literature survey helps researchers and developers understand the current technology landscape, identify what works well, and figure out where existing tools fall short. By reviewing other platforms, "research gaps"—the problems that still need solving—can be clearly identified. Finding these gaps provides a robust justification for building new systems, ensuring that the project actually brings value rather than replicating existing solutions.
 
 Over the past few years, the software industry has been completely transformed by Artificial Intelligence (AI). In the past, if you wanted an application to automatically generate a document, it relied on strict, boring templates. You would fill out a form, and the software would just paste your answers into a pre-written file. It wasn't smart, and it definitely wasn't creative. 
 
@@ -12,7 +12,7 @@ Recently, however, everything changed with the rise of Large Language Models (LL
 
 ## 2.2 Review of Existing Systems
 
-To understand where QuillStack AI fits in, we first need to look at the main tools people currently use to create content and documents. These can be broken down into general AI chatbots, specialized marketing tools, old-school document generators, and traditional content management systems (CMS).
+To understand the positioning of QuillStack AI, it is first necessary to examine the primary tools currently utilized to create content and documents. These can be broken down into general AI chatbots, specialized marketing tools, old-school document generators, and traditional content management systems (CMS).
 
 ### 2.2.1 AI Chatbots (e.g., ChatGPT, Claude)
 **How it works:** Tools like ChatGPT are conversational AI models. They have read vast amounts of text from the internet and use advanced neural networks to predict what the most logical response to a user's prompt should be.
@@ -66,7 +66,7 @@ Instead of forcing a user's laptop to run a heavy AI model locally, applications
 
 ## 2.4 Comparative Analysis
 
-When we compare these existing systems across a few main categories, clear trade-offs become visible.
+When these existing systems are compared across a few main categories, clear trade-offs become visible.
 
 | Platform Type | Performance & Creativity | Ease of Use | Customization | Cost |
 | :--- | :--- | :--- | :--- | :--- |
@@ -81,7 +81,7 @@ Looking at this comparison, the problem becomes obvious. ChatGPT is smart but is
 
 ## 2.5 Identifying the Research Gap
 
-After reviewing the literature and testing the commercial tools currently available, we found a few serious issues that need addressing:
+After a review of the literature and testing of the commercial tools currently available, a few serious issues were identified that require addressing:
 
 1.  **A Lack of Tools for Technical Developers:** While content creators have dozens of AI tools to write blog posts, software developers have very few affordable, dedicated platforms that can automatically read a complex source code file and write an academic or technical explanation for it.
 2.  **Fragmented Workflows & No Visual Mapping:** Right now, if a developer wants AI documentation, they have to manually jump between multiple windows. Furthermore, most tools only output text, lacking the visual architecture diagrams (like Mermaid charts) that developers need to see the "big picture" of their codebase.
@@ -94,8 +94,8 @@ These gaps clearly highlight the need for a new platform. Developers urgently ne
 
 ## 2.6 Conclusion
 
-In conclusion, this literature survey explored how automated content generation has evolved from simple "copy-and-paste" templates to highly intelligent generative AI models. We looked at how tools like ChatGPT are flexible but disorganized, while tools like WordPress are organized but unintelligent. 
+In conclusion, this literature survey explored how automated content generation has evolved from simple "copy-and-paste" templates to highly intelligent generative AI models. It was observed how tools like ChatGPT are flexible but disorganized, while tools like WordPress are organized but unintelligent. 
 
-By analyzing these tools, we found a distinct "research gap": there is no accessible, all-in-one web platform purely dedicated to automating technical document generation for engineering teams without charging extreme enterprise fees. 
+Through the analysis of these tools, a distinct "research gap" was identified: there is no accessible, all-in-one web platform purely dedicated to automating technical document generation for engineering teams without charging extreme enterprise fees. 
 
 **QuillStack AI** was created specifically to fill this void. By combining the organizational power of a traditional MERN-stack web application with the deep cognitive understanding of Google's Generative AI API, QuillStack AI aims to give users the best of both worlds. The proposed platform eliminates fragmented workflows, ensuring developers can manage, generate, and export their documentation securely from one central location.

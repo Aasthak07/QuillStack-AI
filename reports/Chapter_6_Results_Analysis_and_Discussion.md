@@ -2,15 +2,15 @@
 
 ## 6.1 Introduction to Results and Discussion
 
-After spending weeks planning architectures and writing code, this is the chapter where we finally look at the finished product and ask: *Did it actually work?*
+After spending weeks planning architectures and writing code, this is the chapter where the finished product is examined to ask: *Did it actually work?*
 
-This section evaluates how well the **QuillStack AI** platform performs in the real world. Specifically, we are looking at how smoothly our standard MERN web stack handles the massive processing power of the Google Generative AI (Gemini) API. We will break down exactly what the app does well, where it slows down, and what major roadblocks we hit along the way.
+This section evaluates how well the **QuillStack AI** platform performs in the real world. Specifically, the smoothness of the standard MERN web stack handling the massive processing power of the Google Generative AI (Gemini) API is examined. A breakdown of exactly what the app does well, where it slows down, and what major roadblocks were hit along the way is provided.
 
 ---
 
 ## 6.2 System Implementation Overview
 
-The final version of QuillStack AI successfully bridged the gap between a standard web app and cutting-edge AI. We successfully deployed a complete ecosystem with four major features:
+The final version of QuillStack AI successfully bridged the gap between a standard web app and cutting-edge AI. A complete ecosystem was successfully deployed with four major features:
 
 1.  **Authentication:** A fully operational login system that securely hashes passwords using `bcrypt` and locks the app down using JSON Web Tokens (JWT).
 2.  **AI Generation:** An Express.js backend that securely packages user files, fires them over to Google Gemini, and pulls back clean technical explanations.
@@ -21,7 +21,7 @@ The final version of QuillStack AI successfully bridged the gap between a standa
 
 ## 6.3 Results Obtained
 
-To prove the system works, we didn't just test it with "Hello World" scripts. We threw highly complex, 200-line React components into the uploader and hit generate.
+To prove the system works, it was not solely tested with "Hello World" scripts. Highly complex, 200-line React components were thrown into the uploader and the generation sequence was initiated.
 
 The results were incredibly promising. The system successfully grabbed the `.js` file, passed it to the AI, and returned a beautifully structured Markdown document. The output perfectly included bold headers explaining what the code did, bulleted lists breaking down specific functions, and even highlighted code blocks detailing confusing loops. 
 
@@ -33,9 +33,9 @@ During the wait time, the frontend interface automatically locked the screen and
 
 When dealing with third-party AI models, speed is always the biggest hurdle.
 
-1.  **App Responsiveness:** Because we built the frontend with React, clicking around the dashboard feels instantaneous. The browser never does a hard refresh, keeping the user experience under 100 milliseconds for basic navigation.
-2.  **API Wait Times:** The massive bottleneck in our app is waiting for Google to "think." For short scripts, Gemini replied in **2 to 4 seconds**. For massive blocks of code, we sometimes waited up to **12 seconds**.
-3.  **System Efficiency:** Because 12 seconds is an eternity in web development, our Node.js backend had to be built asynchronously using JavaScript `Promises`. This allowed the Express server to patiently wait for Google's answer without freezing up the rest of the app for other users trying to log in.
+1.  **App Responsiveness:** Due to the frontend being built with React, clicking around the dashboard feels instantaneous. The browser never does a hard refresh, keeping the user experience under 100 milliseconds for basic navigation.
+2.  **API Wait Times:** The massive bottleneck in the app is waiting for Google to "think." For short scripts, Gemini replied in **2 to 4 seconds**. For massive blocks of code, waits of up to **12 seconds** were sometimes experienced.
+3.  **System Efficiency:** Because 12 seconds is an eternity in web development, the Node.js backend had to be built asynchronously using JavaScript `Promises`. This allowed the Express server to patiently wait for Google's answer without freezing up the rest of the app for other users trying to log in.
 
 ---
 
@@ -44,15 +44,15 @@ When dealing with third-party AI models, speed is always the biggest hurdle.
 The whole application is useless if the AI writes terrible documentation. 
 
 1.  **The Strengths:** Gemini proved to be incredibly smart when reading standard programming logic. It effortlessly understood the difference between Python and JavaScript, traced variable loops logically, and wrote explanations that sounded like a senior developer mentoring a junior. 
-2.  **The Weaknesses:** AI models aren't magic; they are just guessing algorithms. When we uploaded severely messy legacy code with terrible variable names (like `let x = y(z)`), Gemini occasionally "hallucinated." Instead of admitting it didn't understand the code, the AI would confidently guess what the function did, which resulted in slightly inaccurate technical documentation. 
+2.  **The Weaknesses:** AI models aren't magic; they are just guessing algorithms. When severely messy legacy code with terrible variable names (like `let x = y(z)`) was uploaded, Gemini occasionally "hallucinated." Instead of admitting it didn't understand the code, the AI would confidently guess what the function did, which resulted in slightly inaccurate technical documentation. 
 
 ---
 
 ## 6.6 User Experience (UX) Analysis
 
-We wanted developers to use this tool, and developers hate cluttered, confusing interfaces.
+For the tool to be optimally adopted by developers, cluttered, confusing interfaces had to be avoided.
 
-1.  **The Design:** We built the core "Generation Workspace" as a split-screen. Users upload their files and write prompts on the left half of the screen, and watch the finished documentation instantly render on the right half. 
+1.  **The Design:** The core "Generation Workspace" was built as a split-screen. Users upload their files and write prompts on the left half of the screen, and watch the finished documentation instantly render on the right half. 
 2.  **Usability Win:** This side-by-side design completely eliminates cognitive fatigue. Users never have to switch browser tabs, open new windows, or refresh the page to see their results. The flow from uploading code to exporting a PDF feels entirely seamless.
 
 ---
@@ -70,25 +70,25 @@ How does QuillStack AI stack up against tools people are already using?
 
 Looking at the results, this project absolutely achieved what it set out to do. Software developers desperately need tools that automate the tedious, boring parts of their jobs (like writing documentation). 
 
-By tightly integrating the Gemini API directly into a MERN-stack application, we proved that developers don't have to rely on fragmented workflows or expensive enterprise subscriptions. We successfully built a tool that takes raw, messy code and turns it into organized, human-readable textbooks with a single click.
+By tightly integrating the Gemini API directly into a MERN-stack application, it was proven that developers do not have to rely on fragmented workflows or expensive enterprise subscriptions. A tool was successfully built that takes raw, messy code and turns it into organized, human-readable textbooks with a single click.
 
 ---
 
 ## 6.9 Challenges Faced During Implementation
 
-Building this system wasn't easy. We hit two major roadblocks:
+The construction of this system presented challenges. Two major roadblocks were encountered:
 
-1.  **Formatting Nightmares:** Initially, Gemini would send back wildly inconsistent responses. Sometimes it used headers, sometimes it just sent a raw paragraph, and sometimes it wrapped the text in useless JSON brackets. We resolved this by silently gluing strict "System Prompts" to the backend before sending the request to Google, effectively forcing the AI to strictly format its answers in Markdown.
-2.  **Memory Crashes:** During early testing, we realized that if a user uploaded a massive 50MB file, our Express server would instantly crash trying to read it. We solved this by installing the `multer` package, which acts like a bouncer. It aggressively checks file sizes the moment they hit the server, instantly rejecting anything dangerously large before it can break the system.
+1.  **Formatting Nightmares:** Initially, Gemini would send back wildly inconsistent responses. Sometimes it used headers, sometimes it just sent a raw paragraph, and sometimes it wrapped the text in useless JSON brackets. This was resolved by silently attaching strict "System Prompts" to the backend before the request was sent to Google, effectively forcing the AI to strictly format its answers in Markdown.
+2.  **Memory Crashes:** During early testing, it was realized that if a user uploaded a massive 50MB file, the Express server would instantly crash trying to read it. This was solved by installing the `multer` package. File sizes are aggressively checked the moment they hit the server, instantly rejecting anything dangerously large before it can break the system.
 
 ---
 
 ## 6.10 Limitations of the System
 
-As with any software, our application has a few hard technological boundaries:
+As with any software, the application is constrained by a few hard technological boundaries:
 
-1.  **Chained to Google:** The entire "brain" of our app lives on Google's servers. If the Gemini API goes offline for maintenance, or Google decides to radically change their pricing, QuillStack's main feature breaks immediately.
-2.  **No Offline Mode:** Because we outsource the heavy processing to the cloud, QuillStack API has zero offline capabilities. If your Wi-Fi drops, the app completely stops working.
+1.  **Chained to Google:** The entire "brain" of the app lives on Google's servers. If the Gemini API goes offline for maintenance, or Google decides to radically change their pricing, QuillStack's main feature breaks immediately.
+2.  **No Offline Mode:** Because the heavy processing is outsourced to the cloud, QuillStack API has zero offline capabilities. If your Wi-Fi drops, the app completely stops working.
 
 ---
 
