@@ -7,7 +7,12 @@ import { HiOutlineDocumentMagnifyingGlass, HiOutlineExclamationTriangle, HiOutli
 import MermaidRenderer from "./MermaidRenderer";
 
 export default function OutputContainer({ doc }) {
-  const content = doc?.content || doc || "";
+  let content = doc?.content || doc || "";
+
+  // Cleanup: If the AI omitted the mermaid block but left the heading, strip the heading out completely.
+  if (!content.includes("```mermaid")) {
+    content = content.replace(/^#+\s*(?:\d+\.)?\s*architecture\s+diagram.*$/gmi, '');
+  }
 
   return (
     <div className="flex-1 w-full bg-[#060910] min-h-[500px] relative overflow-hidden flex flex-col">

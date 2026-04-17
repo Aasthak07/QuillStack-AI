@@ -98,19 +98,7 @@ export default function MermaidRenderer({ chart }) {
   }, [chart]);
 
   if (error) {
-    return (
-      <div className="w-full mb-10 p-6 bg-amber-500/5 border border-amber-500/10 rounded-3xl flex items-start gap-4 shadow-sm select-none whitespace-normal">
-        <div className="shrink-0 w-8 h-8 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-500 mt-0.5">
-          <HiOutlineExclamationTriangle className="text-xl" />
-        </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-bold text-amber-200/90 tracking-wide mb-1.5">Architecture Mapping Note</p>
-          <p className="text-xs text-amber-200/60 leading-relaxed max-w-prose">
-            This file's logic structure is exceptionally complex. To maintain documentation accuracy, a simplified visual mapping was skipped. Please refer to the <b>Technical Breakdown</b> below for the complete logic flow.
-          </p>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (

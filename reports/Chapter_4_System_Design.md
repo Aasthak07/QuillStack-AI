@@ -16,7 +16,10 @@ QuillStack AI operates on a classic **Client-Server Architecture**. This specifi
 1.  **Frontend (What the User Sees):** Built with React.js and Next.js, this layer lives entirely in the user’s web browser. It handles rendering buttons, forms, and the final Markdown documents.
 2.  **Backend (The Air Traffic Controller):** Built on Node.js and Express.js, the backend server is the middleman. It receives the user's uploaded code, checks if the user is legally logged in, and acts as the secure bridge to the outside world.
 3.  **Database (The Memory):** We use MongoDB to store all persistent data. When the backend needs to check a password or save a generated document, it talks to MongoDB via Mongoose.
-4.  **The AI API (The Brain):** When the backend is ready, it securely fires a request holding the user's files and our custom prompting rules over the internet to the Gemini API. Gemini processes the text and fires the result back to our backend.
+4.  **The AI API (The Brain):** When the backend is ready, it securely| **TC-007** | **Actions** | Clicked the Delete button on the Dashboard. | The row disappears and the MongoDB record is permanently removed. | Deleted perfectly; no residual data left in DB. | **PASS** |
+| **TC-008** | **Admin** | Searched users rapidly (spamming keys). | System should debounce requests to stay under rate limits. | Search triggered exactly 500ms after last key, preventing 429 error. | **PASS** |
+| **TC-009** | **Security**| Attempted to login after 5 failed tries. | System should temporarily rate-limit the IP address. | Request blocked with 'Too Many Requests' message as expected. | **PASS** |
+to our backend.
 
 ---
 
@@ -84,7 +87,7 @@ erDiagram
         string Email
         string PasswordHash
         string Name
-        boolean Role
+        boolean isAdmin
     }
     
     DOCUMENT {
@@ -187,8 +190,8 @@ Our goal for the UI was to keep the design incredibly straightforward so the use
 
 1.  **Authentication Gates:** Strict, minimal login forms that immediately tell you if you typed a password wrong before even bothering the server.
 2.  **Dashboard Modules:** A beautifully crafted, horizontal list-layout dashboard tracking a user's chronological generation history. Users can interact with any row to instantly View, download as PDF, Copy, Share, or securely Delete past documentation through seamless client-side interactions.
-3.  **The Generation Workspace:** The heart of the app. Users drop their source code into the left pane, hit generate, and watch a loading indicator lock the screen until a beautifully formatted MarkDown document magically populates the right pane.
-4.  **Exporting Mechanisms:** Simple trigger buttons that leverage advanced client-side scripts (like `html2pdf.js`) to instantly compile the generated web text into completely clean, perfectly styled downloadable PDF documents without heavily loading the backend server.
+3.  **Document Management:** A MongoDB database that automatically saves and organizes every single document a user generates.
+4.  **Interactive UX Suite:** A high-end frontend featuring an automated Product Tour, a Live Typewriter Demo, and smart context-aware navigation for logged-in users.
 
 ---
 

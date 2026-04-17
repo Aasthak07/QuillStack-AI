@@ -16,8 +16,8 @@ Building this platform wasn't just about plugging into an API; it was about buil
 
 1.  **Taming the AI:** We successfully integrated the Google Gemini API as a completely stateless microservice. Our Express backend securely holds the private API keys, packages user code over HTTPS, and forces the AI to return beautifully formatted Markdown every single time.
 2.  **A Decoupled MERN Architecture:** We kept the React frontend incredibly fast and visually clean, offloading all the heavy API throttling, data parsing, and user authentication to the Node.js backend.
-3.  **Ironclad Security:** We didn't cut corners on user data. We successfully implemented `bcrypt` to scramble passwords into unreadable hashes and utilized JSON Web Tokens (JWT) to ensure users can only ever access their own generated documents inside the MongoDB cluster.
-4.  **A Developer-Friendly UI:** We successfully eliminated user friction. Expanding beyond the generation workspace, we built a comprehensive "My Documents" list-styled dashboard. The interface is completely intuitive, allowing users to effortlessly view past history, securely delete unwanted records from MongoDB, and seamlessly export, copy, or distribute their Markdown files in a single click.
+3.  **Ironclad Security:** We implemented `bcryptjs` to hash passwords and added password visibility toggles for a better UX.
+4.  **Admin and Tour Features:** We built a global Admin Dashboard and an interactive Product Tour to guide new users through the platform seamlessly.
 
 ---
 
@@ -27,8 +27,9 @@ As powerful as the platform is, deploying it to a test environment revealed a fe
 
 1.  **Chained to Google:** Our entire "brain" is outsourced. If the Google Gemini endpoints suffer an outage, or if Google abruptly alters their pricing tier, the core generation feature of QuillStack AI completely breaks.
 2.  **100% Internet Dependent:** Because the heavy LLM models live on external cloud servers, the app has absolutely zero offline capabilities. If a developer's Wi-Fi drops, they cannot generate documentation.
-3.  **AI Hallucinations:** AI is not magic; it’s a guessing algorithm. If a user uploads insanely messy, completely undocumented legacy code with terrible variable names, the AI will occasionally "guess" what the code does rather than accurately tracing it.
-4.  **File Size Bottlenecks:** To keep our own Express server from crashing under heavy memory loads, we had to enforce strict `multer` file-size limits. This means users cannot upload their entire 5-gigabyte application repository at once; they have to upload it in smaller, logical chunks.
+3.  **AI Hallucinations:** AI is not magic; it’s a guessing algorithm. If a user uploads insanely messy, completely undocumented legacy code with terrible variable names, the AI will occasionally "guess" what the code does.
+4.  **Mermaid Syntax Sanitization:** Initially, AI-generated diagrams would crash if they contained extra punctuation (like dots in labels). We resolved this by building a "greedy sanitizer" that scrubs labels before they reach the frontend, ensuring diagrams render perfectly every time.
+5.  **File Size Bottlenecks:** To keep our own Express server from crashing under heavy memory loads, we had to enforce strict `multer` file-size limits. This means users cannot upload their entire 5-gigabyte application repository at once; they have to upload it in smaller, logical chunks.
 
 ---
 
@@ -41,7 +42,13 @@ The tech world moves fast, especially in Artificial Intelligence. While version 
 3.  **Voice-to-Prompt:** By hooking into browser Web Speech APIs, developers could literally just talk to the application, dictating custom instructions to the AI rather than typing them out manually.
 4.  **Real-Time Multiplayer Editing:** Similar to Google Docs, we could implement `Socket.io` WebSockets. This would allow an entire team of authenticated developers to jump into a single finalized Markdown document and edit it together at the exact same time.
 5.  **Going Local (Offline Mode):** To solve our internet dependency, a future version could package a smaller, open-source AI model (like Meta's LLaMA 3) directly into the app. This would allow the entire system to run locally on a developer's laptop, completely disconnected from the web.
-6.  **Brand Styling:** Corporate teams could define strict global templates for their accounts. They could tell the system: *“Always use our company logo, always use the font Arial, and always add a copyright footer to every PDF we export.”*
+
+| Test ID    | Module        | Scenario                                            | Mitigation                                                             | Result                                                                 | Status   |
+| :--------- | :------------ | :-------------------------------------------------- | :--------------------------------------------------------------------- | :--------------------------------------------------------------------- | :------- |
+| **TC-008** | **AI Engine** | Exhausted primary API quota (Status 429).           | System detects failure and automatically switches to a fallback model. | Successfully generated doc using secondary model without user knowing. | **PASS** |
+| **TC-009** | **Logic**     | Generated code with special characters in diagrams. | Sanitizer cleans "dots" and "dashes" that crash Mermaid.               | Diagram rendered perfectly without syntax errors.                      | **PASS** |
+
+6.  **Brand Styling:** Corporate teams could define strict global templates for their accounts. They could tell the system: _“Always use our company logo, always use the font Arial, and always add a copyright footer to every PDF we export.”_
 
 ---
 

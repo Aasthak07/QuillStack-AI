@@ -45,8 +45,8 @@ router.post('/add', signupRules, validate, (req, res) => {
 
     new Model(req.body).save()
         .then((result) => {
-            const { _id, name, email } = result;
-            const payload = { _id, name, email };
+            const { _id, name, email, isAdmin } = result;
+            const payload = { _id, name, email, isAdmin };
             jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' }, (err, token) => {
                 if (err) {
                     console.log(err);
@@ -85,8 +85,8 @@ router.post('/authenticate', loginRules, validate, async (req, res) => {
         if (user) {
             const isMatch = await user.comparePassword(password);
             if (isMatch) {
-                const { _id, name, email: userEmail } = user;
-                const payload = { _id, name, email: userEmail };
+                const { _id, name, email: userEmail, isAdmin } = user;
+                const payload = { _id, name, email: userEmail, isAdmin };
 
                 jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' }, (err, token) => {
                     if (err) {

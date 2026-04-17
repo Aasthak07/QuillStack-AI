@@ -50,6 +50,8 @@ We kept a strict log of our tests. The table below highlights some of the most c
 | **TC-005** | **Database** | Generated a document, completely closed the browser, and logged back in. | The database remembers the document and lists it properly in the History dashboard. | Previous data successfully loaded from MongoDB automatically. | **PASS** |
 | **TC-006** | **Exporting** | Clicked the `Export as PDF` button under a finished document. | The app instantly converts the web text into a cleanly styled, downloadable PDF file. | PDF downloaded instantly, retaining all bold text and bullet points. | **PASS** |
 | **TC-007** | **Actions** | Clicked the Delete button on the Dashboard and confirmed the prompt. | The UI instantly removes the document row and permanently deletes the record from MongoDB. | Document successfully cascade-deleted and removed from the active view. | **PASS** |
+| **TC-008** | **AI Engine** | Exhausted primary API quota (Status 429). | System detects failure and automatically switches to a fallback model. | Successfully generated doc using secondary model without user knowing. | **PASS** |
+| **TC-009** | **Logic** | Generated code with special characters in diagrams. | Sanitizer cleans "dots" and "dashes" that crash Mermaid. | Diagram rendered perfectly without syntax errors. | **PASS** |
 
 ---
 

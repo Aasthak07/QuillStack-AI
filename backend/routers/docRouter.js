@@ -28,6 +28,23 @@ router.post("/upload", authMiddleware, upload.single("file"), async (req, res) =
   let fileContent = "";
 
   try {
+    // Rate limit check: 2 docs per 24 hours for non-admin users
+    if (!req.user.isAdmin) {
+      const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
+      const docsGenerated = await Documentation.countDocuments({
+        userId: req.user._id,
+        createdAt: { $gte: twentyFourHoursAgo }
+      });
+
+      if (docsGenerated >= 2) {
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        return res.status(429).json({
+          success: false,
+          message: "Rate limit exceeded. You can only generate 2 documentations per 24 hours. Admin users have unlimited access."
+        });
+      }
+    }
+
     // Read file content
     fileContent = fs.readFileSync(filePath, "utf-8").slice(0, 10000);
 
@@ -52,6 +69,7 @@ YOUR TASK:
 
     // Add Architecture Diagram instruction (Strict Success Mode)
     prompt += `\n4. ARCHITECTURE DIAGRAM: Provide a clear Mermaid.js flowchart visualizing the code logic.
+    - **OPTIONAL REQUIREMENT**: If the code is too simple, lacks structural flow, or you cannot draw a meaningful architectural diagram, DO NOT include this section or its heading at all. Just completely omit it without any excuses or error text.
     - **STRICT SYNTAX**: Use only simple alphanumeric characters (A-Z, 0-9) and spaces in node labels.
     - **NO SYMBOLS**: Never use parentheses (), brackets [], or any code-related symbols inside diagram text.
     - **ID RULES**: Use short, simple IDs like A, B, C for nodes.
@@ -66,8 +84,8 @@ YOUR TASK:
 
     prompt += `\n\nRESPONSE FORMAT: Use professional Markdown. Ensure all technical terms are correct for the context. Respond ONLY in ${targetLanguage}.`;
 
-    // Multi-tier Fallback System (Verified Preview Tiers)
-    const MODELS = ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-pro-exp-02-05"];
+    // Multi-tier Fallback System (Verified Production Tiers)
+    const MODELS = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash", "gemini-flash-latest"];
     let docText = "";
     let usedModel = "";
     let lastError = null;

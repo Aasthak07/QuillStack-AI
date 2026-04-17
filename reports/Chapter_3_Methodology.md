@@ -46,11 +46,11 @@ Bringing QuillStack AI to life required a stack of proven, highly reliable moder
 *   **Frontend (React.js & Next.js):** React is a popular library built to make user interfaces fast and interactive. By using Next.js on top of React, we gained the ability to load pages incredibly quickly due to Server-Side Rendering (SSR). This stack ensures that navigating around the QuillStack dashboard feels as smooth as using a desktop application.
 *   **Backend (Node.js & Express.js):** Node.js allows us to use JavaScript on a server rather than just in a browser. Because the system has to wait a few seconds for the Gemini AI to generate a response, Node.js is perfect—it is non-blocking, meaning it can handle other users logging in while simultaneously waiting for Google's API to reply to someone else. Express.js is a framework that makes setting up the "routes" (like `/login` or `/generate`) clean and organized.
 *   **Database (MongoDB):** MongoDB organizes data like folders in a filing cabinet (using flexible JSON documents) rather than strict Excel-style tables. Because AI-generated text varies wildly in size and structure, MongoDB's flexible nature was the smartest choice for storing users' document history.
-*   **The Brain (Google Generative AI / Gemini API):** The Gemini LLM acts as the core intelligence of the platform. Through the API, we pass it hundreds of lines of complex programming code, and it processes the logic, syntax, and purpose in seconds, returning a beautifully written, easy-to-read explanation.
+*   **The Brain (Multi-Tier AI Engine):** The system utilizes a four-tier fallback mechanism across Google Gemini 2.x models. This ensures high availability—if one model hits a quota limit, the system automatically migrates the request to the next available intelligence tier without user intervention.
 *   **Essential Utilities:**
-    *   **Git:** Used to track every single change made to the codebase, ensuring we could easily rollback if a new feature broke the site.
-    *   **Postman:** A testing tool we used extensively to verify that the Express backend was correctly formatting the AI responses before we ever built the visual website.
-    *   **VS Code:** The primary text editor where all development took place.
+    *   **Bcrypt.js:** For industrial-strength password hashing.
+    *   **Framer Motion:** For advanced UI animations and interactive walkthroughs.
+    *   **Mermaid.js:** For dynamic rendering of architectural diagrams.
 
 ---
 
@@ -73,11 +73,13 @@ This massive text package is sent securely to the Gemini API endpoint. The backe
 
 To truly understand how QuillStack AI operates, it helps to walk through the exact step-by-step lifecycle of a user creating a document:
 
-1.  **Authentication:** The user logs in via the `/login` route. The system checks their password and hands them a secure "JWT Token"—a digital VIP pass proving who they are.
-2.  **Input:** The user opens the dashboard, uploads their Python or JavaScript file, and types an instruction. They click "Generate."
-3.  **The API Request:** The frontend packages the file and the user's JWT Token, sending it behind the scenes to the backend server.
-4.  **Verification & Processing:** The backend catches the request, checks the token to ensure the user isn't an intruder, reads the uploaded file, and silently fires off a request to the Google Gemini API. 
-5.  **Database Storage:** A few seconds later, Gemini replies with the completed documentation. The backend intercepts this reply and safely stores a copy of it in the user's specific MongoDB database record.
+1. ### 4.8.1 Authentication (JWTs & Bcrypt)
+We utilize `bcryptjs` for secure password protection. Instead of storing passwords, the system stores a salted "hash". During login, the backend uses secure comparison hooks to verify Identity. Once verified, we hand the user a JSON Web Token (JWT) "digital VIP pass" that secures every subsequent request.
+
+### 4.8.2 Rate Limiting and Resilience
+To protect against automated attacks and 429 errors, we implemented strict rate limiting on all authentication routes and debounced search triggers in the Admin Panel to ensure the server remains stable under load.
+4.  **Verification & Processing:** The backend catches the request, checks the token, reads the file, and initiates a multi-model ping loop. If the primary model fails (Error 429), the system automatically retries with a fallback model. 
+5.  **Database Storage & Sanitization:** Once Gemini replies, the backend runs a "greedy sanitizer" to clean up Mermaid syntax and then saves the document record to MongoDB.
 6.  **Displaying the Result:** The backend finally sends the finished text back to the browser. The frontend UI stops spinning a "loading" wheel, immediately renders the Markdown text onto the screen, and unlocks the action tray allowing the user to seamlessly export their new document as a perfectly styled PDF, copy it, or instantly share it.
 
 ---
