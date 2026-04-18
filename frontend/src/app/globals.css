@@ -68,3 +68,8 @@ body {
     radial-gradient(at 100% 100%, rgba(129, 140, 248, 0.05) 0px, transparent 50%);
 }
 
+/* Hide Next.js Dev Error Overlay globally so quietly-caught Mermaid errors don't trigger the red popup */
+nextjs-portal {
+  display: none !important;
+}
+

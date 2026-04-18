@@ -184,7 +184,24 @@ classDiagram
 
 ---
 
-## 4.7 User Interface Design
+## 4.7 Functional Modules of the System
+
+This section details the explicit functional module processes configured securely within the platform:
+
+1.  **Source Code Input Interface:** A user-friendly interface was developed that allows users to easily upload or paste source code snippets into the system for seamless documentation generation.
+2.  **User Authentication & Authorization Module:** This module strictly handles user access and permissions. It ensures that only authorized users can access certain authenticated parts of the application.
+3.  **AI-Powered Documentation Generation Module:** The core processing module that integrates cognitive AI (via the Google Gemini API) to autonomously assist users in generating text and improving the structural quality of the documentation.
+4.  **Document Editing & Management Module:** This module provides users dynamic capabilities to securely create, edit, and recursively manage generated documents within the platform interface.
+5.  **Document Export & Sharing Module:** This module seamlessly executes localized browser controls, enabling users to instantly export and share their finalized documentation in various formats (such as robust PDFs).
+6.  **Database Management Module:** An aggressive data persistence controller built natively on MongoDB. It handles encrypted document storage and ensures efficient, lightweight retrieval from the scalable cloud-based database.
+7.  **History Manager:** A chronological History Manager Module was developed that actively tracks changes to documentation, securely allowing users to view and interact with previous versions as technically needed.
+8.  **Admin Dashboard Module:** An administrative interface is securely provided to manage active users, total global documents, and oversee the overall functional stability of the system.
+9.  **Feedback System:** A feedback module was structurally designed and implemented that allows users to critically submit comments and ratings on documentation quality, enhancing technical engagement and overall user algorithmic satisfaction.
+10. **Documentation Theme Customizer:** A Documentation Theme Customizer layer was created that dynamically allows users to personalize documentation rendering styles, organically enhancing brand consistency and the ultimate developer user experience.
+
+---
+
+## 4.8 User Interface Design
 
 The goal for the UI was to keep the design incredibly straightforward so the user isn't overwhelmed by the powerful AI running behind the scenes.
 
@@ -195,34 +212,34 @@ The goal for the UI was to keep the design incredibly straightforward so the use
 
 ---
 
-## 4.8 Security Design
+## 4.9 Security Design
 
 Because uploaded user code and highly sensitive API keys are being handled, security is not an afterthought; it is built into the foundation.
 
-### 4.8.1 Authentication (JWTs)
+### 4.9.1 Authentication (JWTs)
 Old-school server sessions were discarded in favor of JSON Web Tokens (JWT). When a user successfully logs in, the backend encrypts their profile into a secure string. The user passes this JWT "digital VIP pass" every time they try to generate a document. If the token is fake or expired, the backend instantly rejects them.
 
-### 4.8.2 Environmental Protection
+### 4.9.2 Environmental Protection
 It is explicitly ensured that the primary Google Gemini API Key is never accidentally uploaded to GitHub. The API Key is permanently decoupled from the main code and securely hidden completely inside a local `.env` configuration file on the server.
 
 ---
 
-## 4.9 System Requirements
+## 4.10 System Requirements
 
 To run QuillStack AI smoothly, users and hosts only need to meet highly basic, modern computing standards.
 
-### 4.9.1 Hardware Requirements
+### 4.10.1 Hardware Requirements
 *   **Processor:** Any modern dual-core or multi-core processor.
 *   **Memory:** At least 4GB of RAM to ensure the Node server doesn't crash during heavy generation requests.
 *   **Networking:** A stable, high-speed internet connection is absolutely mandatory. Because the backend relies on Google's cloud API, dropped connections will severely break the generation loop.
 
-### 4.9.2 Software Requirements
+### 4.10.2 Software Requirements
 *   **Backend:** A system capable of running Node.js (Version 18+).
 *   **Database:** A localized MongoDB installation or access to an external MongoDB Atlas Cloud cluster.
 *   **Client Software:** Standard, updated modern web browsers (Chrome, Firefox, Safari) that can handle React's dynamic JavaScript rendering.
 
 ---
 
-## 4.10 Summary
+## 4.11 Summary
 
 Chapter 4 thoroughly outlines the exact blueprints that take QuillStack AI from a theoretical idea to a deployable, functioning platform. By using a strict Client-Server decoupled model, it is ensured that the MERN stack brilliantly handles the heavy lifting of user management and database storage, while exclusively leaving the intensely complicated text generation to the Gemini API. Through these structured layouts, use-case visualizations, and precise database mapping, the platform guarantees a secure, scalable, and highly intuitive experience.

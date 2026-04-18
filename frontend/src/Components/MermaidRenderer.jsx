@@ -76,18 +76,27 @@ export default function MermaidRenderer({ chart }) {
           .replace(/<([^>]+)>/g, '$1') 
           .replace(/\\n/g, ' '); 
 
-        // Check if syntax is valid before rendering
-        await mermaid.parse(processedChart);
+        // Temporarily intercept console.error to stop Next.js Dev Overlay from popping up
+        const originalConsoleError = console.error;
+        console.error = () => {}; 
 
-        const id = `mermaid-${Math.random().toString(36).substr(2, 9)}`;
-        const { svg } = await mermaid.render(id, processedChart);
-        
-        if (svg.includes("Syntax error") || svg.includes("mermaid-error")) {
-          throw new Error("Mermaid syntax error detected in SVG");
+        try {
+          // Check if syntax is valid before rendering, suppressing standard library alerts
+          await mermaid.parse(processedChart, { suppressErrors: true });
+
+          const id = `mermaid-${Math.random().toString(36).substr(2, 9)}`;
+          const { svg } = await mermaid.render(id, processedChart);
+          
+          if (svg.includes("Syntax error") || svg.includes("mermaid-error")) {
+            throw new Error("Mermaid syntax error detected in SVG");
+          }
+
+          setSvg(svg);
+          setError(false);
+        } finally {
+          // Restore the console to normal
+          console.error = originalConsoleError;
         }
-
-        setSvg(svg);
-        setError(false);
       } catch (err) {
         console.error("Mermaid check failed:", err);
         setError(true);
