@@ -1,8 +1,8 @@
 "use client";
 import { useState, useEffect } from "react";
-import AdminSidebar from "../../../../components/AdminSidebar.jsx";
-import AdminNavbar from "../../../../components/AdminNavbar.jsx";
-import AdminProtectedRoute from "../../../../components/AdminProtectedRoute.jsx";
+import AdminSidebar from "src/components/AdminSidebar";
+import AdminNavbar from "src/components/AdminNavbar";
+import AdminProtectedRoute from "src/components/AdminProtectedRoute";
 import { motion } from "framer-motion";
 import { FaUsers, FaFileAlt, FaCogs, FaHourglassHalf } from "react-icons/fa";
 import axios from "axios";
