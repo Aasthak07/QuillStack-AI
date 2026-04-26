@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import DocsList from "@/components/DocsList";
+import DocsList from "../../../components/DocsList.jsx";
 import { HiOutlineCube } from "react-icons/hi2";
 
 export default function MyDocsPage() {

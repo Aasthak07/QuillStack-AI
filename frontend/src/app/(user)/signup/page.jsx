@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { HiOutlineEye, HiOutlineEyeSlash } from "react-icons/hi2";
-import { useAuth } from "@/context/AuthContext";
-import { useAuthForm } from "@/hooks/useAuthForm";
-import { getSignupErrors } from "@/utils/validators";
+import { useAuth } from "../../../../context/AuthContext.jsx";
+import { useAuthForm } from "../../../../hooks/useAuthForm.js";
+import { getSignupErrors } from "../../../../utils/validators.js";
 
 const passwordRules = [
   { label: "Minimum 8 characters", test: (v) => v.length >= 8 },

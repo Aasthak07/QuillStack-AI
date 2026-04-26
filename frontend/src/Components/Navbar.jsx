@@ -4,7 +4,7 @@ import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth } from "../context/AuthContext.jsx";
 
 const navLinks = [
   { name: "Home", href: "/" },

@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import FileUpload from "@/components/FileUpload";
+import FileUpload from "../../../components/FileUpload";
 import ReactMarkdown from "react-markdown";
 import toast from "react-hot-toast";
 import { HiOutlineSparkles, HiOutlineLockClosed } from "react-icons/hi2";
-import ActionButtons from "@/components/ActionButtons";
-import OutputContainer from "@/components/OutputContainer";
+import ActionButtons from "../../../components/ActionButtons";
+import OutputContainer from "../../../components/OutputContainer";
 
 export default function GenerateDocsPage() {
   const [doc, setDoc] = useState(null);

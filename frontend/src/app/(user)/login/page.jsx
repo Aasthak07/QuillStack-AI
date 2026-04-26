@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useAuth } from "@/context/AuthContext";
-import { useAuthForm } from "@/hooks/useAuthForm";
-import { getLoginErrors } from "@/utils/validators";
+import { useAuth } from "../../../../context/AuthContext.jsx";
+import { useAuthForm } from "../../../../hooks/useAuthForm.js";
+import { getLoginErrors } from "../../../../utils/validators.js";
 import { HiOutlineEye, HiOutlineEyeSlash } from "react-icons/hi2";
 
 export default function LoginPage() {

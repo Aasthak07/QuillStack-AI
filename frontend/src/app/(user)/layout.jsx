@@ -1,8 +1,8 @@
 "use client";
 
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import FloatingBackground from "@/components/FloatingBackground";
+import Navbar from "../../../components/Navbar.jsx";
+import Footer from "../../../components/Footer.jsx";
+import FloatingBackground from "../../../components/FloatingBackground.jsx";
 
 export default function UserLayout({ children }) {
     return (
