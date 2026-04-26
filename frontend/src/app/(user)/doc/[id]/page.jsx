@@ -15,7 +15,7 @@ export default function SharedDocPage({ params }) {
   useEffect(() => {
     const fetchDoc = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/docs/${id}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/docs/${id}`);
         if (!res.ok) throw new Error("Document not found or access denied");
         const data = await res.json();
         setDoc(data);

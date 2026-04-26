@@ -22,7 +22,7 @@ export default function AdminProtectedRoute({ children }) {
         }
 
         // Verify token with backend
-        const response = await axios.get('http://localhost:5000/admin/check', {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/admin/check`, {
           headers: {
             'Authorization': `Bearer ${adminToken}`
           }

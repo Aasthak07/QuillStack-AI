@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
     setError('')
     
     try {
-      const response = await axios.post('http://localhost:5000/admin/login', {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/admin/login`, {
         email: values.email,
         password: values.password,
       })

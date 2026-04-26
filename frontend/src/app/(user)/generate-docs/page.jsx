@@ -18,7 +18,7 @@ export default function GenerateDocsPage() {
 
   const handleExportMarkdown = () => {
     if (!doc?._id) return;
-    window.open(`http://localhost:5000/api/docs/export/${doc._id}/markdown`, '_blank');
+    window.open(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/docs/export/${doc._id}/markdown`, '_blank');
   };
 
   const handleDownloadPdf = async () => {

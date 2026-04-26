@@ -32,7 +32,7 @@ export default function AdminUsersPage() {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await axios.get(`http://localhost:5000/admin/users?page=${currentPage}&limit=10&search=${searchTerm}`, {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/admin/users?page=${currentPage}&limit=10&search=${searchTerm}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -55,7 +55,7 @@ export default function AdminUsersPage() {
 
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.delete(`http://localhost:5000/admin/users/${userId}`, {
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/admin/users/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -71,7 +71,7 @@ export default function AdminUsersPage() {
   const handleUpdateUser = async (userData) => {
     try {
       const token = localStorage.getItem('adminToken');
-      await axios.put(`http://localhost:5000/admin/users/${editingUser._id}`, userData, {
+      await axios.put(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/admin/users/${editingUser._id}`, userData, {
         headers: {
           Authorization: `Bearer ${token}`
         }

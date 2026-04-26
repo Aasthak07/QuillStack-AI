@@ -58,7 +58,7 @@ export default function FileUpload({ onUploadSuccess, onRequestLogin, includeAud
     formData.append("file", selectedFile);
     formData.append("includeAudit", includeAudit.toString());
     try {
-      const res = await fetch("http://localhost:5000/api/docs/upload", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/docs/upload`, {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
         body: formData,
