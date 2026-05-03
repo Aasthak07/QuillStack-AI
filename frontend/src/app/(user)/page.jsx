@@ -4,9 +4,9 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { HiOutlineSparkles, HiOutlineCube, HiOutlineShieldCheck, HiOutlineArrowRight, HiOutlineCommandLine, HiOutlineCloudArrowUp, HiOutlineUserGroup, HiOutlineShare } from "react-icons/hi2";
 import Link from "next/link";
-import ProductTourModal from "../../../components/ProductTourModal.jsx";
-import { useAuth } from "../../../context/AuthContext.jsx";
-import LiveDemoSection from "../../../components/LiveDemoSection.jsx";
+import ProductTourModal from "../../components/ProductTourModal.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
+import LiveDemoSection from "../../components/LiveDemoSection.jsx";
 
 
 const features = [

@@ -8,10 +8,10 @@ This is precisely why QuillStack AI was developed. The objective was to solve th
 
 This report provides a complete walkthrough of the platform's development journey. It traces the progression from the initial ideas all the way to the final deployed product, which was entirely built on the modern MERN stack (MongoDB, Express, React, Node.js). 
 
-To ensure maximum clarity, the report has been organized into seven main chapters:
+To ensure maximum clarity, the report has been organized into eight main chapters, followed by a comprehensive bibliography and supplementary materials:
 
 **Chapter 1: Introduction**  
-The report begins by examining the core problem. The reasons why technical debt is such a significant issue are explored, along with an explanation of exactly how QuillStack AI is designed to help solo developers and teams save time.
+The report begins by examining the core problem. The reasons why technical debt is such a significant issue are explored, along with an explanation of exactly how QuillStack AI is designed to help solo developers and teams save time. Furthermore, the chapter details the feasibility study conducted to ensure the project's technical, economic, and operational viability.
 
 **Chapter 2: Literature Survey**  
 Before the commencement of development, existing solutions were evaluated. This chapter reviews traditional tools like JSDoc and explores why modern Large Language Models (LLMs) offer a much more powerful, dynamic way to understand abstract codebase structures.
@@ -28,7 +28,16 @@ A tool for developers needs to be incredibly reliable. This chapter covers the c
 **Chapter 6: Results, Analysis, and Discussion**  
 An evaluation of whether the project goals were successfully met is presented here. The final application is examined alongside UI screenshots and a breakdown of the generated documentation quality. Real-world challenges encountered with AI token limits and rotation errors, along with their respective solutions, are also critically discussed.
 
-**Chapter 7: Conclusion and Future Scope**  
-Finally, the project is concluded. Reflections on the achievements in turning raw code into readable knowledge are offered, and potential ideas for future updates are outlined—such as GitHub routing integrations and collaborative workspaces.
+**Chapter 7: Conclusion**  
+This chapter summarizes the overall development and findings of the study, reflecting on the achievements in transforming raw source code into structured knowledge.
+
+**Chapter 8: Future Scope**  
+The report concludes with a discussion of potential future enhancements, such as GitHub integration, collaborative workspaces, and support for additional programming languages.
+
+**References**  
+A list of the academic sources, technical documentations, and research papers utilized throughout the project's development is provided.
+
+**Appendix**  
+Supplementary materials, including an installation guide, a system API reference table, and sample documentation outputs, are included for further technical clarity.
 
 Ultimately, this project demonstrates that AI serves not to replace developers, but to handle routine chores so that human focus can remain on creativity and complex problem-solving. It is hoped that this report provides valuable insight into the development process of the system!

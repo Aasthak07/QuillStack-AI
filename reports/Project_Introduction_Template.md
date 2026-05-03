@@ -55,3 +55,18 @@ To keep the project realistic, there are a few things explicitly outside the sco
 
 **Target Audience:**
 The target users for QuillStack AI are incredibly broad but specifically focused on the tech industry. It is designed for freelance software developers who want to save time, development teams who need a quick way to document their shared codebases, and coding students who need help understanding complex scripts. Furthermore, it is designed for administrative personnel who need a simple interface to manage the users utilizing the platform. By tailoring the platform specifically to the needs of developers, QuillStack AI delivers a complete, highly effective solution that perfectly addresses the frustrating problem of manual documentation.
+
+---
+
+## 1.5 Feasibility Study
+
+The feasibility study was conducted to evaluate the viability of the project from technical, economic, and operational perspectives. This assessment ensured that the project could be successfully completed within the allocated resources and timeframes.
+
+### 1.5.1 Technical Feasibility
+The technical feasibility was assessed by examining the maturity and accessibility of the required technologies. The project was built upon the MERN stack (MongoDB, Express.js, React.js, and Node.js), which was identified as a robust and scalable framework for web application development. Furthermore, the availability of the Google Generative AI (Gemini) API provided the necessary cognitive capabilities for automated documentation generation. It was determined that the integration of these technologies was technically achievable, as the development team possessed the requisite expertise in JavaScript and RESTful API consumption. The use of modern cloud-based databases and server environments further confirmed that the system could handle the anticipated data processing loads.
+
+### 1.5.2 Economic Feasibility
+An economic evaluation was performed to determine the cost-effectiveness of the project. It was observed that the development utilized primarily open-source technologies, which significantly reduced the initial capital expenditure. The Google Gemini API was accessed through a tier that provided a generous free usage limit, making the project financially viable for development and testing purposes. Additionally, the automation of documentation was projected to result in substantial long-term savings by reducing the manual engineering hours typically required for documentation maintenance. Consequently, the project was deemed economically sound as the benefits of increased productivity outweighed the minimal operational costs.
+
+### 1.5.3 Operational Feasibility
+The operational feasibility was analyzed to ensure that the final product would be effectively utilized by the target audience. It was recognized that the manual documentation process represented a major bottleneck in the software development lifecycle. By providing a streamlined, AI-powered interface for rapid generation and management of reports, the system was designed to be seamlessly integrated into existing developer workflows. The implementation of a user-friendly dashboard and interactive workspace further ensured that the platform could be operated with minimal training. Feedback from potential users indicated a strong demand for such a tool, confirming that the project was operationally feasible and addressed a genuine market need.
