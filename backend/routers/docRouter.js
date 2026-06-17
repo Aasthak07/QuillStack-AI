@@ -85,7 +85,7 @@ YOUR TASK:
     prompt += `\n\nRESPONSE FORMAT: Use professional Markdown. Ensure all technical terms are correct for the context. Respond ONLY in ${targetLanguage}.`;
 
     // Multi-tier Fallback System (Verified Production Tiers)
-    const MODELS = ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash", "gemini-flash-latest"];
+    const MODELS = ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-2.5-pro", "gemini-flash-latest"];
     let docText = "";
     let usedModel = "";
     let lastError = null;

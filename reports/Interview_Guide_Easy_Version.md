@@ -176,3 +176,9 @@ This guide provides a simple, jargon-free way to explain your project to an inte
 
 **Q36: What does 'stateless' mean and why is it important for your app?**
 > **How to answer simply:** "'Stateless' means the server has no memory of who you are. Instead of the server trying to remember thousands of users, each user carries their own 'ID badge' (the JWT Token). Every time a user clicks something, they show their badge to the server. The server scans it, sees it's real, and says 'Okay, you can pass.' Because the server doesn't have to 'remember' anything in its own brain (memory), it uses very little power and can handle thousands of users at once without crashing. This is what makes the app scalable!"
+
+**Q37: Why did you build this project if ChatGPT already exists?**
+> **How to answer simply:** "ChatGPT is just a generic chat box. To use it for code documentation, you have to constantly copy-paste files, write long prompts, and then copy-paste visual chart code to another website just to see the diagram. It's too many steps. 
+> 
+> **QuillStack AI** is a complete, specialized product. A user just drags and drops their code file, and my site handles the rest: it automatically parses the file, gets the explanation, and renders a visual flowchart right on the screen. Because we have a database and authentication, users can log in securely, save their past document history, and export PDF reports. We also built our own system resilience: if the main AI goes down, our site switches to a backup AI automatically, which ChatGPT can't do for you."
+
