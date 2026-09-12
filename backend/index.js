@@ -7,6 +7,10 @@ require('./connection'); // MongoDB connection
 const app = express();
 const port = process.env.PORT || 5000;
 
+// Trust reverse proxy (Render, Vercel, etc.) so rate limiting uses real client IPs
+// Without this, all users appear to come from the same proxy IP and share one rate limit bucket
+app.set('trust proxy', 1);
+
 // ========== RATE LIMITING ==========
 
 // Strict limiter for auth endpoints — blocks brute-force attacks
