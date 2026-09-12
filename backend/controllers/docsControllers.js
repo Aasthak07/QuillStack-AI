@@ -688,10 +688,15 @@ const exportDoc = async (req, res) => {
         return res.send(doc.content);
 
       case 'pdf':
-        const pdfBuffer = await convertToPdf(doc.content);
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', `attachment; filename=${doc.filename}.pdf`);
-        return res.send(pdfBuffer);
+        try {
+          const pdfBuffer = await convertToPdf(doc.content);
+          res.setHeader('Content-Type', 'application/pdf');
+          res.setHeader('Content-Disposition', `attachment; filename=${doc.filename}.pdf`);
+          return res.send(pdfBuffer);
+        } catch (pdfErr) {
+          console.error('PDF export error:', pdfErr);
+          return res.status(500).json({ error: 'PDF generation is unsupported in this environment. Please export as Markdown, HTML, or DOCX.' });
+        }
 
       case 'html':
         const htmlContent = markdownToHtml(doc.content);

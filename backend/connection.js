@@ -1,14 +1,29 @@
 const mongoose = require('mongoose');
+const dns = require('dns');
 require('dotenv').config(); // Load environment variables from .env file
 
-const url = process.env.MONGO_URI || 'mongodb://localhost:27017/quillstack'; // Use the environment variable or fallback to a local MongoDB URL
+// Set DNS servers to resolve MongoDB Atlas SRV records on Windows networks
+try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+} catch (e) {
+    // Ignore if environment restricts setting DNS servers
+}
 
-mongoose.connect(url)
-    .then((result) => {
-        console.log('✅ Connected to MongoDB successfully');
-    }).catch((err) => {
-        console.error('❌ MongoDB connection error:', err.message);
-        console.log('Make sure MongoDB is running or check your MONGO_URI environment variable');
-    });
+const url = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/quillstack';
+
+if (mongoose.connection.readyState === 0) {
+    mongoose.connect(url)
+        .then(() => {
+            console.log('✅ Connected to MongoDB successfully');
+        }).catch((err) => {
+            console.error('❌ MongoDB connection error:', err.message);
+            console.log('Checking fallback connection to local MongoDB...');
+            if (url.startsWith('mongodb+srv://')) {
+                mongoose.connect('mongodb://127.0.0.1:27017/quillstack')
+                    .then(() => console.log('✅ Connected to local MongoDB fallback successfully'))
+                    .catch((localErr) => console.error('❌ Local fallback MongoDB error:', localErr.message));
+            }
+        });
+}
 
 module.exports = mongoose;
